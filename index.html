@@ -327,13 +327,13 @@ $("form").addEventListener("submit",async e=>{
     commission:num($("fComm").value), products:[...$("fProds").querySelectorAll('[aria-pressed="true"]')].map(b=>b.dataset.p),
     notes:$("fNotes").value.trim()};
   $("save").disabled=true;
-  try{ await store.save(d); const [y,m]=d.date.split("-"); view=new Date(+y,+m-1,1); closeForm(); render(); if(isNew) chaChing(ctx); }
+  try{ await store.save(d); const [y,m]=d.date.split("-"); view=new Date(+y,+m-1,1); closeForm(); render(); if(isNew) chaChing(ctx); tapSuccess(); }
   catch(err){ $("formErr").textContent=err?.code==="quota_exceeded"?"Storage is full. Delete some old deals, then save again.":"Couldn't save. Check your connection and tap Save again."; $("formErr").hidden=false; }
   finally{ $("save").disabled=false; }
 });
 $("del").addEventListener("click",()=>{$("confirm").hidden=false; $("del").hidden=true;});
 $("noDel").addEventListener("click",()=>{$("confirm").hidden=true; $("del").hidden=false;});
-$("yesDel").addEventListener("click",async()=>{ if(!editing)return; try{await store.remove(editing.id); closeForm();}catch(e){$("formErr").textContent="Couldn't delete. Try again."; $("formErr").hidden=false;} });
+$("yesDel").addEventListener("click",async()=>{ if(!editing)return; try{await store.remove(editing.id); closeForm(); tapSuccess();}catch(e){$("formErr").textContent="Couldn't delete. Try again."; $("formErr").hidden=false;} });
 
 /* ---------- sound ---------- */
 let actx=null;
@@ -394,6 +394,17 @@ $("importFile").addEventListener("change",async e=>{
     setNote("Restored: "+added+" new deal"+(added===1?"":"s")+(updated?", "+updated+" updated":"")+".");
   }catch(err){ setNote("That file isn't a Trip Pad backup. Pick a file named trip-pad-backup-….json.","warn"); }
 });
+
+/* ---------- haptics: iPhone (iOS 18+) via a hidden switch; Android via vibrate ---------- */
+const hapLabel=(()=>{try{
+  const i=document.createElement("input"); i.type="checkbox"; i.setAttribute("switch",""); i.id="hapSwitch"; i.tabIndex=-1; i.setAttribute("aria-hidden","true");
+  i.style.cssText="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none";
+  const l=document.createElement("label"); l.htmlFor="hapSwitch"; l.setAttribute("aria-hidden","true"); l.style.display="none";
+  document.body.append(i,l); return l;
+}catch(e){return null;}})();
+function tap(){ try{ if(navigator.vibrate){ navigator.vibrate(12); return; } if(hapLabel) hapLabel.click(); }catch(e){} }
+function tapSuccess(){ tap(); setTimeout(tap,130); }
+document.addEventListener("click",e=>{ const b=e.target.closest("button, label.chipbtn"); if(b && !b.closest("#save,#yesDel") && b.id!=="hapSwitch") tap(); },true);
 
 /* ---------- month, filter, goal ---------- */
 $("prev").addEventListener("click",()=>{view.setMonth(view.getMonth()-1); render();});
