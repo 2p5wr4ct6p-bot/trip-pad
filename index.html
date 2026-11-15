@@ -51,6 +51,13 @@ h1{font-family:var(--f-display);font-weight:700;font-size:30px;margin:0;letter-s
 .board{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:14px}
 .units{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
 .big{font-family:var(--f-display);font-weight:700;font-size:56px;line-height:.9;font-variant-numeric:tabular-nums}
+.unum{display:inline-block}
+.unum.bump{animation:ubump .65s cubic-bezier(.2,1.5,.4,1)}
+@keyframes ubump{0%{transform:translateY(45%) scale(.55);opacity:0}55%{transform:translateY(-8%) scale(1.18);opacity:1;color:var(--accent)}100%{transform:none}}
+#units{position:relative}
+.plus{position:absolute;top:-4px;font-family:var(--f-num);font-size:20px;font-weight:700;color:var(--good);pointer-events:none;animation:rise 1.2s ease-out forwards}
+@keyframes rise{0%{opacity:0;transform:translateY(12px)}20%{opacity:1}100%{opacity:0;transform:translateY(-36px)}}
+.amt.glow{text-shadow:0 0 18px color-mix(in srgb,var(--good) 55%,transparent);transition:text-shadow .4s}
 .big small{font-family:var(--f-body);font-size:15px;font-weight:600;color:var(--muted);margin-left:6px}
 .pay{text-align:right}
 .pay .lbl{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
@@ -136,7 +143,7 @@ textarea{min-height:64px;resize:vertical}
 
   <section class="board" aria-label="Month totals">
     <div class="units">
-      <div class="big" id="units">0<small>units</small></div>
+      <div class="big" id="units"><span class="unum" id="unitsNum">0</span><small>units</small></div>
       <div class="pay"><div class="lbl">Commission</div><div class="amt" id="comm">$0</div></div>
     </div>
     <div class="goal">
@@ -248,6 +255,29 @@ async function init(){
 }
 function setNote(t,k){const n=$("syncNote"); n.textContent=t; n.className="note"+(k?" "+k:"");}
 
+/* ---------- units / commission animation ---------- */
+let shownUnits=null, shownComm=null, shownMonth=null, celebrateUntil=0;
+const reduceMotion=()=>{ try{ return matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){ return false; } };
+function setTotals(units, comm, mk){
+  const uEl=$("unitsNum"), cEl=$("comm");
+  const animate = shownMonth===mk && shownUnits!==null && units>shownUnits && Date.now()<celebrateUntil && !reduceMotion();
+  if(animate){
+    const delta=units-shownUnits;
+    uEl.textContent=String(units);
+    uEl.classList.remove("bump"); void uEl.offsetWidth; uEl.classList.add("bump");
+    const plus=document.createElement("span"); plus.className="plus"; plus.textContent="+"+delta;
+    plus.style.left=(uEl.offsetWidth+6)+"px"; $("units").append(plus); setTimeout(()=>plus.remove(),1300);
+    const from=shownComm||0, to=comm, t0=performance.now(), dur=900;
+    if(to>from){ cEl.classList.add("glow"); const step=now=>{ const k=Math.min(1,(now-t0)/dur), e=1-Math.pow(1-k,3);
+      cEl.textContent=money(from+(to-from)*e); if(k<1) requestAnimationFrame(step); else { cEl.textContent=money(to); setTimeout(()=>cEl.classList.remove("glow"),400); } }; requestAnimationFrame(step); }
+    else cEl.textContent=money(comm);
+    celebrateUntil=0;
+  }else{
+    uEl.textContent=String(units); cEl.textContent=money(comm);
+  }
+  shownUnits=units; shownComm=comm; shownMonth=mk;
+}
+
 /* ---------- render ---------- */
 function monthKey(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");}
 function render(){
@@ -256,8 +286,7 @@ function render(){
   const month=deals.filter(d=>(d.date||"").startsWith(mk)).sort((a,b)=>(b.date||"").localeCompare(a.date||"")||(b.created||0)-(a.created||0));
   const live=month.filter(d=>d.status!=="unwound");
   const units=live.reduce((s,d)=>s+(d.split?0.5:1),0);
-  $("units").firstChild.textContent=String(units);
-  $("comm").textContent=money(live.reduce((s,d)=>s+num(d.commission),0));
+  setTotals(units, live.reduce((s,d)=>s+num(d.commission),0), mk);
   $("front").textContent=money(live.reduce((s,d)=>s+num(d.front),0));
   $("back").textContent=money(live.reduce((s,d)=>s+num(d.back),0));
   $("prodCount").textContent=live.reduce((s,d)=>s+(d.products||[]).length,0);
@@ -328,7 +357,7 @@ $("form").addEventListener("submit",async e=>{
   e.preventDefault();
   if(!$("fDeal").value.trim()){$("formErr").textContent="Add the deal number to save this deal."; $("formErr").hidden=false; return;}
   if(!$("fDate").value){$("formErr").textContent="Pick the date the deal was processed."; $("formErr").hidden=false; return;}
-  const ctx=audioCtx(); const isNew=!editing;
+  const ctx=audioCtx(); const isNew=!editing; if(isNew) celebrateUntil=Date.now()+4000;
   const split=segVal("fSplit")==="yes";
   const d={id:editing?.id||("d"+Date.now().toString(36)+Math.random().toString(36).slice(2,6)),
     created:editing?.created||Date.now(), date:$("fDate").value, dealNo:$("fDeal").value.trim(), stock:$("fStock").value.trim().toUpperCase(),
