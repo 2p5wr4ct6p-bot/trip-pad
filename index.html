@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Lora Trip Pad</title>
+<title>Fun Trip Pad</title>
 <meta name="description" content="Personal sales log: deals, credit and commission by month.">
 <meta name="theme-color" content="#1f4fd1">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -279,7 +279,7 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
 
 <div class="wrap">
   <div class="top">
-    <h1><span class="h-pre">Welcome to the</span><span class="h-main">Lora Trip Pad<span class="h-dot" aria-hidden="true"></span></span></h1>
+    <h1><span class="h-pre">Welcome to the</span><span class="h-main">Fun Trip Pad<span class="h-dot" aria-hidden="true"></span></span></h1>
     <div class="month">
       <button class="icon" id="prev" type="button" aria-label="Previous month">‹</button>
       <span id="monthLabel"></span>
@@ -583,7 +583,7 @@ function openRecap(){
   const mk=monthKey(view), c=monthCtx(mk), card=$("recapCard"); card.replaceChildren();
   const el=(tag,cls,txt)=>{const e=document.createElement(tag); if(cls) e.className=cls; if(txt!=null) e.textContent=txt; return e;};
   const x=el("button","rx","✕"); x.type="button"; x.setAttribute("aria-label","Close recap"); x.onclick=()=>{$("recapScrim").hidden=true;};
-  const top=el("div"); top.append(el("div","eyebrow","Lora Trip Pad · Month recap"), el("h2",null,view.toLocaleString("en-US",{month:"long",year:"numeric"})));
+  const top=el("div"); top.append(el("div","eyebrow","Fun Trip Pad · Month recap"), el("h2",null,view.toLocaleString("en-US",{month:"long",year:"numeric"})));
   const hero=el("div","hero"); hero.append(el("b",null,String(c.units)), el("span",null,c.units===1?"unit sold":"units sold"));
   const top3=Object.entries(c.live.flatMap(d=>d.products||[]).reduce((a,p)=>(a[p]=(a[p]||0)+1,a),{})).sort((a,b)=>b[1]-a[1])[0];
   const bestDay=Object.entries(c.byDay).sort((a,b)=>b[1]-a[1])[0];
