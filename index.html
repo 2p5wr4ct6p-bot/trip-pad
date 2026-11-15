@@ -504,7 +504,7 @@ const GOLD=["#f5b700","#ffd54a","#e09b00","#fff1b0","#c98a00"];
 const BADGES=[
   {id:"first",  icon:"🚗", name:"First deal",   how:"Log your first deal of the month", prog:c=>c.live.length?"Done":"0 of 1", test:c=>c.live.length>=1},
   {id:"hat",    icon:"🎩", name:"Hat trick",    how:"Log 3 deals on the same day", prog:c=>"Best day so far: "+c.maxDay, test:c=>c.maxDay>=3},
-  {id:"vsa",    icon:"🛡️", name:"VSA machine",  how:"Sell 5 VSAs in one month", prog:c=>Math.min(c.vsa,5)+" of 5", test:c=>c.vsa>=5},
+  {id:"vsa",    icon:"🛡️", name:"VSA machine",  how:"Keep your VSA at 60% or higher for the month", prog:c=>c.live.length?Math.round(c.vsa/c.live.length*100)+"% now · need 60%":"No deals yet", test:c=>c.live.length>0&&c.vsa/c.live.length>=0.6},
   {id:"cash",   icon:"💵", name:"Cash king",    how:"Close 3 cash deals in one month", prog:c=>Math.min(c.cash,3)+" of 3", test:c=>c.cash>=3},
   {id:"pro",    icon:"🧰", name:"Product pro",  how:"Sell 3 or more products on a single deal", prog:c=>"Most on one deal: "+Math.max(0,...c.live.map(d=>(d.products||[]).length)), test:c=>c.live.some(d=>(d.products||[]).length>=3)},
   {id:"veritas",icon:"⭐", name:"Veritas x3",   how:"Get the Veritas bonus on 3 deals in one month", prog:c=>Math.min(c.veritas,3)+" of 3", test:c=>c.veritas>=3},
