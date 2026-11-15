@@ -285,6 +285,20 @@ textarea{min-height:64px;resize:vertical}
 @keyframes achvup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @keyframes achvshine{0%,50%{transform:translateX(-120%)}90%,100%{transform:translateX(120%)}}
 @media (prefers-reduced-motion:reduce){.achv,.achv *,.achv-rays{animation:none!important}}
+
+/* ---- delete confirmation pop-up ---- */
+.confirm-scrim{align-items:center;z-index:30;padding:16px max(16px,env(safe-area-inset-right,0px)) 16px max(16px,env(safe-area-inset-left,0px))}
+.delbox{background:var(--card);color:var(--ink);border-radius:20px;padding:24px 20px 18px;max-width:340px;width:100%;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;
+  box-shadow:0 24px 60px rgba(5,10,30,.35);animation:delpop .28s cubic-bezier(.2,1.4,.4,1) both}
+.delbox .delicon{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--bad) 14%,var(--card));color:var(--bad)}
+.delbox .delicon svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.delbox h3{margin:4px 0 0;font:700 20px "Sora",var(--f-body);letter-spacing:-.01em}
+.delbox p{margin:0;color:var(--muted);font-size:15px;line-height:1.4}
+.delbox p b{color:var(--ink)}
+.delbox .row2{width:100%;margin-top:8px}
+.btn.danger-solid{background:var(--bad);color:#fff;border-color:var(--bad)}
+@keyframes delpop{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.delbox{animation:none}}
 /* ---- race-to-goal road ---- */
 .road{position:relative;height:48px;background:var(--chip);border-radius:12px;overflow:hidden;--p:0}
 .road .lane{position:absolute;left:14px;right:44px;top:50%;height:3px;transform:translateY(-50%);background:repeating-linear-gradient(90deg,var(--muted) 0 14px,transparent 14px 26px);opacity:.45}
@@ -509,6 +523,15 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
   <div style="width:100%;max-width:380px">
     <div class="recap" id="recapCard" role="dialog" aria-label="Month recap"></div>
     <p class="recaphint">Take a screenshot to share it.</p>
+  </div>
+</div>
+
+<div class="scrim confirm-scrim" id="delScrim" hidden>
+  <div class="delbox" role="alertdialog" aria-modal="true" aria-labelledby="delTitle" aria-describedby="delText">
+    <div class="delicon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg></div>
+    <h3 id="delTitle">Delete this deal?</h3>
+    <p id="delText"></p>
+    <div class="row2"><button class="btn" type="button" id="delNo">Cancel</button><button class="btn danger-solid" type="button" id="delYes">Delete</button></div>
   </div>
 </div>
 
@@ -745,8 +768,8 @@ function attachSwipe(wrap,row,d){
     row.style.transform=""; wrap.classList.remove("open"); if(openSwipe===wrap) openSwipe=null; };
   row.addEventListener("pointerup",end); row.addEventListener("pointercancel",end);
   row.addEventListener("click",e=>{ if(moved){ e.stopImmediatePropagation(); e.preventDefault(); moved=false; } },true);
-  wrap.querySelector(".swipe-bg.right").addEventListener("click",async()=>{ mournUntil=Date.now()+4000; tapSuccess();
-    try{ await store.remove(d.id); }catch(err){ setNote("Couldn't delete. Try again.","warn"); } openSwipe=null; });
+  wrap.querySelector(".swipe-bg.right").addEventListener("click",()=>{ askDelete(d, async()=>{ mournUntil=Date.now()+4000; tapSuccess(); openSwipe=null;
+    try{ await store.remove(d.id); }catch(err){ setNote("Couldn't delete. Try again.","warn"); } }, ()=>closeOpenSwipe()); });
 }
 
 /* ---------- theme ---------- */
@@ -1017,7 +1040,19 @@ $("form").addEventListener("submit",async e=>{
   catch(err){ $("formErr").textContent=err?.code==="quota_exceeded"?"Storage is full. Delete some old deals, then save again.":"Couldn't save. Check your connection and tap Save again."; $("formErr").hidden=false; }
   finally{ $("save").disabled=false; }
 });
-$("del").addEventListener("click",()=>{$("confirm").hidden=false; $("del").hidden=true;});
+let delPending=null, delCancel=null;
+function askDelete(d, onYes, onNo){
+  const t=$("delText"); t.replaceChildren();
+  const b=document.createElement("b"); b.textContent="Deal #"+(d.dealNo||"—")+(d.customer?" · "+String(d.customer).toUpperCase():"");
+  t.append("Are you sure you wish to delete ", b, "? This can't be undone.");
+  delPending=onYes; delCancel=onNo||null; $("delScrim").hidden=false; tap(); setTimeout(()=>$("delNo").focus(),50);
+}
+function closeDelete(cancelled){ $("delScrim").hidden=true; const c=delCancel; delPending=null; delCancel=null; if(cancelled&&c) c(); }
+$("delNo").addEventListener("click",()=>closeDelete(true));
+$("delScrim").addEventListener("click",e=>{ if(e.target===$("delScrim")) closeDelete(true); });
+$("delYes").addEventListener("click",async()=>{ const fn=delPending; closeDelete(false); if(fn) await fn(); });
+$("del").addEventListener("click",()=>{ if(!editing) return; const d=editing; askDelete(d, async()=>{ mournUntil=Date.now()+4000;
+  try{ await store.remove(d.id); closeForm(); tapSuccess(); }catch(e){ $("formErr").textContent="Couldn't delete. Try again."; $("formErr").hidden=false; } }); });
 $("noDel").addEventListener("click",()=>{$("confirm").hidden=true; $("del").hidden=false;});
 $("yesDel").addEventListener("click",async()=>{ if(!editing)return; mournUntil=Date.now()+4000; try{await store.remove(editing.id); closeForm(); tapSuccess();}catch(e){$("formErr").textContent="Couldn't delete. Try again."; $("formErr").hidden=false;} });
 
@@ -1106,7 +1141,7 @@ document.querySelectorAll(".filters .chipbtn").forEach(b=>b.addEventListener("cl
 $("goalEdit").addEventListener("click",()=>{$("goalInput").value=goal||""; $("goalScrim").hidden=false; $("goalInput").focus();});
 $("goalCancel").addEventListener("click",()=>$("goalScrim").hidden=true);
 $("goalForm").addEventListener("submit",async e=>{e.preventDefault(); $("goalScrim").hidden=true; try{await store.saveGoal(num($("goalInput").value));}catch(err){setNote("Couldn't save the goal. Try again.","warn");}});
-document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeForm(); $("goalScrim").hidden=true; $("recapScrim").hidden=true;}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){ if(!$("delScrim").hidden){ closeDelete(true); return; } closeForm(); $("goalScrim").hidden=true; $("recapScrim").hidden=true;}});
 $("recapBtn").addEventListener("click",openRecap);
 $("recapScrim").addEventListener("click",e=>{ if(e.target===$("recapScrim")) $("recapScrim").hidden=true; });
 
