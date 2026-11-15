@@ -243,6 +243,8 @@ textarea{min-height:64px;resize:vertical}
 .tag.follow{background:color-mix(in srgb,var(--warn) 16%,var(--chip));color:var(--warn)}
 .tag.paid{background:color-mix(in srgb,var(--good) 14%,var(--chip));color:var(--good)}
 .cal{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.calhead{display:flex;align-items:center;gap:10px}
+.todaybtn{border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:5px 12px;font-weight:700;font-size:12px;cursor:pointer}
 .callegend{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted)}
 .callegend i{width:11px;height:11px;border-radius:3px;display:inline-block}
 .calgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
@@ -411,7 +413,7 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
   <p class="swipehint">Swipe a pending deal right to mark it funded, or left to delete.</p>
 
   <section class="cal" aria-label="Deal calendar">
-    <div class="badgehead"><h3>Deal calendar<span id="calMonth"></span></h3><span class="callegend" aria-hidden="true">Less <i style="background:var(--chip)"></i><i style="background:color-mix(in srgb,var(--good) 28%,var(--chip))"></i><i style="background:color-mix(in srgb,var(--good) 58%,var(--chip))"></i><i style="background:var(--good)"></i> More</span></div>
+    <div class="badgehead"><div class="calhead"><h3>Deal calendar<span id="calMonth"></span></h3><button type="button" class="todaybtn" id="calToday">Today</button></div><span class="callegend" aria-hidden="true">Less <i style="background:var(--chip)"></i><i style="background:color-mix(in srgb,var(--good) 28%,var(--chip))"></i><i style="background:color-mix(in srgb,var(--good) 58%,var(--chip))"></i><i style="background:var(--good)"></i> More</span></div>
     <div class="calgrid" id="calGrid"></div>
   </section>
   <p class="note" id="syncNote">Loading your deals…</p>
@@ -1042,6 +1044,8 @@ $("listHeadClear").addEventListener("click",()=>{ searchQ=""; $("searchBox").val
 $("alertBar").addEventListener("click",()=>{ filter="followup"; searchQ=""; $("searchBox").value=""; dayFilter=null;
   document.querySelectorAll(".filters .chipbtn").forEach(x=>x.setAttribute("aria-pressed","false")); listEnter=true; render(); $("listHead").scrollIntoView({behavior:"smooth",block:"start"}); });
 $("csvBtn").addEventListener("click",exportCsv);
+$("calToday").addEventListener("click",()=>{ const n=new Date(); view=new Date(n.getFullYear(),n.getMonth(),1); dayFilter=today(); searchQ=""; $("searchBox").value=""; if(filter==="followup") filter="all";
+  listEnter=true; render(); tap(); $("listHead").scrollIntoView({behavior:reduceMotion()?"auto":"smooth",block:"start"}); });
 $("next").addEventListener("click",()=>{view.setMonth(view.getMonth()+1); dayFilter=null; listEnter=true; render();});
 document.querySelectorAll(".filters .chipbtn").forEach(b=>b.addEventListener("click",()=>{filter=b.dataset.f;
   document.querySelectorAll(".filters .chipbtn").forEach(x=>x.setAttribute("aria-pressed",String(x===b))); render();}));
