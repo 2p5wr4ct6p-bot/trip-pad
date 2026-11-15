@@ -16,7 +16,7 @@
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}*,*::before,*::after{box-sizing:inherit}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@600;800&family=Sora:wght@500;600&family=Roboto:wght@400;500;700&family=Archivo+Narrow:wght@600;700&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@600;800&family=Sora:wght@500;600&family=Roboto:wght@100;300;400&family=Archivo+Narrow:wght@600;700&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
 <style>
 /* Layout: a salesperson's month at a glance — month switcher, tally board, then the deal log; add/edit opens a bottom sheet. */
 :root{
@@ -339,9 +339,11 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
 
 /* ---- deal list in Roboto ---- */
 .deal,.deal .cust,.deal .veh,.deal .tag,.deal .comm,.deal .gross,.deal .day,.deal .day b{font-family:"Roboto",system-ui,-apple-system,sans-serif;font-variant-numeric:tabular-nums}
-.deal .comm{font-weight:700;font-size:17px}
-.deal .gross{font-size:12px}
-.deal .day b{font-weight:700}
+.deal .cust{font-weight:100;font-size:17px;letter-spacing:.01em}
+.deal .comm{font-weight:100;font-size:20px;letter-spacing:.01em}
+.deal .day b{font-weight:100;font-size:24px}
+.deal .veh,.deal .gross,.deal .day{font-weight:300}
+.deal .tag{font-weight:400}
 </style>
 
 <div class="wrap">
