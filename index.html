@@ -390,11 +390,6 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
     <div class="badgegrid" id="badgeGrid"></div>
   </section>
 
-  <section class="cal" aria-label="Deal calendar">
-    <div class="badgehead"><h3>Deal calendar<span id="calMonth"></span></h3><span class="callegend" aria-hidden="true">Less <i style="background:var(--chip)"></i><i style="background:color-mix(in srgb,var(--good) 28%,var(--chip))"></i><i style="background:color-mix(in srgb,var(--good) 58%,var(--chip))"></i><i style="background:var(--good)"></i> More</span></div>
-    <div class="calgrid" id="calGrid"></div>
-  </section>
-
   <button type="button" class="alertbar" id="alertBar" hidden><span class="dot" aria-hidden="true"></span><span id="alertText"></span><span class="go">Review ›</span></button>
 
   <div class="tools">
@@ -414,6 +409,11 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
   <div class="listhead" id="listHead" hidden><span id="listHeadText"></span><button type="button" id="listHeadClear">Clear</button></div>
   <section class="log" id="log" aria-label="Deals"></section>
   <p class="swipehint">Swipe a pending deal right to mark it funded, or left to delete.</p>
+
+  <section class="cal" aria-label="Deal calendar">
+    <div class="badgehead"><h3>Deal calendar<span id="calMonth"></span></h3><span class="callegend" aria-hidden="true">Less <i style="background:var(--chip)"></i><i style="background:color-mix(in srgb,var(--good) 28%,var(--chip))"></i><i style="background:color-mix(in srgb,var(--good) 58%,var(--chip))"></i><i style="background:var(--good)"></i> More</span></div>
+    <div class="calgrid" id="calGrid"></div>
+  </section>
   <p class="note" id="syncNote">Loading your deals…</p>
   <div class="backup">
     <button class="chipbtn" type="button" id="exportBtn">Back up deals</button>
