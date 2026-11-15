@@ -367,6 +367,13 @@ textarea{min-height:64px;resize:vertical}
 .recap-scrim{z-index:50;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 .recap-scrim > div{margin:auto 0;max-width:min(380px,100%)!important}
 @media (max-width:360px){.recap{padding:22px 16px 16px;gap:13px}.recap .hero b{font-size:68px}.recap h2{font-size:26px}.recap .rcell b{font-size:17px}}
+
+.recapactions{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:14px}
+.shotbtn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:999px;padding:12px 22px;background:#fff;color:#0b1630;font-weight:800;font-size:15px;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.shotbtn svg{width:18px;height:18px}
+.shotbtn:disabled{opacity:.7;cursor:progress}
+.recap.flash::after{content:"";position:absolute;inset:0;border-radius:inherit;background:#fff;pointer-events:none;animation:shotflash .45s ease-out both}
+@keyframes shotflash{from{opacity:.85}to{opacity:0}}
 .recaphint{color:#fff;opacity:.8;font-size:13px;text-align:center;margin-top:10px}
 @media (prefers-reduced-motion:reduce){.road .car{transition:none}.road .car.drive,.badge.pop,.recap{animation:none}}
 
@@ -645,7 +652,7 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
 <div class="scrim recap-scrim" id="recapScrim" hidden>
   <div style="width:100%;max-width:380px">
     <div class="recap" id="recapCard" role="dialog" aria-label="Month recap"></div>
-    <p class="recaphint">Take a screenshot to share it.</p>
+    <div class="recapactions"><button type="button" class="shotbtn" id="shotBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><span id="shotLbl">Save screenshot</span></button><p class="recaphint" style="margin:0">Saves the card to your photos so you can share it.</p></div>
   </div>
 </div>
 
@@ -1355,6 +1362,35 @@ $("importFile").addEventListener("change",async e=>{
 $("bkNow").addEventListener("click",()=>$("exportBtn").click());
 $("bkLater").addEventListener("click",()=>{ lsSet(BKS,Date.now()+7*864e5); renderBackup(); });
 
+
+/* ---------- recap screenshot ---------- */
+let h2cLoading=null;
+function loadH2C(){ if(window.html2canvas) return Promise.resolve(); if(h2cLoading) return h2cLoading;
+  h2cLoading=new Promise((ok,bad)=>{ const s=document.createElement("script"); s.src=H2C_SRC; s.onload=ok; s.onerror=()=>{h2cLoading=null; bad(new Error("load"));}; document.head.append(s); }); return h2cLoading; }
+async function saveRecapShot(){
+  const btn=$("shotBtn"), lbl=$("shotLbl"), card=$("recapCard"); if(btn.disabled) return;
+  btn.disabled=true; lbl.textContent="Saving…";
+  try{
+    await loadH2C(); if(document.fonts&&document.fonts.ready) await document.fonts.ready;
+    const canvas=await html2canvas(card,{backgroundColor:null,scale:Math.min(3,Math.max(2,window.devicePixelRatio||2)),logging:false,useCORS:true,
+      ignoreElements:el=>el.classList&&el.classList.contains("rx")});
+    const blob=await new Promise(r=>canvas.toBlob(r,"image/png"));
+    if(!blob) throw new Error("blob");
+    const name="trip-pad-recap-"+monthKey(view)+".png";
+    card.classList.remove("flash"); void card.offsetWidth; card.classList.add("flash"); try{ tapSuccess(); }catch(e){}
+    const res=await deliverShot(blob,name);
+    lbl.textContent=res==="cancel"?"Save screenshot":"Saved ✓";
+  }catch(e){ lbl.textContent="Save screenshot"; setNote("Couldn't save the picture. Use your phone's screenshot instead.","warn"); }
+  btn.disabled=false; setTimeout(()=>{ if(!btn.disabled) lbl.textContent="Save screenshot"; },2200);
+}
+const H2C_SRC="html2canvas.min.js";
+async function deliverShot(blob,name){
+  const file=new File([blob],name,{type:"image/png"});
+  try{ if(navigator.canShare&&navigator.canShare({files:[file]})){ await navigator.share({files:[file]}); return "ok"; } }
+  catch(e){ if(e&&e.name==="AbortError") return "cancel"; }
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; document.body.append(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href); a.remove();},1500); return "ok";
+}
+
 /* ---------- month, filter, goal ---------- */
 $("prev").addEventListener("click",()=>{view.setMonth(view.getMonth()-1); dayFilter=null; listEnter=true; render();});
 let searchT=0;
@@ -1374,6 +1410,7 @@ $("goalCancel").addEventListener("click",()=>$("goalScrim").hidden=true);
 $("goalForm").addEventListener("submit",async e=>{e.preventDefault(); $("goalScrim").hidden=true; try{await store.saveGoal(num($("goalInput").value));}catch(err){setNote("Couldn't save the goal. Try again.","warn");}});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){ if(!$("delScrim").hidden){ closeDelete(true); return; } closeForm(); $("goalScrim").hidden=true; $("recapScrim").hidden=true;}});
 $("recapBtn").addEventListener("click",openRecap);
+$("shotBtn").addEventListener("click",saveRecapShot);
 $("recapScrim").addEventListener("click",e=>{ if(e.target===$("recapScrim")) $("recapScrim").hidden=true; });
 
 store=localStore(); // usable immediately; replaced by account sync when available
