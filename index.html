@@ -376,7 +376,7 @@ $("form").addEventListener("submit",async e=>{
   e.preventDefault();
   if(!$("fDeal").value.trim()){$("formErr").textContent="Add the deal number to save this deal."; $("formErr").hidden=false; return;}
   if(!$("fDate").value){$("formErr").textContent="Pick the date the deal was processed."; $("formErr").hidden=false; return;}
-  const ctx=audioCtx(); const isNew=!editing; if(isNew) celebrateUntil=Date.now()+4000;
+  const ctx=audioCtx(); const isNew=!editing; if(isNew) celebrateUntil=Date.now()+4000; if(!isNew && editing.status!=="unwound" && segVal("fStatus")==="unwound") mournUntil=Date.now()+4000;
   const split=segVal("fSplit")==="yes";
   const d={id:editing?.id||("d"+Date.now().toString(36)+Math.random().toString(36).slice(2,6)),
     created:editing?.created||Date.now(), date:$("fDate").value, dealNo:$("fDeal").value.trim(), stock:$("fStock").value.trim().toUpperCase(),
