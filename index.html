@@ -260,12 +260,12 @@ textarea{min-height:64px;resize:vertical}
 
 
 /* ---- animated title gradient ---- */
-h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 30%,var(--hg3) 55%,var(--hg2) 78%,var(--hg1) 100%);background-size:360px 100%;background-repeat:repeat-x;
-  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;animation:titleflow 5s linear infinite}
-@keyframes titleflow{from{background-position:0 50%}to{background-position:360px 50%}}
-:root{--hg1:#0a2fff;--hg2:#0094ff;--hg3:#00b862}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--hg1:#3d6bff;--hg2:#00c8ff;--hg3:#7dff3c}}
-:root[data-theme="dark"]{--hg1:#3d6bff;--hg2:#00c8ff;--hg3:#7dff3c}
+h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 25%,var(--hg2) 37.5%,var(--hg1) 50%,var(--hg5) 62.5%,var(--hg4) 75%,var(--hg5) 87.5%,var(--hg1) 100%);background-size:640px 100%;background-repeat:repeat-x;
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;animation:titleflow 9s linear infinite}
+@keyframes titleflow{from{background-position:0 50%}to{background-position:640px 50%}}
+:root{--hg1:#0a2fff;--hg2:#0094ff;--hg3:#00b862;--hg4:#ff1f8e;--hg5:#7a2cff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--hg1:#3d6bff;--hg2:#00c8ff;--hg3:#7dff3c;--hg4:#ff4fae;--hg5:#9b5bff}}
+:root[data-theme="dark"]{--hg1:#3d6bff;--hg2:#00c8ff;--hg3:#7dff3c;--hg4:#ff4fae;--hg5:#9b5bff}
 @media (prefers-reduced-motion:reduce){h1{animation:none}}
 </style>
 
