@@ -183,6 +183,13 @@ textarea{min-height:64px;resize:vertical}
 @media (prefers-color-scheme:dark){:root[data-accent="red"]:not([data-theme="light"]){--accent:#ff5a66;--accent-ink:#2a0306;--accent-soft:#3b1a1e}}
 :root[data-accent="red"][data-theme="dark"]{--accent:#ff5a66;--accent-ink:#2a0306;--accent-soft:#3b1a1e}
 @media (prefers-reduced-motion:reduce){.swipe.enter,.cheer{animation:none}.ring .fill{transition:none}}
+
+/* ---- greeting ---- */
+.greet{display:flex;flex-direction:column;gap:2px;margin-top:-4px;animation:greetin .6s ease-out both}
+.greet b{font-size:19px;font-weight:700;letter-spacing:-.005em}
+.greet span{font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+@keyframes greetin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.greet{animation:none}}
 /* ---- race-to-goal road ---- */
 .road{position:relative;height:48px;background:var(--chip);border-radius:12px;overflow:hidden;--p:0}
 .road .lane{position:absolute;left:14px;right:44px;top:50%;height:3px;transform:translateY(-50%);background:repeating-linear-gradient(90deg,var(--muted) 0 14px,transparent 14px 26px);opacity:.45}
@@ -256,6 +263,8 @@ textarea{min-height:64px;resize:vertical}
       <button class="icon" id="next" type="button" aria-label="Next month">›</button>
     </div>
   </div>
+
+  <div class="greet" aria-live="polite"><b id="greetText">Hello</b><span id="greetTime"></span></div>
 
   <section class="board" aria-label="Month totals">
     <div class="units">
@@ -597,6 +606,17 @@ function renderThemePicker(){
   mk("Toyota red",accentPref==="red",()=>{ accentPref=accentPref==="red"?"blue":"red"; try{localStorage.setItem("trippad.accent",accentPref);}catch(e){} applyTheme(); renderThemePicker(); });
 }
 applyTheme(); renderThemePicker();
+
+/* ---------- greeting ---------- */
+let greetName="Jonathan";
+function updateGreeting(){
+  const now=new Date(), h=now.getHours();
+  const part=h>=5&&h<12?"Good morning":h>=12&&h<17?"Good afternoon":"Good evening";
+  $("greetText").textContent=part+(greetName?", "+greetName:"");
+  $("greetTime").textContent=now.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"})+" · "+now.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"});
+}
+updateGreeting(); setInterval(updateGreeting,15000);
+document.addEventListener("visibilitychange",()=>{ if(!document.hidden) updateGreeting(); });
 
 /* ---------- render ---------- */
 function monthKey(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");}
