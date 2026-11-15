@@ -168,7 +168,7 @@ textarea{min-height:64px;resize:vertical}
 .insights .v.up{color:var(--good)} .insights .v.down{color:var(--bad)}
 .insights .sub{font-size:11px;color:var(--muted);font-family:var(--f-body)}
 /* ---- confetti + banner ---- */
-.confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:40}
+.confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:70}
 .cheer{position:fixed;left:50%;top:38%;transform:translate(-50%,-50%);z-index:41;pointer-events:none;
   background:var(--card);color:var(--ink);border:2px solid var(--good);border-radius:18px;padding:16px 26px;text-align:center;
   box-shadow:0 18px 50px rgba(10,20,40,.25);animation:cheer 2.4s cubic-bezier(.2,1.4,.4,1) forwards}
@@ -259,6 +259,32 @@ textarea{min-height:64px;resize:vertical}
 .cday.future{opacity:.45;cursor:default}
 .formhint{font-size:12px;color:var(--muted);margin:-8px 0 0}
 @media (prefers-reduced-motion:reduce){.alertbar .dot{animation:none}}
+
+/* ---- achievement unlocked ---- */
+.achv{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:24px;background:rgba(6,10,20,.86);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);animation:achvbg .35s ease-out both;cursor:pointer}
+.achv.out{animation:achvout .4s ease-in both}
+.achv-card{position:relative;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;color:#fff;max-width:340px}
+.achv-rays{position:absolute;top:22px;left:50%;width:300px;height:300px;margin-left:-150px;border-radius:50%;pointer-events:none;
+  background:repeating-conic-gradient(rgba(255,214,80,.28) 0 9deg,transparent 9deg 22deg);-webkit-mask:radial-gradient(circle,#000 25%,transparent 70%);mask:radial-gradient(circle,#000 25%,transparent 70%);animation:achvspin 9s linear infinite}
+.achv-kicker{position:relative;font:800 13px var(--f-body);letter-spacing:.28em;text-transform:uppercase;
+  background:linear-gradient(90deg,#ffd54a,#fff6c9,#ffb000,#fff6c9,#ffd54a);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;animation:achvshimmer 2s linear infinite,achvup .5s .15s cubic-bezier(.2,1.4,.4,1) both}
+.achv-medal{position:relative;width:132px;height:132px;border-radius:50%;display:grid;place-items:center;margin:18px 0 8px;
+  background:radial-gradient(circle at 35% 30%,#fff3b0 0%,#ffd54a 30%,#f0a500 65%,#b87600 100%);box-shadow:0 0 0 6px rgba(255,213,74,.25),0 0 60px rgba(255,190,40,.6),inset 0 -6px 14px rgba(120,70,0,.4);
+  animation:achvdrop .8s .05s cubic-bezier(.2,1.5,.4,1) both;overflow:hidden}
+.achv-medal::after{content:"";position:absolute;inset:-20%;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.75) 50%,transparent 60%);transform:translateX(-120%);animation:achvshine 2.6s 1s ease-in-out infinite}
+.achv-medal b{position:relative;font:800 64px/1 "Sora",var(--f-body);color:#7a4a00;text-shadow:0 2px 0 rgba(255,255,255,.5)}
+.achv-medal svg{position:absolute;right:16px;bottom:18px;width:30px;height:30px;fill:#7a4a00;opacity:.9}
+.achv-title{position:relative;font:700 28px/1.1 "Sora",var(--f-body);letter-spacing:-.02em;animation:achvup .5s .35s cubic-bezier(.2,1.4,.4,1) both}
+.achv-sub{position:relative;font-size:14px;opacity:.75;animation:achvup .5s .45s ease-out both}
+.achv-tap{position:relative;font-size:12px;opacity:.5;margin-top:10px;animation:achvup .5s .9s ease-out both}
+@keyframes achvbg{from{opacity:0}to{opacity:1}}
+@keyframes achvout{to{opacity:0}}
+@keyframes achvspin{to{transform:rotate(360deg)}}
+@keyframes achvshimmer{to{background-position:-200% 0}}
+@keyframes achvdrop{0%{transform:translateY(-160px) scale(.4) rotate(-25deg);opacity:0}60%{transform:translateY(10px) scale(1.08) rotate(6deg);opacity:1}100%{transform:none}}
+@keyframes achvup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes achvshine{0%,50%{transform:translateX(-120%)}90%,100%{transform:translateX(120%)}}
+@media (prefers-reduced-motion:reduce){.achv,.achv *,.achv-rays{animation:none!important}}
 /* ---- race-to-goal road ---- */
 .road{position:relative;height:48px;background:var(--chip);border-radius:12px;overflow:hidden;--p:0}
 .road .lane{position:absolute;left:14px;right:44px;top:50%;height:3px;transform:translateY(-50%);background:repeating-linear-gradient(90deg,var(--muted) 0 14px,transparent 14px 26px);opacity:.45}
@@ -280,7 +306,7 @@ textarea{min-height:64px;resize:vertical}
 .badgehead h3{margin:0;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .badgehead h3 span{color:var(--ink);margin-left:6px}
 .recapbtn{border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:7px 14px;font-weight:700;font-size:13px;cursor:pointer}
-.badgegrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.badgegrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .badge{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;padding:10px 4px;border-radius:12px;background:var(--chip);min-width:0}
 .medal{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;flex:none;background:var(--card);color:var(--muted);box-shadow:inset 0 0 0 1.5px var(--line);transition:transform .2s}
 .medal svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
@@ -295,14 +321,12 @@ textarea{min-height:64px;resize:vertical}
   font-size:12px;font-weight:600;line-height:1.35;padding:8px 10px;border-radius:10px;opacity:0;pointer-events:none;transition:opacity .15s,transform .15s;z-index:6;text-align:center;box-shadow:0 8px 24px rgba(10,20,40,.25)}
 .badge .tip small{display:block;font-weight:500;opacity:.75;margin-top:3px}
 .badge:hover .tip,.badge:focus-visible .tip,.badge.show .tip{opacity:1;transform:translate(-50%,0)}
-.badgegrid .badge:nth-child(4n+1) .tip{left:0;transform:translateY(4px)} .badgegrid .badge:nth-child(4n+1):is(:hover,:focus-visible,.show) .tip{transform:none}
-.badgegrid .badge:nth-child(4n) .tip{left:auto;right:0;transform:translateY(4px)} .badgegrid .badge:nth-child(4n):is(:hover,:focus-visible,.show) .tip{transform:none}
-@media (max-width:380px){.badgegrid .badge:nth-child(n) .tip{left:50%;right:auto;transform:translate(-50%,4px)} .badgegrid .badge:nth-child(n):is(:hover,:focus-visible,.show) .tip{transform:translate(-50%,0)}
-  .badgegrid .badge:nth-child(3n+1) .tip{left:0;transform:translateY(4px)} .badgegrid .badge:nth-child(3n+1):is(:hover,:focus-visible,.show) .tip{transform:none}
-  .badgegrid .badge:nth-child(3n) .tip{left:auto;right:0;transform:translateY(4px)} .badgegrid .badge:nth-child(3n):is(:hover,:focus-visible,.show) .tip{transform:none}}
+.badgegrid .badge:nth-child(3n+1) .tip{left:0;transform:translateY(4px)} .badgegrid .badge:nth-child(3n+1):is(:hover,:focus-visible,.show) .tip{transform:none}
+.badgegrid .badge:nth-child(3n) .tip{left:auto;right:0;transform:translateY(4px)} .badgegrid .badge:nth-child(3n):is(:hover,:focus-visible,.show) .tip{transform:none}
+
 .badge.pop{animation:bpop .7s cubic-bezier(.2,1.6,.4,1)}
 @keyframes bpop{0%{transform:scale(.6)}60%{transform:scale(1.15)}100%{transform:none}}
-@media (max-width:380px){.badgegrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
 .cheer.gold{border-color:#d9a000} .cheer.gold b{color:#c48a00}
 /* ---- month recap ---- */
 .recap-scrim{align-items:center;padding:16px max(16px,env(safe-area-inset-right,0px)) 16px max(16px,env(safe-area-inset-left,0px))}
@@ -609,6 +633,7 @@ const BADGES=[
   {id:"veritas",icon:"⭐", name:"Veritas x3",   how:"Get the Veritas bonus on 3 deals in one month", prog:c=>Math.min(c.veritas,3)+" of 3", test:c=>c.veritas>=3},
   {id:"goal",   icon:"🏁", name:"Goal crusher", how:"Hit your monthly unit goal", prog:c=>goal?c.units+" of "+goal+" units":"Set a goal first", test:c=>!!goal&&c.units>=goal, silent:true},
   {id:"record", icon:"🏆", name:"Record month", how:"Beat your best month ever", prog:c=>c.bestOther?"Your best: "+c.bestOther+" units":"Needs a past month to beat", test:c=>c.units>0&&c.bestOther>0&&c.units>c.bestOther, silent:true},
+  {id:"five",   icon:"5", name:"Five-car day", how:"Sell 5 cars in a single day", prog:c=>"Best day so far: "+c.maxDay, test:c=>c.maxDay>=5, silent:true},
 ];
 const BADGE_ICONS={
   first:'<path d="M3 16v-3l2.2-5h13.6L21 13v3"/><path d="M3 16h18M6.5 11.5h11"/><circle cx="7" cy="16.5" r="1.8"/><circle cx="17" cy="16.5" r="1.8"/>',
@@ -618,10 +643,11 @@ const BADGE_ICONS={
   pro:'<path d="M12 4l8 4.5-8 4.5-8-4.5z"/><path d="M4 12.5l8 4.5 8-4.5"/><path d="M4 16.5l8 4.5 8-4.5"/>',
   veritas:'<path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8L3.5 9.7l5.9-.9z"/>',
   goal:'<path d="M5.5 21V4"/><path d="M5.5 4.5h11l-2.2 4 2.2 4h-11"/>',
+  five:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',
   record:'<path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3"/><path d="M12 14v4M8.5 21h7M9.5 18h5"/>'
 };
 const BADGE_COLORS={first:["#2f6bff","#00c2ff"],hat:["#7a2cff","#ff3d9a"],vsa:["#1f5fff","#14b86f"],cash:["#12a150","#9be22d"],
-  pro:["#00a3c4","#3d5bff"],veritas:["#ff9f1a","#ff3d7f"],goal:["#14b86f","#00c2ff"],record:["#ffb000","#ff6a00"]};
+  pro:["#00a3c4","#3d5bff"],veritas:["#ff9f1a","#ff3d7f"],goal:["#14b86f","#00c2ff"],record:["#ffb000","#ff6a00"],five:["#ffd54a","#e08a00"]};
 function medal(id,on,size){
   const m=document.createElement("span"); m.className="medal"+(on?" on":""); m.setAttribute("aria-hidden","true");
   if(on){ const c=BADGE_COLORS[id]||["#2f6bff","#14b86f"]; m.style.background="linear-gradient(135deg,"+c[0]+","+c[1]+")"; }
@@ -830,6 +856,21 @@ async function exportCsv(){
 function lastPrefs(){ try{ return JSON.parse(localStorage.getItem("trippad.last")||"{}"); }catch(e){ return {}; } }
 function saveLastPrefs(d){ try{ localStorage.setItem("trippad.last",JSON.stringify({type:d.type,processor:d.processor})); }catch(e){} }
 
+/* ---------- achievement unlocked: 5 cars in one day ---------- */
+function showAchievement(count, dateStr){
+  const [y,m,d]=dateStr.split("-").map(Number);
+  const o=document.createElement("div"); o.className="achv"; o.setAttribute("role","dialog"); o.setAttribute("aria-label","Achievement unlocked: "+count+" cars in one day");
+  o.innerHTML='<div class="achv-card"><div class="achv-rays"></div><div class="achv-kicker">Achievement unlocked</div><div class="achv-medal"><b></b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></div><div class="achv-title"></div><div class="achv-sub"></div><div class="achv-tap">Tap to keep selling</div></div>';
+  o.querySelector(".achv-medal b").textContent=String(count);
+  o.querySelector(".achv-title").textContent=count+" cars in one day";
+  o.querySelector(".achv-sub").textContent=new Date(y,m-1,d).toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"})+" · Five-car day";
+  document.body.append(o);
+  let gone=false; const close=()=>{ if(gone) return; gone=true; o.classList.add("out"); setTimeout(()=>o.remove(),400); };
+  o.addEventListener("click",close); setTimeout(close,5200);
+  setTimeout(()=>{ confetti(3.2,GOLD); setTimeout(()=>confetti(2,GOLD),700); },450);
+  playFanfare(); try{ tapSuccess(); setTimeout(tapSuccess,260); setTimeout(tapSuccess,520); }catch(e){}
+}
+
 /* ---------- render ---------- */
 function monthKey(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");}
 function render(){
@@ -967,7 +1008,12 @@ $("form").addEventListener("submit",async e=>{
     commission:num($("fComm").value), products:[...$("fProds").querySelectorAll('[aria-pressed="true"]')].map(b=>b.dataset.p),
     notes:$("fNotes").value.trim(), veritas:segVal("fVeritas")==="yes", processor:segVal("fProc")||"", paid:segVal("fPaid")==="yes"};
   $("save").disabled=true;
-  try{ await store.save(d); if(isNew) saveLastPrefs(d); const [y,m]=d.date.split("-"); view=new Date(+y,+m-1,1); closeForm(); render(); if(isNew) chaChing(ctx); tapSuccess(); }
+  const dayBefore=deals.filter(x=>x.date===d.date && x.status!=="unwound" && x.id!==d.id).length;
+  const wasLiveSameDay=!!editing && editing.status!=="unwound" && editing.date===d.date;
+  const fiveDay=d.status!=="unwound" && !wasLiveSameDay && dayBefore===4;
+  if(fiveDay) cheerFree=Math.max(cheerFree,Date.now()+6200);
+  try{ await store.save(d); if(isNew) saveLastPrefs(d);
+    if(fiveDay) setTimeout(()=>showAchievement(5,d.date),500); const [y,m]=d.date.split("-"); view=new Date(+y,+m-1,1); closeForm(); render(); if(isNew) chaChing(ctx); tapSuccess(); }
   catch(err){ $("formErr").textContent=err?.code==="quota_exceeded"?"Storage is full. Delete some old deals, then save again.":"Couldn't save. Check your connection and tap Save again."; $("formErr").hidden=false; }
   finally{ $("save").disabled=false; }
 });
