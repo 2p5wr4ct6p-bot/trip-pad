@@ -400,6 +400,26 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
 @keyframes spin2{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
 @keyframes spbar{to{width:100%}}
 @keyframes streak{from{transform:translateX(0) skewX(-20deg)}to{transform:translateX(220vw) skewX(-20deg)}}
+
+/* ---- Black Friday splash ---- */
+.splash.bf{background:radial-gradient(120% 80% at 50% 110%,#3a0008 0%,#0b0b0d 55%)}
+.splash.bf .sp-in{gap:12px}
+.splash.bf b{font-size:clamp(54px,19vw,120px);line-height:.84;letter-spacing:-.01em}
+.splash.bf b span:nth-child(1){animation:spin1 .55s cubic-bezier(.15,1.2,.3,1) both}
+.splash.bf b span:nth-child(2){animation:spin2 .6s .12s cubic-bezier(.15,1.2,.3,1) both}
+.splash.bf b span:nth-child(3){font-size:1.18em;color:transparent;-webkit-text-fill-color:transparent;
+  background:linear-gradient(100deg,#ff1a2d 0%,#ff6a00 35%,#ffd54a 55%,#ff6a00 75%,#ff1a2d 100%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;
+  filter:drop-shadow(0 0 18px rgba(255,40,40,.55));animation:bfslam .55s .5s cubic-bezier(.2,1.6,.4,1) both,bfshine 1.6s 1s linear infinite}
+.splash.bf .sp-bar{height:10px;background:linear-gradient(90deg,#ff1a2d,#ff6a00,#ffd54a);animation-delay:.85s}
+.splash.bf .sp-streak{height:4px;background:linear-gradient(90deg,transparent,rgba(255,40,60,.85),transparent)}
+.splash.bf .sp-tag{position:absolute;top:calc(env(safe-area-inset-top,0px) + 22px);right:20px;font:800 italic 15px/1 "Barlow Condensed","Arial Narrow",Impact,sans-serif;letter-spacing:.12em;text-transform:uppercase;
+  color:#0b0b0d;background:#ffd54a;padding:7px 12px;border-radius:4px;transform:rotate(6deg);animation:bftag .5s 1.1s cubic-bezier(.2,1.6,.4,1) both}
+.splash.bf::after{content:"";position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;animation:bfflash .5s .5s ease-out both}
+@keyframes bfslam{0%{opacity:0;transform:scale(2.4) rotate(-4deg)}60%{opacity:1;transform:scale(.94)}100%{opacity:1;transform:none}}
+@keyframes bfshine{to{background-position:-220% 0}}
+@keyframes bftag{from{opacity:0;transform:rotate(30deg) scale(.3)}to{opacity:1;transform:rotate(6deg)}}
+@keyframes bfflash{0%{opacity:0}15%{opacity:.35}100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.splash.bf::after{display:none}}
 @media (prefers-reduced-motion:reduce){.splash *{animation:none!important}.splash .sp-bar{width:100%}}
 
 /* ---- round 4: coach, follow-ups, year, undo, backup ---- */
@@ -441,7 +461,12 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
   try{ const L=[["You got","this!"],["Close","strong."],["One","more."],["Own","today."],["Stay","hungry."],["Make it","count."],["No days","off."],["Sell","the day."]];
     const n=new Date(), doy=Math.floor((n-new Date(n.getFullYear(),0,0))/864e5), pick=L[doy%L.length], s=sp.querySelectorAll(".sp-in b span");
     if(s.length===2){ s[0].textContent=pick[0]; s[1].textContent=pick[1]; } }catch(e){}
-  setTimeout(()=>{ sp.classList.add("out"); setTimeout(()=>sp.remove(),700); },2000);
+  let hold=2000;
+  try{ const n=new Date(), y=n.getFullYear(), nov1=new Date(y,10,1).getDay(), bfDay=1+((4-nov1+7)%7)+21+1;
+    const bf=(n.getMonth()===10 && n.getDate()===bfDay) || /[?&]bf\b/.test(location.search);
+    if(bf){ sp.classList.add("bf"); const b=sp.querySelector(".sp-in b"); b.replaceChildren(...["Black","Friday","Baby!"].map(t=>{const x=document.createElement("span"); x.textContent=t; return x;}));
+      const tag=document.createElement("span"); tag.className="sp-tag"; tag.textContent="Sell it all"; sp.append(tag); hold=3000; } }catch(e){}
+  setTimeout(()=>{ sp.classList.add("out"); setTimeout(()=>sp.remove(),700); },hold);
   sp.addEventListener("click",()=>{ sp.classList.add("out"); setTimeout(()=>sp.remove(),700); });
 })();
 </script>
