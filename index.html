@@ -793,7 +793,7 @@ function renderCal(mk, live){
     c.className="cday"+(lvl?" l"+lvl:"")+(key===todayKey?" today":"")+(dayFilter===key?" sel":"")+(key>todayKey?" future":"");
     c.textContent=String(day);
     c.setAttribute("aria-label",new Date(y,m-1,day).toLocaleDateString("en-US",{month:"long",day:"numeric"})+": "+u+" unit"+(u===1?"":"s"));
-    if(key<=todayKey) c.addEventListener("click",()=>{ dayFilter=dayFilter===key?null:key; searchQ=""; $("searchBox").value=""; if(filter==="followup") filter="all"; listEnter=true; render(); tap(); });
+    if(key<=todayKey) c.addEventListener("click",()=>{ dayFilter=dayFilter===key?null:key; searchQ=""; $("searchBox").value=""; if(filter==="followup") filter="all"; listEnter=true; render(); tap(); if(dayFilter) $("listHead").scrollIntoView({behavior:reduceMotion()?"auto":"smooth",block:"start"}); });
     g.append(c);
   }
 }
