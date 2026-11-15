@@ -210,6 +210,8 @@ textarea{min-height:64px;resize:vertical}
       <div class="f full"><span class="f">Veritas bonus</span>
         <div class="seg" id="fVeritas"><button type="button" data-v="no">No</button><button type="button" data-v="yes">Yes</button></div></div>
       <label class="f full">Notes<textarea id="fNotes"></textarea></label>
+      <div class="f full"><span class="f">Doc processor</span>
+        <div class="seg" id="fProc"><button type="button" data-v="Nikki">Nikki</button><button type="button" data-v="Vicky">Vicky</button></div></div>
     </div>
     <p class="err" id="formErr" hidden></p>
     <div class="row2">
@@ -337,6 +339,7 @@ function render(){
     if(d.split&&d.partner) tag("w/ "+d.partner,"split");
     if((d.products||[]).length) tag((d.products.length)+" product"+(d.products.length>1?"s":""));
     if(d.veritas) tag("Veritas bonus","funded");
+    if(d.processor) tag("Docs: "+d.processor);
     main.append(c,v,tags);
     const right=document.createElement("div"); right.className="dright";
     const cm=document.createElement("div"); cm.className="comm"; cm.textContent=money(num(d.commission));
@@ -351,6 +354,7 @@ function render(){
 /* ---------- form ---------- */
 function segVal(id){return $(id).querySelector('[aria-pressed="true"]')?.dataset.v;}
 function setSeg(id,v){$(id).querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===v)));}
+$("fProc").addEventListener("click",e=>{const b=e.target.closest("button"); if(!b)return; setSeg("fProc", b.getAttribute("aria-pressed")==="true" ? "" : b.dataset.v);});
 ["fType","fStatus","fSplit","fVeritas"].forEach(id=>$(id).addEventListener("click",e=>{const b=e.target.closest("button"); if(!b)return; setSeg(id,b.dataset.v); if(id==="fSplit")$("partnerWrap").hidden=b.dataset.v!=="yes";}));
 PRODUCTS.forEach(p=>{const b=document.createElement("button"); b.type="button"; b.className="chipbtn"; b.textContent=p; b.dataset.p=p; b.setAttribute("aria-pressed","false");
   b.addEventListener("click",()=>b.setAttribute("aria-pressed",String(b.getAttribute("aria-pressed")!=="true"))); $("fProds").append(b);});
@@ -360,7 +364,7 @@ function openForm(d){
   $("formTitle").textContent=d?"Edit deal":"Log a deal";
   $("fDate").value=d?.date||(monthKey(view)===monthKey(new Date())?today():monthKey(view)+"-01");
   $("fDeal").value=d?.dealNo||""; $("fStock").value=d?.stock||""; $("fCust").value=d?.customer||""; $("fVeh").value=d?.vehicle||"";
-  setSeg("fType",d?.type||"New"); setSeg("fStatus",d?.status||"pending"); setSeg("fSplit",d?.split?"yes":"no"); setSeg("fVeritas",d?.veritas?"yes":"no");
+  setSeg("fType",d?.type||"New"); setSeg("fStatus",d?.status||"pending"); setSeg("fSplit",d?.split?"yes":"no"); setSeg("fVeritas",d?.veritas?"yes":"no"); setSeg("fProc",d?.processor||"");
   $("partnerWrap").hidden=!d?.split; $("fPartner").value=d?.partner||"";
   $("fFront").value=d?.front??""; $("fBack").value=d?.back??""; $("fComm").value=d?.commission??"";
   $("fProds").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String((d?.products||[]).includes(b.dataset.p))));
@@ -383,7 +387,7 @@ $("form").addEventListener("submit",async e=>{
     customer:$("fCust").value.trim().toUpperCase(), vehicle:$("fVeh").value.trim(), type:segVal("fType"), status:segVal("fStatus"),
     split, partner:split?$("fPartner").value.trim():"", front:num($("fFront").value), back:num($("fBack").value),
     commission:num($("fComm").value), products:[...$("fProds").querySelectorAll('[aria-pressed="true"]')].map(b=>b.dataset.p),
-    notes:$("fNotes").value.trim(), veritas:segVal("fVeritas")==="yes"};
+    notes:$("fNotes").value.trim(), veritas:segVal("fVeritas")==="yes", processor:segVal("fProc")||""};
   $("save").disabled=true;
   try{ await store.save(d); const [y,m]=d.date.split("-"); view=new Date(+y,+m-1,1); closeForm(); render(); if(isNew) chaChing(ctx); tapSuccess(); }
   catch(err){ $("formErr").textContent=err?.code==="quota_exceeded"?"Storage is full. Delete some old deals, then save again.":"Couldn't save. Check your connection and tap Save again."; $("formErr").hidden=false; }
