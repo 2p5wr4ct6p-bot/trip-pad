@@ -132,6 +132,7 @@ textarea{min-height:64px;resize:vertical}
 .seg button{flex:1;border:0;background:var(--bg);color:var(--muted);padding:10px 4px;font-weight:600;font-size:14px;cursor:pointer}
 .seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
 .prods{display:flex;flex-wrap:wrap;gap:6px}
+.partnerbox{display:flex;flex-direction:column;gap:8px}
 .row2{display:flex;gap:10px}
 .btn{flex:1;border-radius:12px;padding:14px;font-size:16px;font-weight:700;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--ink)}
 .btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
@@ -333,7 +334,7 @@ textarea{min-height:64px;resize:vertical}
       <label class="f">Date processed<input id="fDate" type="date" required></label>
       <div class="f full"><span class="f">My credit</span>
         <div class="seg" id="fSplit"><button type="button" data-v="no">100%</button><button type="button" data-v="yes">50% split</button></div></div>
-      <label class="f full" id="partnerWrap" hidden>Split with<input id="fPartner" autocomplete="off" autocapitalize="words"></label>
+      <div class="f full partnerbox" id="partnerWrap" hidden><span class="f">Split with</span><div class="prods" id="partnerPick"></div><input id="fPartner" autocomplete="off" autocapitalize="words" placeholder="Or type a name" aria-label="Split with"></div>
       <label class="f full">My commission<input id="fComm" class="num" inputmode="decimal" placeholder="0"></label>
       <p class="f full" style="margin:4px 0 0;border-top:1px solid var(--line);padding-top:12px">Optional details</p>
       <label class="f full">Customer<input id="fCust" autocomplete="off" autocapitalize="characters" style="text-transform:uppercase"></label>
@@ -707,13 +708,18 @@ $("fProc").addEventListener("click",e=>{const b=e.target.closest("button"); if(!
 PRODUCTS.forEach(p=>{const b=document.createElement("button"); b.type="button"; b.className="chipbtn"; b.textContent=p; b.dataset.p=p; b.setAttribute("aria-pressed","false");
   b.addEventListener("click",()=>b.setAttribute("aria-pressed",String(b.getAttribute("aria-pressed")!=="true"))); $("fProds").append(b);});
 
+const PARTNERS=["Luis","Jeremy","Oscar","Keren","Daryl","Darwin"];
+function syncPartner(){ const v=$("fPartner").value.trim().toLowerCase(); $("partnerPick").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.n.toLowerCase()===v))); }
+PARTNERS.forEach(n=>{ const b=document.createElement("button"); b.type="button"; b.className="chipbtn"; b.textContent=n; b.dataset.n=n; b.setAttribute("aria-pressed","false");
+  b.addEventListener("click",()=>{ const on=b.getAttribute("aria-pressed")==="true"; $("fPartner").value=on?"":n; syncPartner(); }); $("partnerPick").append(b); });
+$("fPartner").addEventListener("input",syncPartner);
 function openForm(d){
   editing=d||null;
   $("formTitle").textContent=d?"Edit deal":"Log a deal";
   $("fDate").value=d?.date||(monthKey(view)===monthKey(new Date())?today():monthKey(view)+"-01");
   $("fDeal").value=d?.dealNo||""; $("fStock").value=d?.stock||""; $("fCust").value=d?.customer||""; $("fVeh").value=d?.vehicle||"";
   setSeg("fType",d?.type||"New"); setSeg("fStatus",d?.status||"pending"); setSeg("fSplit",d?.split?"yes":"no"); setSeg("fVeritas",d?.veritas?"yes":"no"); setSeg("fProc",d?.processor||"");
-  $("partnerWrap").hidden=!d?.split; $("fPartner").value=d?.partner||"";
+  $("partnerWrap").hidden=!d?.split; $("fPartner").value=d?.partner||""; syncPartner();
   $("fFront").value=d?.front??""; $("fBack").value=d?.back??""; $("fComm").value=d?.commission??"";
   $("fProds").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String((d?.products||[]).includes(b.dataset.p))));
   $("fNotes").value=d?.notes||"";
