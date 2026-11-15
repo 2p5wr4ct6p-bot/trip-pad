@@ -49,7 +49,7 @@ h1{font-family:"Toyota Type Semibold","ToyotaType-Semibold","Toyota Type","Alber
 .icon{width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:18px;cursor:pointer}
 
 .board{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:14px}
-.units{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.units{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .big{font-family:var(--f-display);font-weight:700;font-size:56px;line-height:.9;font-variant-numeric:tabular-nums}
 .unum{display:inline-block}
 .unum.bump{animation:ubump .65s cubic-bezier(.2,1.5,.4,1)}
@@ -97,7 +97,7 @@ h1{font-family:"Toyota Type Semibold","ToyotaType-Semibold","Toyota Type","Alber
 .dright{text-align:right}
 .comm{font-family:var(--f-num);font-weight:600;font-variant-numeric:tabular-nums}
 .comm.lit{color:var(--good);animation:cglow 2.6s ease-in-out infinite}
-.deal:nth-child(3n+2) .comm.lit{animation-delay:-.9s} .deal:nth-child(3n+3) .comm.lit{animation-delay:-1.7s}
+.swipe:nth-child(3n+2) .comm.lit{animation-delay:-.9s} .swipe:nth-child(3n+3) .comm.lit{animation-delay:-1.7s}
 @keyframes cglow{0%,100%{text-shadow:0 0 0 transparent}50%{text-shadow:0 0 6px color-mix(in srgb,var(--good) 70%,transparent),0 0 14px color-mix(in srgb,var(--good) 40%,transparent)}}
 @media (prefers-reduced-motion:reduce){.comm.lit{animation:none}}
 .deal.unwound .comm{text-decoration:line-through;color:var(--muted)}
@@ -139,6 +139,49 @@ textarea{min-height:64px;resize:vertical}
 .confirm{background:var(--chip);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px}
 .err{color:var(--bad);font-size:14px}
 @media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+
+/* ---- progress ring ---- */
+.ringwrap{position:relative;width:136px;height:136px;flex:none}
+.ring{width:100%;height:100%;transform:rotate(-90deg);overflow:visible}
+.ring circle{fill:none;stroke-width:11}
+.ring .track{stroke:var(--chip)}
+.ring .fill{stroke:url(#ringGrad);stroke-linecap:round;stroke-dasharray:333.0;stroke-dashoffset:333.0;transition:stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1)}
+.ringwrap.hit .ring{filter:drop-shadow(0 0 7px color-mix(in srgb,var(--good) 65%,transparent))}
+.ringwrap #units{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:46px}
+.ringwrap #units small{margin:4px 0 0;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.pace{font-size:13px;font-weight:600;color:var(--muted);margin-top:8px;line-height:1.3;max-width:200px;margin-left:auto}
+.pace.good{color:var(--good)} .pace.warn{color:var(--warn)}
+/* ---- insights ---- */
+.insights{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;border-top:1px solid var(--line);padding-top:12px}
+.insights .v.up{color:var(--good)} .insights .v.down{color:var(--bad)}
+.insights .sub{font-size:11px;color:var(--muted);font-family:var(--f-body)}
+/* ---- confetti + banner ---- */
+.confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:40}
+.cheer{position:fixed;left:50%;top:38%;transform:translate(-50%,-50%);z-index:41;pointer-events:none;
+  background:var(--card);color:var(--ink);border:2px solid var(--good);border-radius:18px;padding:16px 26px;text-align:center;
+  box-shadow:0 18px 50px rgba(10,20,40,.25);animation:cheer 2.4s cubic-bezier(.2,1.4,.4,1) forwards}
+.cheer b{display:block;font-family:var(--f-display);font-size:32px;letter-spacing:.02em;color:var(--good);line-height:1}
+.cheer span{font-size:14px;color:var(--muted);font-weight:600}
+@keyframes cheer{0%{opacity:0;transform:translate(-50%,-50%) scale(.5)}12%{opacity:1;transform:translate(-50%,-50%) scale(1.06)}20%{transform:translate(-50%,-50%) scale(1)}82%{opacity:1}100%{opacity:0;transform:translate(-50%,-60%) scale(.96)}}
+/* ---- list entrance ---- */
+.swipe.enter{animation:slidein .42s cubic-bezier(.2,.8,.2,1) both}
+@keyframes slidein{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+/* ---- swipe actions ---- */
+.swipe{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+.swipe:last-child{border-bottom:0}
+.swipe .deal{border-bottom:0;background:var(--card);position:relative;z-index:1;touch-action:pan-y;transition:transform .22s cubic-bezier(.2,.8,.2,1)}
+.swipe .deal:hover{background:var(--card)}
+.swipe.dragging .deal{transition:none}
+.swipe-bg{position:absolute;top:0;bottom:0;display:flex;align-items:center;font-weight:700;font-size:15px;color:#fff;letter-spacing:.02em}
+.swipe-bg.left{left:0;right:0;background:var(--good);padding-left:22px}
+.swipe-bg.right{right:0;width:96px;justify-content:center;background:var(--bad);border:0;cursor:pointer;font-family:inherit;z-index:0}
+.swipe:not(.can-fund) .swipe-bg.left{background:var(--chip);color:var(--muted)}
+.swipehint{font-size:12px;color:var(--muted);text-align:center;margin:-6px 0 0}
+/* ---- Toyota red accent ---- */
+:root[data-accent="red"]{--accent:#d40b1c;--accent-ink:#ffffff;--accent-soft:#fce8ea}
+@media (prefers-color-scheme:dark){:root[data-accent="red"]:not([data-theme="light"]){--accent:#ff5a66;--accent-ink:#2a0306;--accent-soft:#3b1a1e}}
+:root[data-accent="red"][data-theme="dark"]{--accent:#ff5a66;--accent-ink:#2a0306;--accent-soft:#3b1a1e}
+@media (prefers-reduced-motion:reduce){.swipe.enter,.cheer{animation:none}.ring .fill{transition:none}}
 </style>
 
 <div class="wrap">
@@ -153,11 +196,16 @@ textarea{min-height:64px;resize:vertical}
 
   <section class="board" aria-label="Month totals">
     <div class="units">
-      <div class="big" id="units"><span class="unum" id="unitsNum">0</span><small>units</small></div>
-      <div class="pay"><div class="lbl">Commission</div><div class="amt" id="comm">$0</div></div>
+      <div class="ringwrap" id="ringWrap">
+        <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
+          <defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--accent)"/><stop offset="1" style="stop-color:var(--good)"/></linearGradient></defs>
+          <circle class="track" cx="60" cy="60" r="53"/><circle class="fill" id="ringFill" cx="60" cy="60" r="53"/>
+        </svg>
+        <div class="big" id="units"><span class="unum" id="unitsNum">0</span><small>units</small></div>
+      </div>
+      <div class="pay"><div class="lbl">Commission</div><div class="amt" id="comm">$0</div><div class="pace" id="paceText"></div></div>
     </div>
     <div class="goal">
-      <div class="bar"><i id="goalBar" style="width:0%"></i></div>
       <div class="goalrow"><span id="goalText"></span><button type="button" id="goalEdit">Set goal</button></div>
     </div>
     <div class="stats">
@@ -165,6 +213,11 @@ textarea{min-height:64px;resize:vertical}
       <div class="stat"><div class="lbl">Back</div><div class="v" id="back">$0</div></div>
       <div class="stat"><div class="lbl">Products</div><div class="v" id="prodCount">0</div></div>
       <div class="stat"><div class="lbl">Pending</div><div class="v" id="pendCount">0</div></div>
+    </div>
+    <div class="insights">
+      <div class="stat"><div class="lbl">Avg / deal</div><div class="v" id="avgDeal">$0</div></div>
+      <div class="stat"><div class="lbl">Vs last month</div><div class="v" id="vsLast">—</div></div>
+      <div class="stat"><div class="lbl">Best month</div><div class="v" id="bestMonth">—</div><div class="sub" id="bestMonthLbl"></div></div>
     </div>
   </section>
 
@@ -177,12 +230,14 @@ textarea{min-height:64px;resize:vertical}
   </div>
 
   <section class="log" id="log" aria-label="Deals"></section>
+  <p class="swipehint">Swipe a pending deal right to mark it funded, or left to delete.</p>
   <p class="note" id="syncNote">Loading your deals…</p>
   <div class="backup">
     <button class="chipbtn" type="button" id="exportBtn">Back up deals</button>
     <label class="chipbtn" for="importFile">Restore from backup</label>
     <input type="file" id="importFile" accept="application/json,.json" hidden>
   </div>
+  <section class="soundrow" aria-label="Theme"><span class="soundlbl">Theme</span><div class="soundpick" id="themePick"></div></section>
   <section class="soundrow" aria-label="Deal sound"><span class="soundlbl">Sound when you log a deal</span><div class="soundpick" id="soundPick"></div></section>
   <footer class="copyright">© 2026 Lora Enterprises. All rights reserved.</footer>
 </div>
@@ -278,19 +333,19 @@ function setTotals(units, comm, mk){
     uEl.textContent=String(units);
     uEl.classList.remove("bump"); void uEl.offsetWidth; uEl.classList.add("bump");
     const plus=document.createElement("span"); plus.className="plus"; plus.textContent="+"+delta;
-    plus.style.left=(uEl.offsetWidth+6)+"px"; $("units").append(plus); setTimeout(()=>plus.remove(),1300);
+    plus.style.left=(uEl.offsetLeft+uEl.offsetWidth+2)+"px"; plus.style.top=(uEl.offsetTop-10)+"px"; $("units").append(plus); setTimeout(()=>plus.remove(),1300);
     const from=shownComm||0, to=comm, t0=performance.now(), dur=900;
     if(to>from){ cEl.classList.add("glow"); const step=now=>{ const k=Math.min(1,(now-t0)/dur), e=1-Math.pow(1-k,3);
       cEl.textContent=money(from+(to-from)*e); if(k<1) requestAnimationFrame(step); else { cEl.textContent=money(to); setTimeout(()=>cEl.classList.remove("glow"),400); } }; requestAnimationFrame(step); }
     else cEl.textContent=money(comm);
-    celebrateUntil=0;
+    celebrateUntil=0; milestone(shownUnits, units);
   }else if(shownMonth===mk && shownUnits!==null && units<shownUnits && Date.now()<mournUntil && !reduceMotion()){
     const delta=shownUnits-units;
     uEl.textContent=String(units);
     uEl.classList.remove("shake","bump"); void uEl.offsetWidth; uEl.classList.add("shake");
     setTimeout(()=>uEl.classList.remove("shake"),1300);
     const minus=document.createElement("span"); minus.className="minus"; minus.textContent="−"+delta;
-    minus.style.left=(uEl.offsetWidth+6)+"px"; $("units").append(minus); setTimeout(()=>minus.remove(),1300);
+    minus.style.left=(uEl.offsetLeft+uEl.offsetWidth+2)+"px"; minus.style.top=(uEl.offsetTop-10)+"px"; $("units").append(minus); setTimeout(()=>minus.remove(),1300);
     const from=shownComm||0, to=comm, t0=performance.now(), dur=900;
     cEl.classList.remove("glow"); cEl.classList.add("lose");
     if(to<from){ const step=now=>{ const k=Math.min(1,(now-t0)/dur), e=1-Math.pow(1-k,3);
@@ -302,6 +357,84 @@ function setTotals(units, comm, mk){
   }
   shownUnits=units; shownComm=comm; shownMonth=mk;
 }
+
+/* ---------- celebrations ---------- */
+function confetti(power){
+  if(reduceMotion()) return;
+  const c=document.createElement("canvas"); c.className="confetti"; document.body.append(c);
+  const dpr=Math.min(2,window.devicePixelRatio||1), W=c.width=innerWidth*dpr, H=c.height=innerHeight*dpr, x=c.getContext("2d");
+  const cs=getComputedStyle(document.documentElement);
+  const cols=[cs.getPropertyValue("--accent"),cs.getPropertyValue("--good"),"#f5b700","#ff6b6b","#7c5cff"].map(s=>s.trim()||"#f5b700");
+  const N=Math.round(70*power), P=[];
+  for(let i=0;i<N;i++){ const side=i%2?1:-1;
+    P.push({x:W/2+side*W*0.18, y:H*0.62, vx:side*(-2-Math.random()*7)*dpr*(0.6+power*0.2), vy:(-9-Math.random()*9)*dpr, r:(4+Math.random()*5)*dpr,
+      a:Math.random()*6.28, va:(Math.random()-.5)*0.4, col:cols[i%cols.length], sh:Math.random()<.5}); }
+  const t0=performance.now();
+  (function frame(now){ const t=now-t0; x.clearRect(0,0,W,H);
+    P.forEach(p=>{ p.vy+=0.32*dpr; p.vx*=0.99; p.x+=p.vx; p.y+=p.vy; p.a+=p.va;
+      x.save(); x.translate(p.x,p.y); x.rotate(p.a); x.globalAlpha=Math.max(0,1-t/2600); x.fillStyle=p.col;
+      if(p.sh) x.fillRect(-p.r,-p.r/2.5,p.r*2,p.r/1.25); else { x.beginPath(); x.arc(0,0,p.r/1.6,0,6.28); x.fill(); } x.restore(); });
+    if(t<2700) requestAnimationFrame(frame); else c.remove(); })(t0);
+}
+function cheer(title, sub){
+  if(reduceMotion()) return;
+  const d=document.createElement("div"); d.className="cheer"; d.setAttribute("role","status");
+  const b=document.createElement("b"); b.textContent=title; const s=document.createElement("span"); s.textContent=sub||"";
+  d.append(b,s); document.body.append(d); setTimeout(()=>d.remove(),2500);
+}
+function milestone(oldU,newU){
+  if(goal && oldU<goal && newU>=goal){ setTimeout(()=>{ confetti(3); cheer("GOAL HIT", newU+" units this month"); try{ tapSuccess(); setTimeout(tapSuccess,300); }catch(e){} },380); return; }
+  const m=[5,10].find(v=>oldU<v && newU>=v && (!goal || v<goal));
+  if(m) setTimeout(()=>{ confetti(1); cheer(m+" UNITS", goal?(goal-newU)+" to go for "+goal:"Keep it rolling"); },380);
+}
+
+/* ---------- month stats helpers ---------- */
+function unitsIn(mk){ return deals.filter(d=>(d.date||"").startsWith(mk)&&d.status!=="unwound").reduce((s,d)=>s+(d.split?0.5:1),0); }
+function prevMonthKey(mk){ const [y,m]=mk.split("-").map(Number); return monthKey(new Date(y,m-2,1)); }
+let listEnter=true;
+
+/* ---------- swipe actions ---------- */
+let openSwipe=null;
+function closeOpenSwipe(except){ if(openSwipe&&openSwipe!==except){ openSwipe.querySelector(".deal").style.transform=""; openSwipe.classList.remove("open"); openSwipe=null; } }
+document.addEventListener("pointerdown",e=>{ if(openSwipe && !openSwipe.contains(e.target)) closeOpenSwipe(); },true);
+function attachSwipe(wrap,row,d){
+  const canFund=d.status==="pending"; if(canFund) wrap.classList.add("can-fund");
+  let sx=0, sy=0, dx=0, active=false, decided=false, horiz=false, moved=false, base=0;
+  row.addEventListener("pointerdown",e=>{ if(e.button>0) return; sx=e.clientX; sy=e.clientY; dx=0; active=true; decided=false; horiz=false; moved=false;
+    base=wrap.classList.contains("open")?-96:0; closeOpenSwipe(wrap); });
+  row.addEventListener("pointermove",e=>{ if(!active) return; const mx=e.clientX-sx, my=e.clientY-sy;
+    if(!decided){ if(Math.abs(mx)<8&&Math.abs(my)<8) return; decided=true; horiz=Math.abs(mx)>Math.abs(my); if(horiz){ wrap.classList.add("dragging"); try{row.setPointerCapture(e.pointerId);}catch(_){} } }
+    if(!horiz) return; moved=true; e.preventDefault();
+    dx=base+mx; if(dx>0 && !canFund) dx=Math.min(dx*0.25,40); dx=Math.max(-140,Math.min(160,dx));
+    row.style.transform="translateX("+dx+"px)"; });
+  const end=async()=>{ if(!active) return; active=false; wrap.classList.remove("dragging");
+    if(!horiz){ return; }
+    if(dx>90 && canFund){ row.style.transform="translateX(100%)"; tapSuccess();
+      setTimeout(async()=>{ try{ await store.save({...d,status:"funded"}); }catch(err){ row.style.transform=""; setNote("Couldn't mark it funded. Try again.","warn"); } },180); return; }
+    if(dx<-60){ row.style.transform="translateX(-96px)"; wrap.classList.add("open"); openSwipe=wrap; tap(); return; }
+    row.style.transform=""; wrap.classList.remove("open"); if(openSwipe===wrap) openSwipe=null; };
+  row.addEventListener("pointerup",end); row.addEventListener("pointercancel",end);
+  row.addEventListener("click",e=>{ if(moved){ e.stopImmediatePropagation(); e.preventDefault(); moved=false; } },true);
+  wrap.querySelector(".swipe-bg.right").addEventListener("click",async()=>{ mournUntil=Date.now()+4000; tapSuccess();
+    try{ await store.remove(d.id); }catch(err){ setNote("Couldn't delete. Try again.","warn"); } openSwipe=null; });
+}
+
+/* ---------- theme ---------- */
+const rootEl=document.documentElement, hostTheme=rootEl.getAttribute("data-theme");
+let themePref="auto", accentPref="blue";
+try{ themePref=localStorage.getItem("trippad.theme")||"auto"; accentPref=localStorage.getItem("trippad.accent")||"blue"; }catch(e){}
+function applyTheme(){
+  if(themePref==="auto"){ if(hostTheme) rootEl.setAttribute("data-theme",hostTheme); else rootEl.removeAttribute("data-theme"); }
+  else rootEl.setAttribute("data-theme",themePref);
+  if(accentPref==="red") rootEl.setAttribute("data-accent","red"); else rootEl.removeAttribute("data-accent");
+}
+function renderThemePicker(){
+  const box=document.getElementById("themePick"); if(!box) return; box.replaceChildren();
+  const mk=(label,pressed,fn)=>{ const b=document.createElement("button"); b.type="button"; b.className="chipbtn"; b.textContent=label; b.setAttribute("aria-pressed",String(pressed)); b.addEventListener("click",fn); box.append(b); };
+  [["auto","Auto"],["light","Light"],["dark","Dark"]].forEach(([k,l])=>mk(l,themePref===k,()=>{ themePref=k; try{localStorage.setItem("trippad.theme",k);}catch(e){} applyTheme(); renderThemePicker(); }));
+  mk("Toyota red",accentPref==="red",()=>{ accentPref=accentPref==="red"?"blue":"red"; try{localStorage.setItem("trippad.accent",accentPref);}catch(e){} applyTheme(); renderThemePicker(); });
+}
+applyTheme(); renderThemePicker();
 
 /* ---------- render ---------- */
 function monthKey(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");}
@@ -317,7 +450,22 @@ function render(){
   $("prodCount").textContent=live.reduce((s,d)=>s+(d.products||[]).length,0);
   $("pendCount").textContent=month.filter(d=>d.status==="pending").length;
   const pct=goal?Math.min(100,units/goal*100):0;
-  $("goalBar").style.width=pct+"%";
+  $("ringFill").style.strokeDashoffset=String(333.0*(1-pct/100));
+  $("ringWrap").classList.toggle("hit", !!goal && units>=goal);
+  { const now=new Date(), nk=monthKey(now), pe=$("paceText"); pe.className="pace";
+    if(mk===nk){ const dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate(), day=now.getDate();
+      if(units>0){ const proj=Math.round(units/day*dim*2)/2; pe.textContent="On pace for "+proj+" by "+now.toLocaleString("en-US",{month:"short"})+" "+dim; if(goal) pe.classList.add(proj>=goal?"good":"warn"); }
+      else pe.textContent="Log a deal to see your pace"; }
+    else if(mk<nk) pe.textContent="Final: "+units+" unit"+(units===1?"":"s");
+    else pe.textContent=""; }
+  { const liveComm=live.reduce((s,d)=>s+num(d.commission),0);
+    $("avgDeal").textContent=live.length?money(liveComm/live.length):"$0";
+    const last=unitsIn(prevMonthKey(mk)), diff=units-last, ve=$("vsLast");
+    ve.textContent=(diff>0?"+":diff<0?"−":"±")+Math.abs(diff)+" units"; ve.className="v "+(diff>0?"up":diff<0?"down":"");
+    const keys=[...new Set(deals.map(d=>(d.date||"").slice(0,7)).filter(Boolean))];
+    let best=null; keys.forEach(k=>{ const u=unitsIn(k); if(u>0&&(!best||u>best.u)) best={k,u}; });
+    $("bestMonth").textContent=best?best.u+" units":"—";
+    $("bestMonthLbl").textContent=best?new Date(+best.k.slice(0,4),+best.k.slice(5,7)-1,1).toLocaleString("en-US",{month:"short",year:"numeric"}):""; }
   $("goalText").textContent=goal?(units>=goal?"Goal hit: "+units+" of "+goal:(goal-units)+" to go for "+goal+" units"):"No goal set";
 
   const shown=filter==="all"?month:month.filter(d=>d.status===filter);
@@ -328,7 +476,8 @@ function render(){
     e.append(b, document.createTextNode(month.length?"Try another filter.":"Tap “Log a deal” after each sale to start your count."));
     log.append(e); return;
   }
-  shown.forEach(d=>{
+  const enter=listEnter && !reduceMotion(); listEnter=false;
+  shown.forEach((d,i)=>{
     const r=document.createElement("button"); r.type="button"; r.className="deal"+(d.status==="unwound"?" unwound":"");
     const [y,m,dd]=(d.date||"").split("-");
     const day=document.createElement("div"); day.className="day";
@@ -351,7 +500,10 @@ function render(){
     right.append(cm,g);
     r.append(day,main,right);
     r.addEventListener("click",()=>openForm(d));
-    log.append(r);
+    const w=document.createElement("div"); w.className="swipe"+(enter?" enter":""); if(enter) w.style.animationDelay=(Math.min(i,12)*45)+"ms";
+    const bl=document.createElement("div"); bl.className="swipe-bg left"; bl.setAttribute("aria-hidden","true"); bl.textContent=d.status==="pending"?"✓  Mark funded":"";
+    const br=document.createElement("button"); br.type="button"; br.className="swipe-bg right"; br.textContent="Delete"; br.setAttribute("aria-label","Delete deal #"+(d.dealNo||""));
+    w.append(bl,br,r); log.append(w); attachSwipe(w,r,d);
   });
 }
 
@@ -470,8 +622,8 @@ function tapSuccess(){ tap(); setTimeout(tap,130); }
 document.addEventListener("click",e=>{ const b=e.target.closest("button, label.chipbtn"); if(b && !b.closest("#save,#yesDel") && b.id!=="hapSwitch") tap(); },true);
 
 /* ---------- month, filter, goal ---------- */
-$("prev").addEventListener("click",()=>{view.setMonth(view.getMonth()-1); render();});
-$("next").addEventListener("click",()=>{view.setMonth(view.getMonth()+1); render();});
+$("prev").addEventListener("click",()=>{view.setMonth(view.getMonth()-1); listEnter=true; render();});
+$("next").addEventListener("click",()=>{view.setMonth(view.getMonth()+1); listEnter=true; render();});
 document.querySelectorAll(".filters .chipbtn").forEach(b=>b.addEventListener("click",()=>{filter=b.dataset.f;
   document.querySelectorAll(".filters .chipbtn").forEach(x=>x.setAttribute("aria-pressed",String(x===b))); render();}));
 $("goalEdit").addEventListener("click",()=>{$("goalInput").value=goal||""; $("goalScrim").hidden=false; $("goalInput").focus();});
