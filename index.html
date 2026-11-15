@@ -198,7 +198,7 @@ textarea{min-height:64px;resize:vertical}
       <p class="f full" style="margin:4px 0 0;border-top:1px solid var(--line);padding-top:12px">Optional details</p>
       <label class="f full">Customer<input id="fCust" autocomplete="off" autocapitalize="characters" style="text-transform:uppercase"></label>
       <label class="f">Stock #<input id="fStock" autocomplete="off" autocapitalize="characters" style="text-transform:uppercase"></label>
-      <label class="f">Vehicle<input id="fVeh" autocomplete="off" placeholder="2026 RAV4 XLE"></label>
+      <label class="f">Vehicle<input id="fVeh" autocomplete="off" autocapitalize="characters" placeholder="2026 RAV4 XLE" style="text-transform:uppercase"></label>
       <div class="f full"><span class="f">Type</span>
         <div class="seg" id="fType"><button type="button" data-v="New">New</button><button type="button" data-v="Used">Used</button><button type="button" data-v="CPO">TCUV</button></div></div>
       <div class="f full"><span class="f">Status</span>
@@ -331,7 +331,7 @@ function render(){
     const db=document.createElement("b"); db.textContent=String(+dd||""); day.append(db, document.createTextNode(new Date(+y,+m-1,+dd).toLocaleString("en-US",{weekday:"short"})));
     const main=document.createElement("div"); main.className="dmain";
     const c=document.createElement("div"); c.className="cust"; c.textContent="Deal #"+(d.dealNo||"—")+(d.customer?" · "+String(d.customer).toUpperCase():"");
-    const v=document.createElement("div"); v.className="veh"; v.textContent=[d.vehicle,d.stock?"Stk "+d.stock:""].filter(Boolean).join(" · ")||"Processed "+new Date(+y,+m-1,+dd).toLocaleDateString("en-US");
+    const v=document.createElement("div"); v.className="veh"; v.textContent=[d.vehicle?String(d.vehicle).toUpperCase():"",d.stock?"Stk "+d.stock:""].filter(Boolean).join(" · ")||"Processed "+new Date(+y,+m-1,+dd).toLocaleDateString("en-US");
     const tags=document.createElement("div"); tags.className="tags";
     const tag=(t,cl)=>{const s=document.createElement("span"); s.className="tag "+(cl||""); s.textContent=t; tags.append(s);};
     tag(d.status==="cash"?"cash deal":(d.status||"pending"),d.status||"pending"); if(d.type&&d.type!=="New") tag(d.type==="CPO"?"TCUV":d.type);
@@ -384,7 +384,7 @@ $("form").addEventListener("submit",async e=>{
   const split=segVal("fSplit")==="yes";
   const d={id:editing?.id||("d"+Date.now().toString(36)+Math.random().toString(36).slice(2,6)),
     created:editing?.created||Date.now(), date:$("fDate").value, dealNo:$("fDeal").value.trim(), stock:$("fStock").value.trim().toUpperCase(),
-    customer:$("fCust").value.trim().toUpperCase(), vehicle:$("fVeh").value.trim(), type:segVal("fType"), status:segVal("fStatus"),
+    customer:$("fCust").value.trim().toUpperCase(), vehicle:$("fVeh").value.trim().toUpperCase(), type:segVal("fType"), status:segVal("fStatus"),
     split, partner:split?$("fPartner").value.trim():"", front:num($("fFront").value), back:num($("fBack").value),
     commission:num($("fComm").value), products:[...$("fProds").querySelectorAll('[aria-pressed="true"]')].map(b=>b.dataset.p),
     notes:$("fNotes").value.trim(), veritas:segVal("fVeritas")==="yes", processor:segVal("fProc")||""};
