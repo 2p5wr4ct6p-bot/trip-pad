@@ -96,6 +96,10 @@ h1{font-family:"Toyota Type Semibold","ToyotaType-Semibold","Toyota Type","Alber
 .tag.pending{color:var(--warn)} .tag.funded{color:var(--good)} .tag.unwound{color:var(--bad)} .tag.cash{color:var(--good)} .tag.split{color:var(--accent)}
 .dright{text-align:right}
 .comm{font-family:var(--f-num);font-weight:600;font-variant-numeric:tabular-nums}
+.comm.lit{color:var(--good);animation:cglow 2.6s ease-in-out infinite}
+.deal:nth-child(3n+2) .comm.lit{animation-delay:-.9s} .deal:nth-child(3n+3) .comm.lit{animation-delay:-1.7s}
+@keyframes cglow{0%,100%{text-shadow:0 0 0 transparent}50%{text-shadow:0 0 6px color-mix(in srgb,var(--good) 70%,transparent),0 0 14px color-mix(in srgb,var(--good) 40%,transparent)}}
+@media (prefers-reduced-motion:reduce){.comm.lit{animation:none}}
 .deal.unwound .comm{text-decoration:line-through;color:var(--muted)}
 .gross{font-size:12px;color:var(--muted);font-family:var(--f-num)}
 .empty{padding:28px 18px;text-align:center;color:var(--muted)}
@@ -342,7 +346,7 @@ function render(){
     if(d.processor) tag("Docs: "+d.processor);
     main.append(c,v,tags);
     const right=document.createElement("div"); right.className="dright";
-    const cm=document.createElement("div"); cm.className="comm"; cm.textContent=money(num(d.commission));
+    const cm=document.createElement("div"); cm.className="comm"+(d.status!=="unwound"&&num(d.commission)>0?" lit":""); cm.textContent=money(num(d.commission));
     const g=document.createElement("div"); g.className="gross"; g.textContent="F "+money(num(d.front))+" · B "+money(num(d.back));
     right.append(cm,g);
     r.append(day,main,right);
