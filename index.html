@@ -55,6 +55,12 @@ h1{font-family:var(--f-display);font-weight:700;font-size:30px;margin:0;letter-s
 .unum.bump{animation:ubump .65s cubic-bezier(.2,1.5,.4,1)}
 @keyframes ubump{0%{transform:translateY(45%) scale(.55);opacity:0}55%{transform:translateY(-8%) scale(1.18);opacity:1;color:var(--accent)}100%{transform:none}}
 #units{position:relative}
+.unum.shake{color:var(--bad);animation:ushake .7s cubic-bezier(.36,.07,.19,.97) both,ured 1.3s ease-out both}
+@keyframes ushake{0%,100%{transform:translateX(0)}10%,50%,90%{transform:translateX(-7px) rotate(-3deg)}30%,70%{transform:translateX(7px) rotate(3deg)}}
+@keyframes ured{0%,55%{color:var(--bad)}100%{color:var(--ink)}}
+.minus{position:absolute;top:-4px;font-family:var(--f-num);font-size:20px;font-weight:700;color:var(--bad);pointer-events:none;animation:drop 1.2s ease-in forwards}
+@keyframes drop{0%{opacity:0;transform:translateY(-10px)}20%{opacity:1}100%{opacity:0;transform:translateY(40px)}}
+.pay .amt.lose{color:var(--bad);text-shadow:0 0 18px color-mix(in srgb,var(--bad) 45%,transparent);animation:ushake .6s cubic-bezier(.36,.07,.19,.97) both;transition:color .5s,text-shadow .5s}
 .plus{position:absolute;top:-4px;font-family:var(--f-num);font-size:20px;font-weight:700;color:var(--good);pointer-events:none;animation:rise 1.2s ease-out forwards}
 @keyframes rise{0%{opacity:0;transform:translateY(12px)}20%{opacity:1}100%{opacity:0;transform:translateY(-36px)}}
 .amt.glow{text-shadow:0 0 18px color-mix(in srgb,var(--good) 55%,transparent);transition:text-shadow .4s}
@@ -256,7 +262,7 @@ async function init(){
 function setNote(t,k){const n=$("syncNote"); n.textContent=t; n.className="note"+(k?" "+k:"");}
 
 /* ---------- units / commission animation ---------- */
-let shownUnits=null, shownComm=null, shownMonth=null, celebrateUntil=0;
+let shownUnits=null, shownComm=null, shownMonth=null, celebrateUntil=0, mournUntil=0;
 const reduceMotion=()=>{ try{ return matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){ return false; } };
 function setTotals(units, comm, mk){
   const uEl=$("unitsNum"), cEl=$("comm");
@@ -272,6 +278,19 @@ function setTotals(units, comm, mk){
       cEl.textContent=money(from+(to-from)*e); if(k<1) requestAnimationFrame(step); else { cEl.textContent=money(to); setTimeout(()=>cEl.classList.remove("glow"),400); } }; requestAnimationFrame(step); }
     else cEl.textContent=money(comm);
     celebrateUntil=0;
+  }else if(shownMonth===mk && shownUnits!==null && units<shownUnits && Date.now()<mournUntil && !reduceMotion()){
+    const delta=shownUnits-units;
+    uEl.textContent=String(units);
+    uEl.classList.remove("shake","bump"); void uEl.offsetWidth; uEl.classList.add("shake");
+    setTimeout(()=>uEl.classList.remove("shake"),1300);
+    const minus=document.createElement("span"); minus.className="minus"; minus.textContent="−"+delta;
+    minus.style.left=(uEl.offsetWidth+6)+"px"; $("units").append(minus); setTimeout(()=>minus.remove(),1300);
+    const from=shownComm||0, to=comm, t0=performance.now(), dur=900;
+    cEl.classList.remove("glow"); cEl.classList.add("lose");
+    if(to<from){ const step=now=>{ const k=Math.min(1,(now-t0)/dur), e=1-Math.pow(1-k,3);
+      cEl.textContent=money(from+(to-from)*e); if(k<1) requestAnimationFrame(step); else { cEl.textContent=money(to); setTimeout(()=>cEl.classList.remove("lose"),700); } }; requestAnimationFrame(step); }
+    else { cEl.textContent=money(comm); setTimeout(()=>cEl.classList.remove("lose"),900); }
+    mournUntil=0;
   }else{
     uEl.textContent=String(units); cEl.textContent=money(comm);
   }
@@ -372,7 +391,7 @@ $("form").addEventListener("submit",async e=>{
 });
 $("del").addEventListener("click",()=>{$("confirm").hidden=false; $("del").hidden=true;});
 $("noDel").addEventListener("click",()=>{$("confirm").hidden=true; $("del").hidden=false;});
-$("yesDel").addEventListener("click",async()=>{ if(!editing)return; try{await store.remove(editing.id); closeForm(); tapSuccess();}catch(e){$("formErr").textContent="Couldn't delete. Try again."; $("formErr").hidden=false;} });
+$("yesDel").addEventListener("click",async()=>{ if(!editing)return; mournUntil=Date.now()+4000; try{await store.remove(editing.id); closeForm(); tapSuccess();}catch(e){$("formErr").textContent="Couldn't delete. Try again."; $("formErr").hidden=false;} });
 
 /* ---------- sound ---------- */
 let actx=null;
