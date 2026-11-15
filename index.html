@@ -221,10 +221,14 @@ textarea{min-height:64px;resize:vertical}
 .recapbtn{border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:7px 14px;font-weight:700;font-size:13px;cursor:pointer}
 .badgegrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
 .badge{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;padding:10px 4px;border-radius:12px;background:var(--chip);min-width:0}
-.badge i{font-style:normal;font-size:24px;line-height:1;filter:grayscale(1);opacity:.35}
+.medal{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;flex:none;background:var(--card);color:var(--muted);box-shadow:inset 0 0 0 1.5px var(--line);transition:transform .2s}
+.medal svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.medal.on{color:#fff;box-shadow:0 6px 14px -6px rgba(20,40,120,.55)}
+.badge:hover .medal{transform:translateY(-2px)}
+.badge:not(.on) .medal{opacity:.7}
 .badge b{font-size:11px;font-weight:700;line-height:1.2;color:var(--muted)}
-.badge.on{background:color-mix(in srgb,var(--good) 12%,var(--card));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--good) 40%,transparent)}
-.badge.on i{filter:none;opacity:1} .badge.on b{color:var(--ink)}
+.badge.on{background:var(--card);box-shadow:inset 0 0 0 1px var(--line)}
+.badge.on b{color:var(--ink)}
 .badge{position:relative;border:0;font:inherit;color:inherit;cursor:help}
 .badge .tip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translate(-50%,4px);width:max-content;max-width:170px;background:var(--ink);color:var(--card);
   font-size:12px;font-weight:600;line-height:1.35;padding:8px 10px;border-radius:10px;opacity:0;pointer-events:none;transition:opacity .15s,transform .15s;z-index:6;text-align:center;box-shadow:0 8px 24px rgba(10,20,40,.25)}
@@ -255,7 +259,9 @@ textarea{min-height:64px;resize:vertical}
 .recap .rcell{background:rgba(255,255,255,.1);border-radius:14px;padding:10px 12px;min-width:0}
 .recap .rcell small{display:block;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.7}
 .recap .rcell b{font-family:var(--f-num);font-size:19px;overflow-wrap:anywhere}
-.recap .rbadges{font-size:22px;letter-spacing:4px;min-height:1em}
+.recap .rbadges{display:flex;flex-wrap:wrap;gap:8px;min-height:34px;margin-top:6px}
+.recap .rbadges .medal{width:34px;height:34px;box-shadow:0 0 0 1.5px rgba(255,255,255,.35)}
+.recap .rbadges .medal svg{width:17px;height:17px}
 .recap .rfoot{display:flex;justify-content:space-between;font-size:11px;opacity:.65;border-top:1px solid rgba(255,255,255,.2);padding-top:10px}
 .recaphint{color:#fff;opacity:.8;font-size:13px;text-align:center;margin-top:10px}
 @media (prefers-reduced-motion:reduce){.road .car{transition:none}.road .car.drive,.badge.pop,.recap{animation:none}}
@@ -513,6 +519,24 @@ const BADGES=[
   {id:"goal",   icon:"🏁", name:"Goal crusher", how:"Hit your monthly unit goal", prog:c=>goal?c.units+" of "+goal+" units":"Set a goal first", test:c=>!!goal&&c.units>=goal, silent:true},
   {id:"record", icon:"🏆", name:"Record month", how:"Beat your best month ever", prog:c=>c.bestOther?"Your best: "+c.bestOther+" units":"Needs a past month to beat", test:c=>c.units>0&&c.bestOther>0&&c.units>c.bestOther, silent:true},
 ];
+const BADGE_ICONS={
+  first:'<path d="M3 16v-3l2.2-5h13.6L21 13v3"/><path d="M3 16h18M6.5 11.5h11"/><circle cx="7" cy="16.5" r="1.8"/><circle cx="17" cy="16.5" r="1.8"/>',
+  hat:'<path d="M3 18.5h18"/><path d="M7 18.5V7.5h10v11"/><path d="M7 14.5h10"/>',
+  vsa:'<path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/>',
+  cash:'<rect x="3" y="7" width="18" height="10" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6.5 10v4M17.5 10v4"/>',
+  pro:'<path d="M12 4l8 4.5-8 4.5-8-4.5z"/><path d="M4 12.5l8 4.5 8-4.5"/><path d="M4 16.5l8 4.5 8-4.5"/>',
+  veritas:'<path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8L3.5 9.7l5.9-.9z"/>',
+  goal:'<path d="M5.5 21V4"/><path d="M5.5 4.5h11l-2.2 4 2.2 4h-11"/>',
+  record:'<path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3"/><path d="M12 14v4M8.5 21h7M9.5 18h5"/>'
+};
+const BADGE_COLORS={first:["#2f6bff","#00c2ff"],hat:["#7a2cff","#ff3d9a"],vsa:["#1f5fff","#14b86f"],cash:["#12a150","#9be22d"],
+  pro:["#00a3c4","#3d5bff"],veritas:["#ff9f1a","#ff3d7f"],goal:["#14b86f","#00c2ff"],record:["#ffb000","#ff6a00"]};
+function medal(id,on,size){
+  const m=document.createElement("span"); m.className="medal"+(on?" on":""); m.setAttribute("aria-hidden","true");
+  if(on){ const c=BADGE_COLORS[id]||["#2f6bff","#14b86f"]; m.style.background="linear-gradient(135deg,"+c[0]+","+c[1]+")"; }
+  if(size) { m.style.width=m.style.height=size+"px"; }
+  m.innerHTML='<svg viewBox="0 0 24 24">'+(BADGE_ICONS[id]||"")+'</svg>'; return m;
+}
 let badgeSeen={}, badgeWatch=0;
 function monthCtx(mk){
   const month=deals.filter(d=>(d.date||"").startsWith(mk)), live=month.filter(d=>d.status!=="unwound");
@@ -532,13 +556,13 @@ function renderBadges(mk){
   const g=$("badgeGrid"); g.replaceChildren();
   BADGES.forEach(b=>{ const on=earned.has(b.id); const el=document.createElement("button"); el.type="button"; el.className="badge"+(on?" on":"")+(fresh.includes(b)?" pop":"");
     el.setAttribute("aria-label",b.name+(on?", earned. ":", locked. ")+b.how);
-    const i=document.createElement("i"); i.textContent=b.icon; i.setAttribute("aria-hidden","true"); const t=document.createElement("b"); t.textContent=b.name;
+    const i=medal(b.id,on); const t=document.createElement("b"); t.textContent=b.name;
     const tip=document.createElement("span"); tip.className="tip"; tip.setAttribute("aria-hidden","true"); tip.textContent=(on?"Earned! ":"")+b.how;
     const pg=document.createElement("small"); pg.textContent=on?"Unlocked this month":b.prog(c); tip.append(pg);
     el.append(i,t,tip);
     el.addEventListener("click",()=>{ const was=el.classList.contains("show"); g.querySelectorAll(".badge.show").forEach(x=>x.classList.remove("show")); if(!was) el.classList.add("show"); });
     g.append(el); });
-  fresh.filter(b=>!b.silent).forEach(b=>setTimeout(()=>{ confetti(1); cheer("BADGE UNLOCKED", b.icon+"  "+b.name); },500));
+  fresh.filter(b=>!b.silent).forEach(b=>setTimeout(()=>{ confetti(1); cheer("BADGE UNLOCKED", b.name); },500));
 }
 function weekKey(dt){ const d=new Date(dt.getFullYear(),dt.getMonth(),dt.getDate()); const wd=(d.getDay()+6)%7; d.setDate(d.getDate()-wd); return d.toISOString().slice(0,10); }
 function weekStreak(){
@@ -570,7 +594,7 @@ function openRecap(){
    ["Top product",top3?top3[0]+" · "+top3[1]:"—"],["Vs last month",(diff>0?"+":diff<0?"−":"±")+Math.abs(diff)+" units"],
    ["Goal",goal?(c.units>=goal?"Hit ✓":Math.round(c.units/goal*100)+"%"):"—"]].forEach(([l,v])=>{const cell=el("div","rcell"); cell.append(el("small",null,l), el("b",null,v)); grid.append(cell);});
   const earned=BADGES.filter(b=>b.test(c));
-  const bwrap=el("div"); bwrap.append(el("div","eyebrow",earned.length?"Badges earned · "+earned.length:"No badges yet this month"), el("div","rbadges",earned.map(b=>b.icon).join(" ")));
+  const bwrap=el("div"); bwrap.append(el("div","eyebrow",earned.length?"Badges earned · "+earned.length:"No badges yet this month"), (()=>{ const r=el("div","rbadges"); earned.forEach(b=>r.append(medal(b.id,true))); return r; })());
   const foot=el("div","rfoot"); foot.append(el("span",null,"© Lora Enterprises"), el("span",null,c.live.length+" deal"+(c.live.length===1?"":"s")));
   card.append(x,top,hero,grid,bwrap,foot);
   $("recapScrim").hidden=false; tap();
