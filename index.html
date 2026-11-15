@@ -151,6 +151,9 @@ textarea{min-height:64px;resize:vertical}
 .ring circle{fill:none;stroke-width:11}
 .ring .track{stroke:var(--chip)}
 .ring .fill{stroke:url(#ringGrad);stroke-linecap:round;stroke-dasharray:333.0;stroke-dashoffset:333.0;transition:stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1)}
+.ring .fill{animation:ringbreathe 4.5s ease-in-out infinite}
+@keyframes ringbreathe{0%,100%{filter:drop-shadow(0 0 0 transparent)}50%{filter:drop-shadow(0 0 4px color-mix(in srgb,var(--accent) 45%,transparent))}}
+@media (prefers-reduced-motion:reduce){.ring .fill{animation:none}}
 .ringwrap.hit .ring{filter:drop-shadow(0 0 7px color-mix(in srgb,var(--good) 65%,transparent))}
 .ringwrap #units{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:46px}
 .ringwrap #units small{margin:4px 0 0;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
@@ -221,6 +224,39 @@ textarea{min-height:64px;resize:vertical}
 @keyframes pcshine{0%,45%{transform:translateX(-100%)}85%,100%{transform:translateX(120%)}}
 @keyframes pcbump{0%{transform:scale(.85)}50%{transform:scale(1.14)}100%{transform:none}}
 @media (prefers-reduced-motion:reduce){.pc-proj,.pc-earned::after,.paycard.bump .pc-amt{animation:none}.pc-earned{transition:none}}
+
+/* ---- round 3: tools, alerts, calendar ---- */
+.tools{display:flex;gap:8px;align-items:center}
+.searchbox{position:relative;flex:1;min-width:0}
+.searchbox svg{position:absolute;left:12px;top:50%;width:16px;height:16px;transform:translateY(-50%);fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round;pointer-events:none}
+.searchbox input{width:100%;box-sizing:border-box;padding:11px 12px 11px 36px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:500 15px var(--f-body)}
+.searchbox input::-webkit-search-cancel-button{cursor:pointer}
+.toolbtn{flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:11px 14px;font-weight:700;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.toolbtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.alertbar{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:0;cursor:pointer;border-radius:12px;padding:11px 14px;font:600 14px var(--f-body);
+  background:color-mix(in srgb,var(--warn) 14%,var(--card));color:var(--ink);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--warn) 40%,transparent)}
+.alertbar .dot{width:10px;height:10px;border-radius:50%;background:var(--warn);flex:none;animation:apulse 1.8s ease-in-out infinite}
+.alertbar .go{margin-left:auto;color:var(--warn);font-weight:700;white-space:nowrap}
+@keyframes apulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--warn) 60%,transparent)}50%{box-shadow:0 0 0 6px transparent}}
+.listhead{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px;font-weight:600;color:var(--muted);margin-bottom:-6px}
+.listhead button{border:0;background:none;color:var(--accent);font-weight:700;font-size:14px;cursor:pointer;padding:4px 0}
+.tag.follow{background:color-mix(in srgb,var(--warn) 16%,var(--chip));color:var(--warn)}
+.tag.paid{background:color-mix(in srgb,var(--good) 14%,var(--chip));color:var(--good)}
+.cal{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.callegend{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted)}
+.callegend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+.calgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.cwd{font-size:11px;font-weight:700;color:var(--muted);text-align:center;letter-spacing:.04em}
+.cday{aspect-ratio:1;max-width:100%;border:0;border-radius:9px;background:var(--chip);color:var(--muted);font:600 12px var(--f-num);display:grid;place-items:center;cursor:pointer;position:relative;padding:0}
+.cday.blank{background:none;cursor:default}
+.cday.l1{background:color-mix(in srgb,var(--good) 28%,var(--chip));color:var(--ink)}
+.cday.l2{background:color-mix(in srgb,var(--good) 58%,var(--chip));color:var(--ink)}
+.cday.l3{background:var(--good);color:#fff}
+.cday.today{box-shadow:inset 0 0 0 2px var(--accent)}
+.cday.sel{outline:2px solid var(--ink);outline-offset:1px}
+.cday.future{opacity:.45;cursor:default}
+.formhint{font-size:12px;color:var(--muted);margin:-8px 0 0}
+@media (prefers-reduced-motion:reduce){.alertbar .dot{animation:none}}
 /* ---- race-to-goal road ---- */
 .road{position:relative;height:48px;background:var(--chip);border-radius:12px;overflow:hidden;--p:0}
 .road .lane{position:absolute;left:14px;right:44px;top:50%;height:3px;transform:translateY(-50%);background:repeating-linear-gradient(90deg,var(--muted) 0 14px,transparent 14px 26px);opacity:.45}
@@ -316,7 +352,7 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
     <div class="units">
       <div class="ringwrap" id="ringWrap">
         <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
-          <defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--accent)"/><stop offset="1" style="stop-color:var(--good)"/></linearGradient></defs>
+          <defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--accent)"/><stop offset="1" style="stop-color:var(--good)"/><animateTransform id="ringSpin" attributeName="gradientTransform" type="rotate" from="0 .5 .5" to="360 .5 .5" dur="9s" repeatCount="indefinite"/></linearGradient></defs>
           <circle class="track" cx="60" cy="60" r="53"/><circle class="fill" id="ringFill" cx="60" cy="60" r="53"/>
         </svg>
         <div class="big" id="units"><span class="unum" id="unitsNum">0</span><small>units</small></div>
@@ -354,14 +390,28 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
     <div class="badgegrid" id="badgeGrid"></div>
   </section>
 
+  <section class="cal" aria-label="Deal calendar">
+    <div class="badgehead"><h3>Deal calendar<span id="calMonth"></span></h3><span class="callegend" aria-hidden="true">Less <i style="background:var(--chip)"></i><i style="background:color-mix(in srgb,var(--good) 28%,var(--chip))"></i><i style="background:color-mix(in srgb,var(--good) 58%,var(--chip))"></i><i style="background:var(--good)"></i> More</span></div>
+    <div class="calgrid" id="calGrid"></div>
+  </section>
+
+  <button type="button" class="alertbar" id="alertBar" hidden><span class="dot" aria-hidden="true"></span><span id="alertText"></span><span class="go">Review ›</span></button>
+
+  <div class="tools">
+    <label class="searchbox"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input type="search" id="searchBox" placeholder="Search deal #, customer, stock #" autocomplete="off" aria-label="Search deals"></label>
+    <button type="button" class="toolbtn" id="csvBtn" title="Download this month as a spreadsheet"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Excel</button>
+  </div>
+
   <div class="filters" role="group" aria-label="Filter deals">
     <button class="chipbtn" data-f="all" aria-pressed="true" type="button">All</button>
     <button class="chipbtn" data-f="pending" aria-pressed="false" type="button">Pending</button>
     <button class="chipbtn" data-f="funded" aria-pressed="false" type="button">Funded</button>
     <button class="chipbtn" data-f="cash" aria-pressed="false" type="button">Cash deal</button>
     <button class="chipbtn" data-f="unwound" aria-pressed="false" type="button">Unwound</button>
+    <button class="chipbtn" data-f="unpaid" aria-pressed="false" type="button">Unpaid</button>
   </div>
 
+  <div class="listhead" id="listHead" hidden><span id="listHeadText"></span><button type="button" id="listHeadClear">Clear</button></div>
   <section class="log" id="log" aria-label="Deals"></section>
   <p class="swipehint">Swipe a pending deal right to mark it funded, or left to delete.</p>
   <p class="note" id="syncNote">Loading your deals…</p>
@@ -380,6 +430,7 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
 <div class="scrim" id="scrim" hidden>
   <form class="sheet" id="form" novalidate>
     <h2 id="formTitle">Log a deal</h2>
+    <p class="formhint" id="quickHint" hidden>Quick log: today’s date and your usual type and doc processor are filled in.</p>
     <div class="grid">
       <label class="f">Deal #<input id="fDeal" class="num" inputmode="numeric" autocomplete="off" required></label>
       <label class="f">Date processed<input id="fDate" type="date" required></label>
@@ -404,6 +455,8 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
       <label class="f full">Notes<textarea id="fNotes"></textarea></label>
       <div class="f full"><span class="f">Doc processor</span>
         <div class="seg" id="fProc"><button type="button" data-v="Nikki">Nikki</button><button type="button" data-v="Vicky">Vicky</button></div></div>
+      <div class="f full"><span class="f">Paid on paycheck</span>
+        <div class="seg" id="fPaid"><button type="button" data-v="no">Not yet</button><button type="button" data-v="yes">Paid ✓</button></div></div>
     </div>
     <p class="err" id="formErr" hidden></p>
     <div class="row2">
@@ -676,6 +729,7 @@ function renderThemePicker(){
   mk("Toyota red",accentPref==="red",()=>{ accentPref=accentPref==="red"?"blue":"red"; try{localStorage.setItem("trippad.accent",accentPref);}catch(e){} applyTheme(); renderThemePicker(); });
 }
 applyTheme(); renderThemePicker();
+try{ if(reduceMotion()) document.getElementById("ringSpin")?.remove(); }catch(e){}
 
 /* ---------- greeting ---------- */
 let greetName="Jonathan Lora";
@@ -713,6 +767,58 @@ function renderPay(mk, live){
   if(grew && !reduceMotion()){ card.classList.remove("bump"); void card.offsetWidth; card.classList.add("bump");
     const pl=document.createElement("span"); pl.className="pc-plus"; pl.textContent="+"+money(target-from); amtEl.append(pl); setTimeout(()=>pl.remove(),1300); }
 }
+
+/* ---------- round 3: follow-ups, search, day filter, calendar, export, quick log ---------- */
+let searchQ="", dayFilter=null;
+const FOLLOW_DAYS=5;
+function daysSince(dateStr){ if(!dateStr) return 0; const [y,m,d]=dateStr.split("-").map(Number); const then=new Date(y,m-1,d), now=new Date(); now.setHours(0,0,0,0); return Math.round((now-then)/86400000); }
+function overdue(){ return deals.filter(d=>d.status==="pending" && daysSince(d.date)>FOLLOW_DAYS).sort((a,b)=>(a.date||"").localeCompare(b.date||"")); }
+function matches(d,q){ return [d.dealNo,d.customer,d.stock,d.vehicle,d.partner,d.notes,d.processor].some(v=>String(v||"").toLowerCase().includes(q)); }
+function renderAlert(){
+  const od=overdue(), bar=$("alertBar");
+  bar.hidden=!od.length;
+  if(od.length) $("alertText").textContent=od.length+" pending deal"+(od.length===1?"":"s")+" over "+FOLLOW_DAYS+" days. Follow up on funding.";
+}
+function renderCal(mk, live){
+  const [y,m]=mk.split("-").map(Number), first=new Date(y,m-1,1), dim=new Date(y,m,0).getDate(), lead=first.getDay();
+  const per={}; live.forEach(d=>{ per[d.date]=(per[d.date]||0)+(d.split?0.5:1); });
+  const todayKey=today(), g=$("calGrid"); g.replaceChildren();
+  $("calMonth").textContent=first.toLocaleString("en-US",{month:"long"});
+  ["S","M","T","W","T","F","S"].forEach(w=>{ const h=document.createElement("div"); h.className="cwd"; h.textContent=w; g.append(h); });
+  for(let i=0;i<lead;i++){ const b=document.createElement("div"); b.className="cday blank"; g.append(b); }
+  for(let day=1; day<=dim; day++){
+    const key=mk+"-"+String(day).padStart(2,"0"), u=per[key]||0;
+    const c=document.createElement("button"); c.type="button";
+    const lvl=u>=3?3:u>=2?2:u>0?1:0;
+    c.className="cday"+(lvl?" l"+lvl:"")+(key===todayKey?" today":"")+(dayFilter===key?" sel":"")+(key>todayKey?" future":"");
+    c.textContent=String(day);
+    c.setAttribute("aria-label",new Date(y,m-1,day).toLocaleDateString("en-US",{month:"long",day:"numeric"})+": "+u+" unit"+(u===1?"":"s"));
+    if(key<=todayKey) c.addEventListener("click",()=>{ dayFilter=dayFilter===key?null:key; searchQ=""; $("searchBox").value=""; if(filter==="followup") filter="all"; listEnter=true; render(); tap(); });
+    g.append(c);
+  }
+}
+function csvMonth(){
+  const mk=monthKey(view), rows=deals.filter(d=>(d.date||"").startsWith(mk)).sort((a,b)=>(a.date||"").localeCompare(b.date||""));
+  const head=["Date processed","Deal #","Customer","Vehicle","Stock #","Type","Status","Credit","Split with","Front gross","Back gross","Commission","Products","Veritas bonus","Doc processor","Paid","Notes"];
+  const esc=v=>{ const s=String(v==null?"":v); return /[",\n\r]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; };
+  const lines=[head.map(esc).join(",")];
+  rows.forEach(d=>{ const [y,m,dd]=(d.date||"--").split("-");
+    lines.push([m+"/"+dd+"/"+y, d.dealNo, d.customer, d.vehicle, d.stock, d.type==="CPO"?"TCUV":d.type, d.status==="cash"?"Cash deal":d.status, d.split?"50%":"100%", d.partner,
+      num(d.front), num(d.back), num(d.commission), (d.products||[]).join("; "), d.veritas?"Yes":"No", d.processor, d.paid?"Yes":"No", d.notes].map(esc).join(",")); });
+  const live=rows.filter(d=>d.status!=="unwound");
+  lines.push(""); lines.push(["Totals","","","","","","",live.reduce((s,d)=>s+(d.split?.5:1),0)+" units","",live.reduce((s,d)=>s+num(d.front),0),live.reduce((s,d)=>s+num(d.back),0),live.reduce((s,d)=>s+num(d.commission),0)].map(esc).join(","));
+  return {name:"trip-pad-"+mk+".csv", text:"﻿"+lines.join("\r\n")};
+}
+async function exportCsv(){
+  const {name,text}=csvMonth();
+  try{ const dl=window.claude?await window.claude.use("downloads"):null;
+    if(dl){ await dl.save({filename:name,data:text}); setNote("Saved "+name+". It opens in Excel."); return; } }
+  catch(e){ if(e&&e.code==="declined") return; if(e&&e.code==="rate_limited"){ setNote("A download is already waiting for you. Finish that one first.","warn"); return; } }
+  try{ const blob=new Blob([text],{type:"text/csv"}), a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; document.body.append(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href); a.remove();},1000); setNote("Saved "+name+". It opens in Excel."); }
+  catch(e){ setNote("Couldn't make the spreadsheet here. Try on a computer.","warn"); }
+}
+function lastPrefs(){ try{ return JSON.parse(localStorage.getItem("trippad.last")||"{}"); }catch(e){ return {}; } }
+function saveLastPrefs(d){ try{ localStorage.setItem("trippad.last",JSON.stringify({type:d.type,processor:d.processor})); }catch(e){} }
 
 /* ---------- render ---------- */
 function monthKey(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");}
@@ -760,12 +866,19 @@ function render(){
     $("bestMonthLbl").textContent=best?new Date(+best.k.slice(0,4),+best.k.slice(5,7)-1,1).toLocaleString("en-US",{month:"short",year:"2-digit"}).replace(" "," '"):""; }
   $("goalText").textContent=goal?(units>=goal?"Goal hit: "+units+" of "+goal:(goal-units)+" to go for "+goal+" units"):"No goal set";
 
-  const shown=filter==="all"?month:month.filter(d=>d.status===filter);
+  renderAlert(); renderCal(mk, live);
+  let shown, headText="";
+  if(searchQ){ shown=deals.filter(d=>matches(d,searchQ)).sort((a,b)=>(b.date||"").localeCompare(a.date||"")); headText=shown.length+" result"+(shown.length===1?"":"s")+" for “"+searchQ+"” in all months"; }
+  else if(filter==="followup"){ shown=overdue(); headText="Pending over "+FOLLOW_DAYS+" days · all months"; }
+  else if(dayFilter){ shown=month.filter(d=>d.date===dayFilter); const [yy,mm,dd2]=dayFilter.split("-").map(Number); headText="Deals on "+new Date(yy,mm-1,dd2).toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"}); }
+  else if(filter==="unpaid") shown=month.filter(d=>d.status!=="unwound"&&d.status!=="pending"&&!d.paid);
+  else shown=filter==="all"?month:month.filter(d=>d.status===filter);
+  $("listHead").hidden=!headText; $("listHeadText").textContent=headText;
   const log=$("log"); log.replaceChildren();
   if(!shown.length){
     const e=document.createElement("div"); e.className="empty";
-    const b=document.createElement("b"); b.textContent=month.length?"No "+(filter==="cash"?"cash":filter)+" deals this month":"No deals logged for "+view.toLocaleString("en-US",{month:"long"});
-    e.append(b, document.createTextNode(month.length?"Try another filter.":"Tap “Log a deal” after each sale to start your count."));
+    const b=document.createElement("b"); b.textContent=headText?(searchQ?"No deals match “"+searchQ+"”":"Nothing here"):month.length?"No "+(filter==="cash"?"cash":filter)+" deals this month":"No deals logged for "+view.toLocaleString("en-US",{month:"long"});
+    e.append(b, document.createTextNode(headText?"Tap Clear to see this month again.":month.length?"Try another filter.":"Tap “Log a deal” after each sale to start your count."));
     log.append(e); return;
   }
   const enter=listEnter && !reduceMotion(); listEnter=false;
@@ -785,6 +898,8 @@ function render(){
     if((d.products||[]).length) tag((d.products.length)+" product"+(d.products.length>1?"s":""));
     if(d.veritas) tag("Veritas bonus","funded");
     if(d.processor) tag("Docs: "+d.processor);
+    if(d.paid) tag("Paid ✓","paid");
+    if(d.status==="pending"){ const age=daysSince(d.date); if(age>FOLLOW_DAYS) tag("Follow up · "+age+"d","follow"); }
     main.append(c,v,tags);
     const right=document.createElement("div"); right.className="dright";
     const cm=document.createElement("div"); cm.className="comm"+(d.status!=="unwound"&&num(d.commission)>0?" lit":""); cm.textContent=money(num(d.commission));
@@ -803,7 +918,7 @@ function render(){
 function segVal(id){return $(id).querySelector('[aria-pressed="true"]')?.dataset.v;}
 function setSeg(id,v){$(id).querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===v)));}
 $("fProc").addEventListener("click",e=>{const b=e.target.closest("button"); if(!b)return; setSeg("fProc", b.getAttribute("aria-pressed")==="true" ? "" : b.dataset.v);});
-["fType","fStatus","fSplit","fVeritas"].forEach(id=>$(id).addEventListener("click",e=>{const b=e.target.closest("button"); if(!b)return; setSeg(id,b.dataset.v); if(id==="fSplit")$("partnerWrap").hidden=b.dataset.v!=="yes";}));
+["fType","fStatus","fSplit","fVeritas","fPaid"].forEach(id=>$(id).addEventListener("click",e=>{const b=e.target.closest("button"); if(!b)return; setSeg(id,b.dataset.v); if(id==="fSplit")$("partnerWrap").hidden=b.dataset.v!=="yes";}));
 PRODUCTS.forEach(p=>{const b=document.createElement("button"); b.type="button"; b.className="chipbtn"; b.textContent=p; b.dataset.p=p; b.setAttribute("aria-pressed","false");
   b.addEventListener("click",()=>b.setAttribute("aria-pressed",String(b.getAttribute("aria-pressed")!=="true"))); $("fProds").append(b);});
 
@@ -817,7 +932,7 @@ function openForm(d){
   $("formTitle").textContent=d?"Edit deal":"Log a deal";
   $("fDate").value=d?.date||(monthKey(view)===monthKey(new Date())?today():monthKey(view)+"-01");
   $("fDeal").value=d?.dealNo||""; $("fStock").value=d?.stock||""; $("fCust").value=d?.customer||""; $("fVeh").value=d?.vehicle||"";
-  setSeg("fType",d?.type||"New"); setSeg("fStatus",d?.status||"pending"); setSeg("fSplit",d?.split?"yes":"no"); setSeg("fVeritas",d?.veritas?"yes":"no"); setSeg("fProc",d?.processor||"");
+  const lp=d?{}:lastPrefs(); setSeg("fType",d?.type||lp.type||"New"); setSeg("fStatus",d?.status||"pending"); setSeg("fSplit",d?.split?"yes":"no"); setSeg("fVeritas",d?.veritas?"yes":"no"); setSeg("fProc",d?(d.processor||""):(lp.processor||"")); setSeg("fPaid",d?.paid?"yes":"no"); $("quickHint").hidden=!!d||!(lp.type||lp.processor);
   $("partnerWrap").hidden=!d?.split; $("fPartner").value=d?.partner||""; syncPartner();
   $("fFront").value=d?.front??""; $("fBack").value=d?.back??""; $("fComm").value=d?.commission??"";
   $("fProds").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String((d?.products||[]).includes(b.dataset.p))));
@@ -840,9 +955,9 @@ $("form").addEventListener("submit",async e=>{
     customer:$("fCust").value.trim().toUpperCase(), vehicle:$("fVeh").value.trim().toUpperCase(), type:segVal("fType"), status:segVal("fStatus"),
     split, partner:split?$("fPartner").value.trim():"", front:num($("fFront").value), back:num($("fBack").value),
     commission:num($("fComm").value), products:[...$("fProds").querySelectorAll('[aria-pressed="true"]')].map(b=>b.dataset.p),
-    notes:$("fNotes").value.trim(), veritas:segVal("fVeritas")==="yes", processor:segVal("fProc")||""};
+    notes:$("fNotes").value.trim(), veritas:segVal("fVeritas")==="yes", processor:segVal("fProc")||"", paid:segVal("fPaid")==="yes"};
   $("save").disabled=true;
-  try{ await store.save(d); const [y,m]=d.date.split("-"); view=new Date(+y,+m-1,1); closeForm(); render(); if(isNew) chaChing(ctx); tapSuccess(); }
+  try{ await store.save(d); if(isNew) saveLastPrefs(d); const [y,m]=d.date.split("-"); view=new Date(+y,+m-1,1); closeForm(); render(); if(isNew) chaChing(ctx); tapSuccess(); }
   catch(err){ $("formErr").textContent=err?.code==="quota_exceeded"?"Storage is full. Delete some old deals, then save again.":"Couldn't save. Check your connection and tap Save again."; $("formErr").hidden=false; }
   finally{ $("save").disabled=false; }
 });
@@ -919,8 +1034,15 @@ function tapSuccess(){ tap(); setTimeout(tap,130); }
 document.addEventListener("click",e=>{ const b=e.target.closest("button, label.chipbtn"); if(b && !b.closest("#save,#yesDel") && b.id!=="hapSwitch") tap(); },true);
 
 /* ---------- month, filter, goal ---------- */
-$("prev").addEventListener("click",()=>{view.setMonth(view.getMonth()-1); listEnter=true; render();});
-$("next").addEventListener("click",()=>{view.setMonth(view.getMonth()+1); listEnter=true; render();});
+$("prev").addEventListener("click",()=>{view.setMonth(view.getMonth()-1); dayFilter=null; listEnter=true; render();});
+let searchT=0;
+$("searchBox").addEventListener("input",e=>{ clearTimeout(searchT); searchT=setTimeout(()=>{ searchQ=e.target.value.trim().toLowerCase(); dayFilter=null; if(filter==="followup") filter="all"; render(); },150); });
+$("listHeadClear").addEventListener("click",()=>{ searchQ=""; $("searchBox").value=""; dayFilter=null; if(filter==="followup") filter="all";
+  document.querySelectorAll(".filters .chipbtn").forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.f===filter))); listEnter=true; render(); });
+$("alertBar").addEventListener("click",()=>{ filter="followup"; searchQ=""; $("searchBox").value=""; dayFilter=null;
+  document.querySelectorAll(".filters .chipbtn").forEach(x=>x.setAttribute("aria-pressed","false")); listEnter=true; render(); $("listHead").scrollIntoView({behavior:"smooth",block:"start"}); });
+$("csvBtn").addEventListener("click",exportCsv);
+$("next").addEventListener("click",()=>{view.setMonth(view.getMonth()+1); dayFilter=null; listEnter=true; render();});
 document.querySelectorAll(".filters .chipbtn").forEach(b=>b.addEventListener("click",()=>{filter=b.dataset.f;
   document.querySelectorAll(".filters .chipbtn").forEach(x=>x.setAttribute("aria-pressed",String(x===b))); render();}));
 $("goalEdit").addEventListener("click",()=>{$("goalInput").value=goal||""; $("goalScrim").hidden=false; $("goalInput").focus();});
