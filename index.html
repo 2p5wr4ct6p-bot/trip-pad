@@ -80,7 +80,7 @@ h1{font-family:var(--f-display);font-weight:700;font-size:30px;margin:0;letter-s
 .veh{font-size:14px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
 .tag{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:999px;background:var(--chip);color:var(--muted)}
-.tag.pending{color:var(--warn)} .tag.funded{color:var(--good)} .tag.unwound{color:var(--bad)} .tag.split{color:var(--accent)}
+.tag.pending{color:var(--warn)} .tag.funded{color:var(--good)} .tag.unwound{color:var(--bad)} .tag.cash{color:var(--good)} .tag.split{color:var(--accent)}
 .dright{text-align:right}
 .comm{font-family:var(--f-num);font-weight:600;font-variant-numeric:tabular-nums}
 .deal.unwound .comm{text-decoration:line-through;color:var(--muted)}
@@ -155,6 +155,7 @@ textarea{min-height:64px;resize:vertical}
     <button class="chipbtn" data-f="all" aria-pressed="true" type="button">All</button>
     <button class="chipbtn" data-f="pending" aria-pressed="false" type="button">Pending</button>
     <button class="chipbtn" data-f="funded" aria-pressed="false" type="button">Funded</button>
+    <button class="chipbtn" data-f="cash" aria-pressed="false" type="button">Cash deal</button>
     <button class="chipbtn" data-f="unwound" aria-pressed="false" type="button">Unwound</button>
   </div>
 
@@ -188,7 +189,7 @@ textarea{min-height:64px;resize:vertical}
       <div class="f full"><span class="f">Type</span>
         <div class="seg" id="fType"><button type="button" data-v="New">New</button><button type="button" data-v="Used">Used</button><button type="button" data-v="CPO">TCUV</button></div></div>
       <div class="f full"><span class="f">Status</span>
-        <div class="seg" id="fStatus"><button type="button" data-v="pending">Pending</button><button type="button" data-v="funded">Funded</button><button type="button" data-v="unwound">Unwound</button></div></div>
+        <div class="seg" id="fStatus"><button type="button" data-v="pending">Pending</button><button type="button" data-v="funded">Funded</button><button type="button" data-v="cash">Cash deal</button><button type="button" data-v="unwound">Unwound</button></div></div>
       <label class="f">Front gross<input id="fFront" class="num" inputmode="decimal" placeholder="0"></label>
       <label class="f">Back gross<input id="fBack" class="num" inputmode="decimal" placeholder="0"></label>
       <div class="f full"><span class="f">Products sold</span>
@@ -269,7 +270,7 @@ function render(){
   const log=$("log"); log.replaceChildren();
   if(!shown.length){
     const e=document.createElement("div"); e.className="empty";
-    const b=document.createElement("b"); b.textContent=month.length?"No "+filter+" deals this month":"No deals logged for "+view.toLocaleString("en-US",{month:"long"});
+    const b=document.createElement("b"); b.textContent=month.length?"No "+(filter==="cash"?"cash":filter)+" deals this month":"No deals logged for "+view.toLocaleString("en-US",{month:"long"});
     e.append(b, document.createTextNode(month.length?"Try another filter.":"Tap “Log a deal” after each sale to start your count."));
     log.append(e); return;
   }
@@ -283,7 +284,7 @@ function render(){
     const v=document.createElement("div"); v.className="veh"; v.textContent=[d.vehicle,d.stock?"Stk "+d.stock:""].filter(Boolean).join(" · ")||"Processed "+new Date(+y,+m-1,+dd).toLocaleDateString("en-US");
     const tags=document.createElement("div"); tags.className="tags";
     const tag=(t,cl)=>{const s=document.createElement("span"); s.className="tag "+(cl||""); s.textContent=t; tags.append(s);};
-    tag(d.status||"pending",d.status||"pending"); if(d.type&&d.type!=="New") tag(d.type==="CPO"?"TCUV":d.type);
+    tag(d.status==="cash"?"cash deal":(d.status||"pending"),d.status||"pending"); if(d.type&&d.type!=="New") tag(d.type==="CPO"?"TCUV":d.type);
     tag(d.split?"50% credit":"100% credit", d.split?"split":"funded");
     if(d.split&&d.partner) tag("w/ "+d.partner,"split");
     if((d.products||[]).length) tag((d.products.length)+" product"+(d.products.length>1?"s":""));
