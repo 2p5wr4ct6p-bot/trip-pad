@@ -16,7 +16,9 @@
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}*,*::before,*::after{box-sizing:inherit}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@600;800&family=Sora:wght@500;600&family=Barlow+Condensed:ital,wght@1,800&family=Archivo+Narrow:wght@600;700&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600&family=Barlow+Condensed:ital,wght@1,800&family=Archivo+Narrow:wght@600;700&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
 <style>
 /* Layout: a salesperson's month at a glance — month switcher, tally board, then the deal log; add/edit opens a bottom sheet. */
 :root{
@@ -399,10 +401,46 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
 @keyframes spbar{to{width:100%}}
 @keyframes streak{from{transform:translateX(0) skewX(-20deg)}to{transform:translateX(220vw) skewX(-20deg)}}
 @media (prefers-reduced-motion:reduce){.splash *{animation:none!important}.splash .sp-bar{width:100%}}
+
+/* ---- round 4: coach, follow-ups, year, undo, backup ---- */
+.coach{display:flex;gap:8px;align-items:baseline;margin-top:8px;padding:9px 12px;border-radius:12px;background:var(--accent-soft);font-size:13.5px;font-weight:600;line-height:1.35}
+.coach b{flex:none;color:var(--accent);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.alertbar.fu{background:color-mix(in srgb,var(--accent) 12%,var(--card));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 40%,transparent)}
+.alertbar.fu .dot{background:var(--accent);animation:none}
+.alertbar.fu .go{color:var(--accent)}
+.alertbar + .alertbar{margin-top:-6px}
+.tag.fu{background:var(--accent-soft);color:var(--accent)}
+.year{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.ybars{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;align-items:end;height:120px}
+.ybar{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;height:100%;border:0;background:none;padding:0;cursor:pointer;color:var(--muted);font:600 10px var(--f-body);min-width:0}
+.ybar .yb{position:relative;width:100%;max-width:22px;flex:1;display:flex;align-items:flex-end;border-radius:6px;background:var(--chip);overflow:hidden}
+.ybar .yb i{display:block;width:100%;height:var(--h,0%);min-height:0;border-radius:6px;background:linear-gradient(180deg,var(--accent),color-mix(in srgb,var(--accent) 55%,var(--card)));transition:height .6s cubic-bezier(.2,.8,.2,1)}
+.ybar .yn{font-family:var(--f-num);font-weight:700;font-size:11px;color:var(--ink);min-height:13px}
+.ybar.sel{color:var(--ink)} .ybar.sel .yb{box-shadow:0 0 0 2px var(--accent)}
+.ybar.future{opacity:.45}
+.ystats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.ystats .stat{background:var(--chip);border-radius:12px;padding:8px 10px}
+.ystats .lbl{font-size:11px;color:var(--muted);font-weight:600}
+.ystats .v{font-family:var(--f-num);font-weight:700;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.undo{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:45;display:flex;align-items:center;gap:14px;
+  padding:10px 10px 10px 16px;border-radius:14px;background:var(--ink);color:var(--card);font-weight:600;font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,.3);max-width:calc(100vw - 32px)}
+.undo.in{animation:undoin .35s cubic-bezier(.2,1.3,.4,1) both}
+.undo span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.undo button{flex:none;border:0;border-radius:10px;padding:7px 14px;background:var(--accent);color:var(--accent-ink,#fff);font-weight:800;font-size:14px;cursor:pointer}
+@keyframes undoin{from{opacity:0;transform:translate(-50%,16px)}to{opacity:1;transform:translate(-50%,0)}}
+.bkbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:11px 14px;border-radius:12px;font-size:14px;font-weight:600;background:color-mix(in srgb,var(--good) 12%,var(--card));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--good) 40%,transparent)}
+.bkbar span{flex:1 1 200px}
+.bkbar button{border:0;border-radius:999px;padding:6px 12px;font-weight:700;font-size:13px;cursor:pointer;background:var(--good);color:#fff}
+.bkbar button.later{background:none;color:var(--muted)}
+.cal,.year,.team{content-visibility:auto;contain-intrinsic-size:auto 420px}
+@media (prefers-reduced-motion:reduce){.undo.in{animation:none}.ybar .yb i{transition:none}}
 </style>
 <div class="splash" id="splash" aria-hidden="true"><span class="sp-streak s1"></span><span class="sp-streak s2"></span><div class="sp-in"><b><span>You got</span><span>this!</span></b><span class="sp-bar"></span></div></div>
 <script>
 (function(){ const sp=document.getElementById("splash"); if(!sp) return;
+  try{ const L=[["You got","this!"],["Close","strong."],["One","more."],["Own","today."],["Stay","hungry."],["Make it","count."],["No days","off."],["Sell","the day."]];
+    const n=new Date(), doy=Math.floor((n-new Date(n.getFullYear(),0,0))/864e5), pick=L[doy%L.length], s=sp.querySelectorAll(".sp-in b span");
+    if(s.length===2){ s[0].textContent=pick[0]; s[1].textContent=pick[1]; } }catch(e){}
   setTimeout(()=>{ sp.classList.add("out"); setTimeout(()=>sp.remove(),700); },2000);
   sp.addEventListener("click",()=>{ sp.classList.add("out"); setTimeout(()=>sp.remove(),700); });
 })();
@@ -442,6 +480,7 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
     </div>
     <div class="goal">
       <div class="goalrow"><span id="goalText"></span><button type="button" id="goalEdit">Set goal</button></div>
+      <div class="coach" id="coach" hidden></div>
     </div>
     <div class="stats">
       <div class="stat"><div class="lbl">Front</div><div class="v" id="front">$0</div></div>
@@ -464,6 +503,8 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
   </section>
 
   <button type="button" class="alertbar" id="alertBar" hidden><span class="dot" aria-hidden="true"></span><span id="alertText"></span><span class="go">Review ›</span></button>
+  <button type="button" class="alertbar fu" id="fuBar" hidden><span class="dot" aria-hidden="true"></span><span id="fuText"></span><span class="go">Review ›</span></button>
+  <div class="bkbar" id="bkBar" hidden><span id="bkText"></span><button type="button" id="bkNow">Back up now</button><button type="button" class="later" id="bkLater">Later</button></div>
 
   <div class="tools">
     <label class="searchbox"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input type="search" id="searchBox" placeholder="Search deal #, customer, stock #" autocomplete="off" aria-label="Search deals"></label>
@@ -487,6 +528,15 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
     <div class="badgehead"><div class="calhead"><h3>Deal calendar<span id="calMonth"></span></h3><button type="button" class="todaybtn" id="calToday">Today</button></div><span class="callegend" aria-hidden="true">Less <i style="background:var(--chip)"></i><i style="background:color-mix(in srgb,var(--good) 28%,var(--chip))"></i><i style="background:color-mix(in srgb,var(--good) 58%,var(--chip))"></i><i style="background:var(--good)"></i> More</span></div>
     <div class="calgrid" id="calGrid"></div>
   </section>
+  <section class="year" aria-label="Year view">
+    <div class="badgehead"><h3>Year<span id="yearLbl"></span></h3></div>
+    <div class="ybars" id="yBars"></div>
+    <div class="ystats">
+      <div class="stat"><div class="lbl" id="yUnitsLbl">Units YTD</div><div class="v" id="yUnits">0</div></div>
+      <div class="stat"><div class="lbl" id="yCommLbl">Comm. YTD</div><div class="v" id="yComm">$0</div></div>
+      <div class="stat"><div class="lbl" id="yProjLbl">On pace for</div><div class="v" id="yProj">—</div></div>
+    </div>
+  </section>
   <p class="note" id="syncNote">Loading your deals…</p>
   <div class="backup">
     <button class="chipbtn" type="button" id="exportBtn">Back up deals</button>
@@ -498,6 +548,7 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
   <footer class="copyright">© 2026 Lora Enterprises. All rights reserved.</footer>
 </div>
 
+<div class="undo" id="undoToast" hidden role="status" aria-live="polite"><span id="undoText"></span><button type="button" id="undoBtn">Undo</button></div>
 <button class="fab" id="add" type="button">+ Log a deal</button>
 
 <div class="scrim" id="scrim" hidden>
@@ -526,6 +577,7 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
       <div class="f full"><span class="f">Veritas bonus</span>
         <div class="seg" id="fVeritas"><button type="button" data-v="no">No</button><button type="button" data-v="yes">Yes</button></div></div>
       <label class="f full">Notes<textarea id="fNotes"></textarea></label>
+      <div class="f full"><span class="f">Customer follow-ups</span><div class="prods" id="fFu"></div></div>
       <div class="f full"><span class="f">Doc processor</span>
         <div class="seg" id="fProc"><button type="button" data-v="Nikki">Nikki</button><button type="button" data-v="Vicky">Vicky</button></div></div>
       <div class="f full"><span class="f">Paid on paycheck</span>
@@ -794,7 +846,7 @@ function attachSwipe(wrap,row,d){
   row.addEventListener("pointerup",end); row.addEventListener("pointercancel",end);
   row.addEventListener("click",e=>{ if(moved){ e.stopImmediatePropagation(); e.preventDefault(); moved=false; } },true);
   wrap.querySelector(".swipe-bg.right").addEventListener("click",()=>{ askDelete(d, async()=>{ mournUntil=Date.now()+4000; tapSuccess(); openSwipe=null;
-    try{ await store.remove(d.id); }catch(err){ setNote("Couldn't delete. Try again.","warn"); } }, ()=>closeOpenSwipe()); });
+    try{ await store.remove(d.id); showUndo(d); }catch(err){ setNote("Couldn't delete. Try again.","warn"); } }, ()=>closeOpenSwipe()); });
 }
 
 /* ---------- theme ---------- */
@@ -877,7 +929,7 @@ function renderCal(mk, live){
     c.className="cday"+(lvl?" l"+lvl:"")+(key===todayKey?" today":"")+(dayFilter===key?" sel":"")+(key>todayKey?" future":"");
     c.textContent=String(day);
     c.setAttribute("aria-label",new Date(y,m-1,day).toLocaleDateString("en-US",{month:"long",day:"numeric"})+": "+u+" unit"+(u===1?"":"s"));
-    if(key<=todayKey) c.addEventListener("click",()=>{ dayFilter=dayFilter===key?null:key; searchQ=""; $("searchBox").value=""; if(filter==="followup") filter="all"; listEnter=true; render(); tap(); if(dayFilter) $("listHead").scrollIntoView({behavior:reduceMotion()?"auto":"smooth",block:"start"}); });
+    if(key<=todayKey) c.addEventListener("click",()=>{ dayFilter=dayFilter===key?null:key; searchQ=""; $("searchBox").value=""; if(filter==="followup"||filter==="fudue") filter="all"; listEnter=true; render(); tap(); if(dayFilter) $("listHead").scrollIntoView({behavior:reduceMotion()?"auto":"smooth",block:"start"}); });
     g.append(c);
   }
 }
@@ -965,10 +1017,11 @@ function render(){
     $("bestMonthLbl").textContent=best?new Date(+best.k.slice(0,4),+best.k.slice(5,7)-1,1).toLocaleString("en-US",{month:"short",year:"2-digit"}).replace(" "," '"):""; }
   $("goalText").textContent=goal?(units>=goal?"Goal hit: "+units+" of "+goal:(goal-units)+" to go for "+goal+" units"):"No goal set";
 
-  renderAlert(); renderCal(mk, live);
+  renderAlert(); renderFuBar(); renderCoach(mk, units); renderCal(mk, live); renderYear(); if(typeof renderBackup==="function") renderBackup();
   let shown, headText="";
   if(searchQ){ shown=deals.filter(d=>matches(d,searchQ)).sort((a,b)=>(b.date||"").localeCompare(a.date||"")); headText=shown.length+" result"+(shown.length===1?"":"s")+" for “"+searchQ+"” in all months"; }
   else if(filter==="followup"){ shown=overdue(); headText="Pending over "+FOLLOW_DAYS+" days · all months"; }
+  else if(filter==="fudue"){ shown=fuList(); headText="Customer follow-ups due · tap a deal to check them off"; }
   else if(dayFilter){ shown=month.filter(d=>d.date===dayFilter); const [yy,mm,dd2]=dayFilter.split("-").map(Number); headText="Deals on "+new Date(yy,mm-1,dd2).toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"}); }
   else if(filter==="unpaid") shown=month.filter(d=>d.status!=="unwound"&&d.status!=="pending"&&!d.paid);
   else shown=filter==="all"?month:month.filter(d=>d.status===filter);
@@ -998,6 +1051,7 @@ function render(){
     if(d.veritas) tag("Veritas bonus","funded");
     if(d.processor) tag("Docs: "+d.processor);
     if(d.paid) tag("Paid ✓","paid");
+    { const due=fuDue(d); if(due.length) tag(due[0].label+" due","fu"); else if(d.fu&&FU.every(f=>d.fu[f.k])) tag("Follow-ups ✓","paid"); }
     if(d.status==="pending"){ const age=daysSince(d.date); if(age>FOLLOW_DAYS) tag("Follow up · "+age+"d","follow"); }
     main.append(c,v,tags);
     const right=document.createElement("div"); right.className="dright";
@@ -1031,7 +1085,7 @@ function openForm(d){
   $("formTitle").textContent=d?"Edit deal":"Log a deal";
   $("fDate").value=d?.date||(monthKey(view)===monthKey(new Date())?today():monthKey(view)+"-01");
   $("fDeal").value=d?.dealNo||""; $("fStock").value=d?.stock||""; $("fCust").value=d?.customer||""; $("fVeh").value=d?.vehicle||"";
-  const lp=d?{}:lastPrefs(); setSeg("fType",d?.type||lp.type||"New"); setSeg("fStatus",d?.status||"pending"); setSeg("fSplit",d?.split?"yes":"no"); setSeg("fVeritas",d?.veritas?"yes":"no"); setSeg("fProc",d?(d.processor||""):(lp.processor||"")); setSeg("fPaid",d?.paid?"yes":"no"); $("quickHint").hidden=!!d||!(lp.type||lp.processor);
+  const lp=d?{}:lastPrefs(); setSeg("fType",d?.type||lp.type||"New"); setSeg("fStatus",d?.status||"pending"); setSeg("fSplit",d?.split?"yes":"no"); setSeg("fVeritas",d?.veritas?"yes":"no"); setSeg("fProc",d?(d.processor||""):(lp.processor||"")); setSeg("fPaid",d?.paid?"yes":"no"); setFu(d?.fu); $("quickHint").hidden=!!d||!(lp.type||lp.processor);
   $("partnerWrap").hidden=!d?.split; $("fPartner").value=d?.partner||""; syncPartner();
   $("fFront").value=d?.front??""; $("fBack").value=d?.back??""; $("fComm").value=d?.commission??"";
   $("fProds").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String((d?.products||[]).includes(b.dataset.p))));
@@ -1054,7 +1108,7 @@ $("form").addEventListener("submit",async e=>{
     customer:$("fCust").value.trim().toUpperCase(), vehicle:$("fVeh").value.trim().toUpperCase(), type:segVal("fType"), status:segVal("fStatus"),
     split, partner:split?$("fPartner").value.trim():"", front:num($("fFront").value), back:num($("fBack").value),
     commission:num($("fComm").value), products:[...$("fProds").querySelectorAll('[aria-pressed="true"]')].map(b=>b.dataset.p),
-    notes:$("fNotes").value.trim(), veritas:segVal("fVeritas")==="yes", processor:segVal("fProc")||"", paid:segVal("fPaid")==="yes"};
+    notes:$("fNotes").value.trim(), veritas:segVal("fVeritas")==="yes", processor:segVal("fProc")||"", paid:segVal("fPaid")==="yes", fu:readFu()};
   $("save").disabled=true;
   const dayBefore=deals.filter(x=>x.date===d.date && x.status!=="unwound" && x.id!==d.id).length;
   const wasLiveSameDay=!!editing && editing.status!=="unwound" && editing.date===d.date;
@@ -1077,7 +1131,7 @@ $("delNo").addEventListener("click",()=>closeDelete(true));
 $("delScrim").addEventListener("click",e=>{ if(e.target===$("delScrim")) closeDelete(true); });
 $("delYes").addEventListener("click",async()=>{ const fn=delPending; closeDelete(false); if(fn) await fn(); });
 $("del").addEventListener("click",()=>{ if(!editing) return; const d=editing; askDelete(d, async()=>{ mournUntil=Date.now()+4000;
-  try{ await store.remove(d.id); closeForm(); tapSuccess(); }catch(e){ $("formErr").textContent="Couldn't delete. Try again."; $("formErr").hidden=false; } }); });
+  try{ await store.remove(d.id); closeForm(); tapSuccess(); showUndo(d); }catch(e){ $("formErr").textContent="Couldn't delete. Try again."; $("formErr").hidden=false; } }); });
 $("noDel").addEventListener("click",()=>{$("confirm").hidden=true; $("del").hidden=false;});
 $("yesDel").addEventListener("click",async()=>{ if(!editing)return; mournUntil=Date.now()+4000; try{await store.remove(editing.id); closeForm(); tapSuccess();}catch(e){$("formErr").textContent="Couldn't delete. Try again."; $("formErr").hidden=false;} });
 
@@ -1149,16 +1203,117 @@ function tap(){ try{ if(navigator.vibrate){ navigator.vibrate(12); return; } if(
 function tapSuccess(){ tap(); setTimeout(tap,130); }
 document.addEventListener("click",e=>{ const b=e.target.closest("button, label.chipbtn"); if(b && !b.closest("#save,#yesDel") && b.id!=="hapSwitch") tap(); },true);
 
+
+/* ---------- round 4: coach line ---------- */
+function renderCoach(mk, units){
+  const el=$("coach"), now=new Date();
+  if(!goal || mk!==monthKey(now)){ el.hidden=true; return; }
+  const dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate(), day=now.getDate(), left=dim-day+1, need=goal-units;
+  let t;
+  if(need<=0) t="Goal hit. Every extra deal is bonus money.";
+  else{
+    const per=need/left;
+    if(per>1) t="Sell "+(Math.round(per*10)/10)+" cars a day to hit "+goal+".";
+    else if(per>=0.6) t="About 1 car a day gets you to "+goal+".";
+    else{ const n=Math.max(1,Math.floor(left/need)); t="1 car every "+n+" days gets you to "+goal+"."; }
+    const eow=Math.min(dim, day+(6-now.getDay())), k=Math.ceil(goal*eow/dim*2)/2-units;
+    if(eow<dim && k>0) t+=" "+k+" more by Saturday keeps you on pace.";
+    else if(eow<dim) t+=" You're ahead of pace this week.";
+  }
+  el.replaceChildren(); const b=document.createElement("b"); b.textContent="What it takes"; const s=document.createElement("span"); s.textContent=t; el.append(b,s); el.hidden=false;
+}
+
+/* ---------- round 4: customer follow-ups ---------- */
+const FU=[{k:"thanks",label:"Thank-you text",due:0,until:14},{k:"check3",label:"3-day check-in",due:3,until:21},{k:"survey",label:"Survey reminder",due:7,until:30}];
+function fuDue(d){ if(d.status==="unwound") return []; const age=daysSince(d.date), done=d.fu||{}; return FU.filter(f=>age>=f.due && age<=f.until && !done[f.k]); }
+function fuList(){ return deals.filter(d=>fuDue(d).length).sort((a,b)=>(a.date||"").localeCompare(b.date||"")); }
+function renderFuBar(){
+  const n=fuList().length, bar=$("fuBar"); bar.hidden=!n;
+  if(n) $("fuText").textContent=n+" customer follow-up"+(n===1?"":"s")+" due. Keep them coming back.";
+}
+FU.forEach(f=>{ const b=document.createElement("button"); b.type="button"; b.className="chipbtn"; b.textContent=f.label; b.dataset.k=f.k; b.setAttribute("aria-pressed","false");
+  b.addEventListener("click",()=>b.setAttribute("aria-pressed",String(b.getAttribute("aria-pressed")!=="true"))); $("fFu").append(b); });
+function readFu(){ const o={}; $("fFu").querySelectorAll("[data-k]").forEach(b=>{ if(b.getAttribute("aria-pressed")==="true") o[b.dataset.k]=true; }); return o; }
+function setFu(fu){ $("fFu").querySelectorAll("[data-k]").forEach(b=>b.setAttribute("aria-pressed",String(!!(fu||{})[b.dataset.k]))); }
+
+/* ---------- round 4: year view ---------- */
+function renderYear(){
+  const y=view.getFullYear(), now=new Date(), cur=y===now.getFullYear(), sel=monthKey(view);
+  $("yearLbl").textContent=String(y);
+  const us=[], cs=[];
+  for(let m=1;m<=12;m++){ const k=y+"-"+String(m).padStart(2,"0"); us.push(unitsIn(k)); cs.push(deals.filter(d=>(d.date||"").startsWith(k)&&d.status!=="unwound").reduce((s,d)=>s+num(d.commission),0)); }
+  const max=Math.max(1,...us), g=$("yBars"); g.replaceChildren();
+  us.forEach((u,i)=>{ const k=y+"-"+String(i+1).padStart(2,"0"), mn=new Date(y,i,1);
+    const b=document.createElement("button"); b.type="button"; b.className="ybar"+(k===sel?" sel":"")+((cur&&i>now.getMonth())||y>now.getFullYear()?" future":"");
+    const n=document.createElement("span"); n.className="yn"; n.textContent=u?String(u):"";
+    const bw=document.createElement("span"); bw.className="yb"; const bi=document.createElement("i"); bi.style.setProperty("--h",(u/max*100)+"%"); bw.append(bi);
+    const l=document.createElement("span"); l.className="ym"; l.textContent=mn.toLocaleString("en-US",{month:"short"}).slice(0,3);
+    b.append(n,bw,l); b.setAttribute("aria-label",mn.toLocaleString("en-US",{month:"long"})+": "+u+" unit"+(u===1?"":"s")+", "+money(cs[i]));
+    b.addEventListener("click",()=>{ view=new Date(y,i,1); dayFilter=null; listEnter=true; render(); window.scrollTo({top:0,behavior:reduceMotion()?"auto":"smooth"}); });
+    g.append(b); });
+  const upto=cur?now.getMonth()+1:(y<now.getFullYear()?12:0);
+  const yu=us.slice(0,upto).reduce((a,b)=>a+b,0), yc=cs.slice(0,upto).reduce((a,b)=>a+b,0);
+  $("yUnitsLbl").textContent=cur?"Units YTD":"Units"; $("yCommLbl").textContent=cur?"Comm. YTD":"Commission";
+  $("yUnits").textContent=String(yu); $("yComm").textContent=money(yc);
+  if(cur){ const doy=Math.floor((now-new Date(y,0,0))/864e5), diy=(y%4===0&&(y%100!==0||y%400===0))?366:365;
+    $("yProjLbl").textContent="On pace for"; $("yProj").textContent=yc?money(Math.round(yc/doy*diy)):"—"; }
+  else{ $("yProjLbl").textContent="Best month"; const bm=Math.max(...us); $("yProj").textContent=bm?bm+" units":"—"; }
+}
+
+/* ---------- round 4: undo delete ---------- */
+let undoDeal=null, undoT=0;
+function showUndo(d){ undoDeal=JSON.parse(JSON.stringify(d)); $("undoText").textContent="Deal #"+(d.dealNo||"—")+" deleted";
+  const t=$("undoToast"); t.hidden=false; t.classList.remove("in"); void t.offsetWidth; t.classList.add("in"); clearTimeout(undoT); undoT=setTimeout(hideUndo,6000); }
+function hideUndo(){ $("undoToast").hidden=true; undoDeal=null; }
+$("undoBtn").addEventListener("click",async()=>{ const d=undoDeal; if(!d) return; clearTimeout(undoT); hideUndo();
+  try{ await store.save(d); tapSuccess(); setNote("Deal #"+(d.dealNo||"")+" is back."); }catch(e){ setNote("Couldn't undo. Try again.","warn"); } });
+$("fuBar").addEventListener("click",()=>{ filter="fudue"; searchQ=""; $("searchBox").value=""; dayFilter=null;
+  document.querySelectorAll(".filters .chipbtn").forEach(x=>x.setAttribute("aria-pressed","false")); listEnter=true; render(); $("listHead").scrollIntoView({behavior:reduceMotion()?"auto":"smooth",block:"start"}); });
+
+/* ---------- backup + reminder ---------- */
+const BK="trippad.lastBackup", BKS="trippad.backupSnooze";
+function lsNum(k){ try{ return +localStorage.getItem(k)||0; }catch(e){ return 0; } }
+function lsSet(k,v){ try{ localStorage.setItem(k,String(v)); }catch(e){} }
+function renderBackup(){
+  const now=Date.now(), show=deals.length>=3 && now-lsNum(BK)>30*864e5 && now>lsNum(BKS);
+  $("bkBar").hidden=!show;
+  if(show){ const last=lsNum(BK); $("bkText").textContent=last?"It's been over a month since your last backup. Your deals live only on this phone.":"You haven't backed up yet. Your deals live only on this phone."; }
+}
+function backedUp(){ lsSet(BK,Date.now()); renderBackup(); }
+$("exportBtn").addEventListener("click",async()=>{
+  const data=JSON.stringify({app:"trip-pad",version:1,exported:new Date().toISOString(),goal,deals},null,1);
+  const name="trip-pad-backup-"+today()+".json";
+  const file=new File([data],name,{type:"application/json"});
+  try{ if(navigator.canShare&&navigator.canShare({files:[file]})){ await navigator.share({files:[file],title:"Trip Pad backup"}); backedUp(); setNote("Backup ready. Save it to Files, email it, or AirDrop it."); return; } }
+  catch(e){ if(e&&e.name==="AbortError") return; }
+  const a=document.createElement("a"); a.href=URL.createObjectURL(file); a.download=name; document.body.append(a); a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href); a.remove();},1000);
+  backedUp(); setNote("Backup saved as "+name+".");
+});
+$("importFile").addEventListener("change",async e=>{
+  const f=e.target.files[0]; e.target.value=""; if(!f) return;
+  try{
+    const j=JSON.parse(await f.text());
+    const list=Array.isArray(j)?j:j.deals; if(!Array.isArray(list)) throw new Error();
+    let added=0, updated=0;
+    for(const d of list){ if(!d||!d.id) continue; const i=deals.findIndex(x=>x.id===d.id); if(i>=0)updated++; else added++; await store.save(d); }
+    if(j.goal&&!Array.isArray(j)) await store.saveGoal(num(j.goal));
+    setNote("Restored: "+added+" new deal"+(added===1?"":"s")+(updated?", "+updated+" updated":"")+".");
+  }catch(err){ setNote("That file isn't a Trip Pad backup. Pick a file named trip-pad-backup-….json.","warn"); }
+});
+$("bkNow").addEventListener("click",()=>$("exportBtn").click());
+$("bkLater").addEventListener("click",()=>{ lsSet(BKS,Date.now()+7*864e5); renderBackup(); });
+
 /* ---------- month, filter, goal ---------- */
 $("prev").addEventListener("click",()=>{view.setMonth(view.getMonth()-1); dayFilter=null; listEnter=true; render();});
 let searchT=0;
-$("searchBox").addEventListener("input",e=>{ clearTimeout(searchT); searchT=setTimeout(()=>{ searchQ=e.target.value.trim().toLowerCase(); dayFilter=null; if(filter==="followup") filter="all"; render(); },150); });
-$("listHeadClear").addEventListener("click",()=>{ searchQ=""; $("searchBox").value=""; dayFilter=null; if(filter==="followup") filter="all";
+$("searchBox").addEventListener("input",e=>{ clearTimeout(searchT); searchT=setTimeout(()=>{ searchQ=e.target.value.trim().toLowerCase(); dayFilter=null; if(filter==="followup"||filter==="fudue") filter="all"; render(); },150); });
+$("listHeadClear").addEventListener("click",()=>{ searchQ=""; $("searchBox").value=""; dayFilter=null; if(filter==="followup"||filter==="fudue") filter="all";
   document.querySelectorAll(".filters .chipbtn").forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.f===filter))); listEnter=true; render(); });
 $("alertBar").addEventListener("click",()=>{ filter="followup"; searchQ=""; $("searchBox").value=""; dayFilter=null;
   document.querySelectorAll(".filters .chipbtn").forEach(x=>x.setAttribute("aria-pressed","false")); listEnter=true; render(); $("listHead").scrollIntoView({behavior:"smooth",block:"start"}); });
 $("csvBtn").addEventListener("click",exportCsv);
-$("calToday").addEventListener("click",()=>{ const n=new Date(); view=new Date(n.getFullYear(),n.getMonth(),1); dayFilter=today(); searchQ=""; $("searchBox").value=""; if(filter==="followup") filter="all";
+$("calToday").addEventListener("click",()=>{ const n=new Date(); view=new Date(n.getFullYear(),n.getMonth(),1); dayFilter=today(); searchQ=""; $("searchBox").value=""; if(filter==="followup"||filter==="fudue") filter="all";
   listEnter=true; render(); tap(); $("listHead").scrollIntoView({behavior:reduceMotion()?"auto":"smooth",block:"start"}); });
 $("next").addEventListener("click",()=>{view.setMonth(view.getMonth()+1); dayFilter=null; listEnter=true; render();});
 document.querySelectorAll(".filters .chipbtn").forEach(b=>b.addEventListener("click",()=>{filter=b.dataset.f;
