@@ -92,6 +92,9 @@ h1{font-family:var(--f-display);font-weight:700;font-size:30px;margin:0;letter-s
   background:var(--accent);color:var(--accent-ink);border:0;border-radius:999px;padding:16px 28px;font-size:17px;font-weight:700;cursor:pointer;box-shadow:0 6px 20px rgba(20,40,100,.28);z-index:5}
 .note{font-size:13px;color:var(--muted);text-align:center}
 .note.warn{color:var(--warn)}
+.soundrow{display:flex;flex-direction:column;align-items:center;gap:8px}
+.soundlbl{font-size:12px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.soundpick{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
 .copyright{font-size:12px;color:var(--muted);text-align:center;letter-spacing:.02em;padding-top:4px;border-top:1px solid var(--line)}
 .backup{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
 .backup .chipbtn{display:inline-flex;align-items:center}
@@ -162,6 +165,7 @@ textarea{min-height:64px;resize:vertical}
     <label class="chipbtn" for="importFile">Restore from backup</label>
     <input type="file" id="importFile" accept="application/json,.json" hidden>
   </div>
+  <section class="soundrow" aria-label="Deal sound"><span class="soundlbl">Sound when you log a deal</span><div class="soundpick" id="soundPick"></div></section>
   <footer class="copyright">© 2026 Lora Enterprises. All rights reserved.</footer>
 </div>
 
@@ -343,62 +347,59 @@ $("yesDel").addEventListener("click",async()=>{ if(!editing)return; try{await st
 /* ---------- sound ---------- */
 let actx=null;
 function audioCtx(){ try{ actx=actx||new (window.AudioContext||window.webkitAudioContext)(); if(actx.state==="suspended") actx.resume(); }catch(e){ actx=null; } return actx; }
-function chaChing(ctx){
-  if(!ctx) return;
-  try{
-    const t0=ctx.currentTime+0.02, out=ctx.createGain(); out.gain.value=0.7; out.connect(ctx.destination);
-    const noise=(dur)=>{const len=Math.max(1,Math.floor(ctx.sampleRate*dur)),b=ctx.createBuffer(1,len,ctx.sampleRate),d=b.getChannelData(0);for(let i=0;i<len;i++)d[i]=Math.random()*2-1;const n=ctx.createBufferSource();n.buffer=b;return n;};
-    const env=(g,at,peak,dec)=>{g.gain.setValueAtTime(0.0001,at);g.gain.exponentialRampToValueAtTime(peak,at+0.003);g.gain.exponentialRampToValueAtTime(0.0001,at+dec);};
-    // 1. Mechanical key/ratchet clicks
-    [0,0.045,0.09,0.13].forEach((dt,i)=>{
-      const at=t0+dt, n=noise(0.03), hp=ctx.createBiquadFilter(), g=ctx.createGain();
-      hp.type="bandpass"; hp.frequency.value=3200+i*350; hp.Q.value=3;
-      env(g,at,0.9,0.025); n.connect(hp); hp.connect(g); g.connect(out); n.start(at); n.stop(at+0.03);
-    });
-    // 2. Lever thunk
-    { const at=t0+0.17, o=ctx.createOscillator(), g=ctx.createGain(); o.type="sine";
-      o.frequency.setValueAtTime(180,at); o.frequency.exponentialRampToValueAtTime(70,at+0.08);
-      env(g,at,0.8,0.1); o.connect(g); g.connect(out); o.start(at); o.stop(at+0.12); }
-    // 3. Drawer sliding open, ending in a thump
-    { const at=t0+0.2, dur=0.32, n=noise(dur), bp=ctx.createBiquadFilter(), g=ctx.createGain();
-      bp.type="bandpass"; bp.Q.value=1.2; bp.frequency.setValueAtTime(700,at); bp.frequency.linearRampToValueAtTime(1800,at+dur);
-      g.gain.setValueAtTime(0.0001,at); g.gain.exponentialRampToValueAtTime(0.35,at+0.06); g.gain.setValueAtTime(0.35,at+dur-0.04); g.gain.exponentialRampToValueAtTime(0.0001,at+dur);
-      n.connect(bp); bp.connect(g); g.connect(out); n.start(at); n.stop(at+dur);
-      const tt=at+dur, o=ctx.createOscillator(), og=ctx.createGain(); o.type="sine"; o.frequency.setValueAtTime(110,tt); o.frequency.exponentialRampToValueAtTime(55,tt+0.1);
-      env(og,tt,0.9,0.14); o.connect(og); og.connect(out); o.start(tt); o.stop(tt+0.16); }
-    // 4. The bell: bright "ching" with metallic overtones and a long ring
-    { const at=t0+0.24, f=1850;
-      [[1,0.5,1.6],[2.32,0.3,1.1],[4.25,0.18,0.7],[6.63,0.1,0.45],[1.007,0.25,1.6]].forEach(([ratio,amp,dec])=>{
-        const o=ctx.createOscillator(), g=ctx.createGain(); o.type="sine"; o.frequency.value=f*ratio;
-        env(g,at,amp,dec); o.connect(g); g.connect(out); o.start(at); o.stop(at+dec+0.05);
-      });
-      const n=noise(0.02), hp=ctx.createBiquadFilter(), g=ctx.createGain(); hp.type="highpass"; hp.frequency.value=5000;
-      env(g,at,0.5,0.02); n.connect(hp); hp.connect(g); g.connect(out); n.start(at); n.stop(at+0.02); }
-  }catch(e){}
+/* ---------- deal sounds: pick one, preview on tap ---------- */
+const SOUNDS={register:"Register",kaching:"Ka-ching",coins:"Coins",pos:"Register beep",off:"Off"};
+let soundPref="register"; try{ const v=localStorage.getItem("trippad.sound"); if(v&&SOUNDS[v]) soundPref=v; }catch(e){}
+function sndKit(ctx){
+  const out=ctx.createGain(); out.gain.value=0.7; out.connect(ctx.destination);
+  const noise=dur=>{const len=Math.max(1,Math.floor(ctx.sampleRate*dur)),b=ctx.createBuffer(1,len,ctx.sampleRate),d=b.getChannelData(0);for(let i=0;i<len;i++)d[i]=Math.random()*2-1;const n=ctx.createBufferSource();n.buffer=b;return n;};
+  const env=(g,at,peak,dec)=>{g.gain.setValueAtTime(0.0001,at);g.gain.exponentialRampToValueAtTime(peak,at+0.003);g.gain.exponentialRampToValueAtTime(0.0001,at+dec);};
+  const tone=(f,at,amp,dec,type)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type=type||"sine";o.frequency.value=f;env(g,at,amp,dec);o.connect(g);g.connect(out);o.start(at);o.stop(at+dec+0.05);};
+  const bell=(f,at,amp,len)=>{[[1,1,1],[2.32,.6,.7],[4.25,.36,.45],[6.63,.2,.3],[1.007,.5,1]].forEach(([r,a,l])=>tone(f*r,at,amp*a,len*l));};
+  const burst=(at,dur,freq,q,amp,type)=>{const n=noise(dur),f=ctx.createBiquadFilter(),g=ctx.createGain();f.type=type||"bandpass";f.frequency.value=freq;f.Q.value=q;env(g,at,amp,dur);n.connect(f);f.connect(g);g.connect(out);n.start(at);n.stop(at+dur);};
+  return {out,noise,env,tone,bell,burst,t:ctx.currentTime+0.02};
 }
-
-/* ---------- backup ---------- */
-$("exportBtn").addEventListener("click",async()=>{
-  const data=JSON.stringify({app:"trip-pad",version:1,exported:new Date().toISOString(),goal,deals},null,1);
-  const name="trip-pad-backup-"+today()+".json";
-  const file=new File([data],name,{type:"application/json"});
-  try{ if(navigator.canShare&&navigator.canShare({files:[file]})){ await navigator.share({files:[file],title:"Trip Pad backup"}); setNote("Backup ready. Save it to Files, email it, or AirDrop it."); return; } }
-  catch(e){ if(e&&e.name==="AbortError") return; }
-  const a=document.createElement("a"); a.href=URL.createObjectURL(file); a.download=name; document.body.append(a); a.click();
-  setTimeout(()=>{URL.revokeObjectURL(a.href); a.remove();},1000);
-  setNote("Backup saved as "+name+".");
-});
-$("importFile").addEventListener("change",async e=>{
-  const f=e.target.files[0]; e.target.value=""; if(!f) return;
-  try{
-    const j=JSON.parse(await f.text());
-    const list=Array.isArray(j)?j:j.deals; if(!Array.isArray(list)) throw new Error();
-    let added=0, updated=0;
-    for(const d of list){ if(!d||!d.id) continue; const i=deals.findIndex(x=>x.id===d.id); if(i>=0)updated++; else added++; await store.save(d); }
-    if(j.goal&&!Array.isArray(j)) await store.saveGoal(num(j.goal));
-    setNote("Restored: "+added+" new deal"+(added===1?"":"s")+(updated?", "+updated+" updated":"")+".");
-  }catch(err){ setNote("That file isn't a Trip Pad backup. Pick a file named trip-pad-backup-….json.","warn"); }
-});
+function soundRegister(ctx){
+  const k=sndKit(ctx),t=k.t;
+  [0,0.045,0.09,0.13].forEach((dt,i)=>k.burst(t+dt,0.03,3200+i*350,3,0.9));
+  { const at=t+0.17,o=ctx.createOscillator(),g=ctx.createGain();o.frequency.setValueAtTime(180,at);o.frequency.exponentialRampToValueAtTime(70,at+0.08);k.env(g,at,0.8,0.1);o.connect(g);g.connect(k.out);o.start(at);o.stop(at+0.12); }
+  { const at=t+0.2,dur=0.32,n=k.noise(dur),bp=ctx.createBiquadFilter(),g=ctx.createGain();bp.type="bandpass";bp.Q.value=1.2;bp.frequency.setValueAtTime(700,at);bp.frequency.linearRampToValueAtTime(1800,at+dur);
+    g.gain.setValueAtTime(0.0001,at);g.gain.exponentialRampToValueAtTime(0.35,at+0.06);g.gain.setValueAtTime(0.35,at+dur-0.04);g.gain.exponentialRampToValueAtTime(0.0001,at+dur);n.connect(bp);bp.connect(g);g.connect(k.out);n.start(at);n.stop(at+dur);
+    const tt=at+dur,o=ctx.createOscillator(),og=ctx.createGain();o.frequency.setValueAtTime(110,tt);o.frequency.exponentialRampToValueAtTime(55,tt+0.1);k.env(og,tt,0.9,0.14);o.connect(og);og.connect(k.out);o.start(tt);o.stop(tt+0.16); }
+  k.bell(1850,t+0.24,0.5,1.6); k.burst(t+0.24,0.02,5000,0.7,0.5,"highpass");
+}
+function soundKaching(ctx){
+  const k=sndKit(ctx),t=k.t;
+  k.burst(t,0.025,2800,2,0.9); k.burst(t+0.03,0.02,3600,2,0.6);   // "ka"
+  k.bell(2100,t+0.11,0.55,1.9); k.burst(t+0.11,0.02,6000,0.7,0.5,"highpass"); // "ching"
+  k.bell(2640,t+0.16,0.22,1.4);
+}
+function soundCoins(ctx){
+  const k=sndKit(ctx),t=k.t; let at=t;
+  for(let i=0;i<11;i++){
+    const f=2600+Math.random()*3200, amp=0.38*(1-i/14);
+    k.tone(f,at,amp,0.09+Math.random()*0.12); k.tone(f*2.76,at,amp*0.4,0.06); k.burst(at,0.012,7000,1,amp*0.6,"highpass");
+    at+=0.035+Math.random()*0.07;
+  }
+  k.bell(3100,at+0.04,0.25,0.6);
+}
+function soundPos(ctx){
+  const k=sndKit(ctx),t=k.t;
+  k.tone(1760,t,0.22,0.09,"square"); k.tone(1760,t+0.13,0.22,0.09,"square");
+  const dur=0.7,at=t+0.3,n=k.noise(dur),bp=ctx.createBiquadFilter(),g=ctx.createGain(),lfo=ctx.createOscillator(),lg=ctx.createGain();
+  bp.type="bandpass";bp.frequency.value=2300;bp.Q.value=2; g.gain.value=0.0001; g.gain.setValueAtTime(0.16,at); g.gain.setValueAtTime(0.16,at+dur-0.05); g.gain.exponentialRampToValueAtTime(0.0001,at+dur);
+  lfo.frequency.value=38; lg.gain.value=0.12; lfo.connect(lg); lg.connect(g.gain);
+  n.connect(bp); bp.connect(g); g.connect(k.out); n.start(at); n.stop(at+dur); lfo.start(at); lfo.stop(at+dur);
+  k.burst(at+dur,0.03,1500,2,0.5);
+}
+function playSound(ctx,name){ if(!ctx) return; try{ ({register:soundRegister,kaching:soundKaching,coins:soundCoins,pos:soundPos})[name]?.(ctx); }catch(e){} }
+function chaChing(ctx){ playSound(ctx,soundPref); }
+function renderSoundPicker(){
+  const box=document.getElementById("soundPick"); if(!box) return; box.replaceChildren();
+  Object.entries(SOUNDS).forEach(([k,label])=>{const b=document.createElement("button");b.type="button";b.className="chipbtn";b.textContent=label;b.setAttribute("aria-pressed",String(k===soundPref));
+    b.addEventListener("click",()=>{soundPref=k;try{localStorage.setItem("trippad.sound",k);}catch(e){}renderSoundPicker();playSound(audioCtx(),k);});box.append(b);});
+}
+renderSoundPicker();
 
 /* ---------- haptics: iPhone (iOS 18+) via a hidden switch; Android via vibrate ---------- */
 const hapLabel=(()=>{try{
