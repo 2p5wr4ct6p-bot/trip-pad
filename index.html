@@ -210,6 +210,16 @@ textarea{min-height:64px;resize:vertical}
 .badge b{font-size:11px;font-weight:700;line-height:1.2;color:var(--muted)}
 .badge.on{background:color-mix(in srgb,var(--good) 12%,var(--card));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--good) 40%,transparent)}
 .badge.on i{filter:none;opacity:1} .badge.on b{color:var(--ink)}
+.badge{position:relative;border:0;font:inherit;color:inherit;cursor:help}
+.badge .tip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translate(-50%,4px);width:max-content;max-width:170px;background:var(--ink);color:var(--card);
+  font-size:12px;font-weight:600;line-height:1.35;padding:8px 10px;border-radius:10px;opacity:0;pointer-events:none;transition:opacity .15s,transform .15s;z-index:6;text-align:center;box-shadow:0 8px 24px rgba(10,20,40,.25)}
+.badge .tip small{display:block;font-weight:500;opacity:.75;margin-top:3px}
+.badge:hover .tip,.badge:focus-visible .tip,.badge.show .tip{opacity:1;transform:translate(-50%,0)}
+.badgegrid .badge:nth-child(4n+1) .tip{left:0;transform:translateY(4px)} .badgegrid .badge:nth-child(4n+1):is(:hover,:focus-visible,.show) .tip{transform:none}
+.badgegrid .badge:nth-child(4n) .tip{left:auto;right:0;transform:translateY(4px)} .badgegrid .badge:nth-child(4n):is(:hover,:focus-visible,.show) .tip{transform:none}
+@media (max-width:380px){.badgegrid .badge:nth-child(n) .tip{left:50%;right:auto;transform:translate(-50%,4px)} .badgegrid .badge:nth-child(n):is(:hover,:focus-visible,.show) .tip{transform:translate(-50%,0)}
+  .badgegrid .badge:nth-child(3n+1) .tip{left:0;transform:translateY(4px)} .badgegrid .badge:nth-child(3n+1):is(:hover,:focus-visible,.show) .tip{transform:none}
+  .badgegrid .badge:nth-child(3n) .tip{left:auto;right:0;transform:translateY(4px)} .badgegrid .badge:nth-child(3n):is(:hover,:focus-visible,.show) .tip{transform:none}}
 .badge.pop{animation:bpop .7s cubic-bezier(.2,1.6,.4,1)}
 @keyframes bpop{0%{transform:scale(.6)}60%{transform:scale(1.15)}100%{transform:none}}
 @media (max-width:380px){.badgegrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
@@ -467,14 +477,14 @@ function milestone(oldU,newU,mk){
 /* ---------- badges, streaks, recap ---------- */
 const GOLD=["#f5b700","#ffd54a","#e09b00","#fff1b0","#c98a00"];
 const BADGES=[
-  {id:"first",  icon:"🚗", name:"First deal",   test:c=>c.live.length>=1},
-  {id:"hat",    icon:"🎩", name:"Hat trick",    test:c=>c.maxDay>=3},
-  {id:"vsa",    icon:"🛡️", name:"VSA machine",  test:c=>c.vsa>=5},
-  {id:"cash",   icon:"💵", name:"Cash king",    test:c=>c.cash>=3},
-  {id:"pro",    icon:"🧰", name:"Product pro",  test:c=>c.live.some(d=>(d.products||[]).length>=3)},
-  {id:"veritas",icon:"⭐", name:"Veritas x3",   test:c=>c.veritas>=3},
-  {id:"goal",   icon:"🏁", name:"Goal crusher", test:c=>!!goal&&c.units>=goal, silent:true},
-  {id:"record", icon:"🏆", name:"Record month", test:c=>c.units>0&&c.bestOther>0&&c.units>c.bestOther, silent:true},
+  {id:"first",  icon:"🚗", name:"First deal",   how:"Log your first deal of the month", prog:c=>c.live.length?"Done":"0 of 1", test:c=>c.live.length>=1},
+  {id:"hat",    icon:"🎩", name:"Hat trick",    how:"Log 3 deals on the same day", prog:c=>"Best day so far: "+c.maxDay, test:c=>c.maxDay>=3},
+  {id:"vsa",    icon:"🛡️", name:"VSA machine",  how:"Sell 5 VSAs in one month", prog:c=>Math.min(c.vsa,5)+" of 5", test:c=>c.vsa>=5},
+  {id:"cash",   icon:"💵", name:"Cash king",    how:"Close 3 cash deals in one month", prog:c=>Math.min(c.cash,3)+" of 3", test:c=>c.cash>=3},
+  {id:"pro",    icon:"🧰", name:"Product pro",  how:"Sell 3 or more products on a single deal", prog:c=>"Most on one deal: "+Math.max(0,...c.live.map(d=>(d.products||[]).length)), test:c=>c.live.some(d=>(d.products||[]).length>=3)},
+  {id:"veritas",icon:"⭐", name:"Veritas x3",   how:"Get the Veritas bonus on 3 deals in one month", prog:c=>Math.min(c.veritas,3)+" of 3", test:c=>c.veritas>=3},
+  {id:"goal",   icon:"🏁", name:"Goal crusher", how:"Hit your monthly unit goal", prog:c=>goal?c.units+" of "+goal+" units":"Set a goal first", test:c=>!!goal&&c.units>=goal, silent:true},
+  {id:"record", icon:"🏆", name:"Record month", how:"Beat your best month ever", prog:c=>c.bestOther?"Your best: "+c.bestOther+" units":"Needs a past month to beat", test:c=>c.units>0&&c.bestOther>0&&c.units>c.bestOther, silent:true},
 ];
 let badgeSeen={}, badgeWatch=0;
 function monthCtx(mk){
@@ -493,9 +503,14 @@ function renderBadges(mk){
   badgeSeen[mk]=earned;
   $("badgeCount").textContent=earned.size+" / "+BADGES.length;
   const g=$("badgeGrid"); g.replaceChildren();
-  BADGES.forEach(b=>{ const el=document.createElement("div"); el.className="badge"+(earned.has(b.id)?" on":"")+(fresh.includes(b)?" pop":"");
-    el.title=b.name+(earned.has(b.id)?" (earned)":" (locked)");
-    const i=document.createElement("i"); i.textContent=b.icon; i.setAttribute("aria-hidden","true"); const t=document.createElement("b"); t.textContent=b.name; el.append(i,t); g.append(el); });
+  BADGES.forEach(b=>{ const on=earned.has(b.id); const el=document.createElement("button"); el.type="button"; el.className="badge"+(on?" on":"")+(fresh.includes(b)?" pop":"");
+    el.setAttribute("aria-label",b.name+(on?", earned. ":", locked. ")+b.how);
+    const i=document.createElement("i"); i.textContent=b.icon; i.setAttribute("aria-hidden","true"); const t=document.createElement("b"); t.textContent=b.name;
+    const tip=document.createElement("span"); tip.className="tip"; tip.setAttribute("aria-hidden","true"); tip.textContent=(on?"Earned! ":"")+b.how;
+    const pg=document.createElement("small"); pg.textContent=on?"Unlocked this month":b.prog(c); tip.append(pg);
+    el.append(i,t,tip);
+    el.addEventListener("click",()=>{ const was=el.classList.contains("show"); g.querySelectorAll(".badge.show").forEach(x=>x.classList.remove("show")); if(!was) el.classList.add("show"); });
+    g.append(el); });
   fresh.filter(b=>!b.silent).forEach(b=>setTimeout(()=>{ confetti(1); cheer("BADGE UNLOCKED", b.icon+"  "+b.name); },500));
 }
 function weekKey(dt){ const d=new Date(dt.getFullYear(),dt.getMonth(),dt.getDate()); const wd=(d.getDay()+6)%7; d.setDate(d.getDate()-wd); return d.toISOString().slice(0,10); }
@@ -543,7 +558,7 @@ let listEnter=true;
 /* ---------- swipe actions ---------- */
 let openSwipe=null;
 function closeOpenSwipe(except){ if(openSwipe&&openSwipe!==except){ openSwipe.querySelector(".deal").style.transform=""; openSwipe.classList.remove("open"); openSwipe=null; } }
-document.addEventListener("pointerdown",e=>{ if(openSwipe && !openSwipe.contains(e.target)) closeOpenSwipe(); },true);
+document.addEventListener("pointerdown",e=>{ if(openSwipe && !openSwipe.contains(e.target)) closeOpenSwipe(); if(!e.target.closest(".badge")) document.querySelectorAll(".badge.show").forEach(x=>x.classList.remove("show")); },true);
 function attachSwipe(wrap,row,d){
   const canFund=d.status==="pending"; if(canFund) wrap.classList.add("can-fund");
   let sx=0, sy=0, dx=0, active=false, decided=false, horiz=false, moved=false, base=0;
