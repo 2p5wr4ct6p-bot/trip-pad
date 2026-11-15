@@ -331,7 +331,7 @@ function render(){
     const db=document.createElement("b"); db.textContent=String(+dd||""); day.append(db, document.createTextNode(new Date(+y,+m-1,+dd).toLocaleString("en-US",{weekday:"short"})));
     const main=document.createElement("div"); main.className="dmain";
     const c=document.createElement("div"); c.className="cust"; c.textContent="Deal #"+(d.dealNo||"—")+(d.customer?" · "+String(d.customer).toUpperCase():"");
-    const v=document.createElement("div"); v.className="veh"; v.textContent=[d.vehicle?String(d.vehicle).toUpperCase():"",d.stock?"STK "+String(d.stock).toUpperCase():""].filter(Boolean).join(" · ")||"Processed "+new Date(+y,+m-1,+dd).toLocaleDateString("en-US");
+    const v=document.createElement("div"); v.className="veh"; v.textContent=[d.vehicle?String(d.vehicle).toUpperCase():"",d.stock?"STOCK# "+String(d.stock).toUpperCase():""].filter(Boolean).join(" · ")||"Processed "+new Date(+y,+m-1,+dd).toLocaleDateString("en-US");
     const tags=document.createElement("div"); tags.className="tags";
     const tag=(t,cl)=>{const s=document.createElement("span"); s.className="tag "+(cl||""); s.textContent=t; tags.append(s);};
     tag(d.status==="cash"?"cash deal":(d.status||"pending"),d.status||"pending"); if(d.type&&d.type!=="New") tag(d.type==="CPO"?"TCUV":d.type);
