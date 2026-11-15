@@ -385,6 +385,24 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
 .deal .veh,.deal .gross,.deal .day{font-weight:400}
 .deal .tag{font-weight:700}
 
+
+/* ---- greeting sky icon (moon / sun) ---- */
+.greetrow{display:flex;align-items:center;gap:8px}
+.sky{flex:none;display:inline-grid;width:30px;height:30px;margin:-4px 0}
+.sky svg{width:100%;height:100%;overflow:visible;display:block}
+.sky .moon{transform-origin:15px 17px;animation:moonrock 6s ease-in-out infinite;filter:drop-shadow(0 0 4px rgba(255,205,80,.65))}
+.sky .glow{transform-origin:15px 17px;animation:moonglow 3.2s ease-in-out infinite}
+.sky .star{transform-box:fill-box;transform-origin:center;animation:twinkle 2.4s ease-in-out infinite}
+.sky .star.t2{animation-delay:.8s} .sky .star.t3{animation-delay:1.6s}
+.sky .sun{transform-origin:16px 16px;animation:sunspin 14s linear infinite}
+.sky .core{transform-origin:16px 16px;animation:moonglow 3.2s ease-in-out infinite}
+.sky.in{animation:skyin .7s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes moonrock{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+@keyframes moonglow{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
+@keyframes twinkle{0%,100%{opacity:.15;transform:scale(.5)}50%{opacity:1;transform:scale(1)}}
+@keyframes sunspin{to{transform:rotate(360deg)}}
+@keyframes skyin{from{opacity:0;transform:translateY(8px) rotate(-30deg) scale(.6)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.sky *,.sky.in{animation:none!important}}
 /* ---- opening splash ---- */
 .splash{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:#0b0b0d;color:#fff;transition:opacity .6s ease,visibility .6s;overflow:hidden}
 .splash.out{opacity:0;visibility:hidden}
@@ -482,7 +500,7 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
     </div>
   </div>
 
-  <div class="greet" aria-live="polite"><b id="greetText">Hello</b><span id="greetTime"></span></div>
+  <div class="greet" aria-live="polite"><div class="greetrow"><b id="greetText">Hello</b><i class="sky" id="greetSky" aria-hidden="true"></i></div><span id="greetTime"></span></div>
 
   <section class="board" aria-label="Month totals">
     <div class="units">
@@ -894,10 +912,15 @@ try{ if(reduceMotion()) document.getElementById("ringSpin")?.remove(); }catch(e)
 
 /* ---------- greeting ---------- */
 let greetName="Jonathan Lora";
+const SKY={
+  moon:'<svg viewBox="0 0 32 32"><defs><radialGradient id="skyMg" cx="35%" cy="40%" r="70%"><stop offset="0" stop-color="#fff7d9"/><stop offset=".6" stop-color="#ffd86b"/><stop offset="1" stop-color="#f0a92b"/></radialGradient><radialGradient id="skyHalo"><stop offset="0" stop-color="#ffd86b" stop-opacity=".45"/><stop offset="1" stop-color="#ffd86b" stop-opacity="0"/></radialGradient><mask id="skyCut"><rect width="32" height="32" fill="#fff"/><circle cx="21.5" cy="12" r="9" fill="#000"/></mask></defs><circle class="glow" cx="15" cy="17" r="15" fill="url(#skyHalo)"/><g class="moon"><circle cx="15" cy="17" r="11" fill="url(#skyMg)" mask="url(#skyCut)"/><circle cx="9.5" cy="19" r="1.3" fill="#e9a52a" opacity=".45" mask="url(#skyCut)"/><circle cx="12.5" cy="24" r=".9" fill="#e9a52a" opacity=".4"/></g><path class="star" d="M26 3l.8 2.2L29 6l-2.2.8L26 9l-.8-2.2L23 6l2.2-.8z" fill="#ffd86b"/><path class="star t2" d="M30 15l.5 1.4 1.5.6-1.5.5-.5 1.5-.5-1.5L28 17l1.5-.6z" fill="#ffe7a3"/><path class="star t3" d="M24.5 24l.5 1.3 1.3.5-1.3.5-.5 1.3-.5-1.3-1.3-.5 1.3-.5z" fill="#ffd86b"/></svg>',
+  sun:'<svg viewBox="0 0 32 32"><defs><radialGradient id="skySg" cx="40%" cy="40%"><stop offset="0" stop-color="#fff3b0"/><stop offset=".7" stop-color="#ffc21a"/><stop offset="1" stop-color="#ff9500"/></radialGradient></defs><g class="sun" stroke="#ffb000" stroke-width="2.2" stroke-linecap="round"><path d="M16 1.5v4M16 26.5v4M1.5 16h4M26.5 16h4M5.7 5.7l2.8 2.8M23.5 23.5l2.8 2.8M5.7 26.3l2.8-2.8M23.5 8.5l2.8-2.8"/></g><circle class="core" cx="16" cy="16" r="10" fill="#ffc21a" opacity=".25"/><circle cx="16" cy="16" r="7" fill="url(#skySg)"/></svg>'};
+let skyNow="";
+function setSky(kind){ if(skyNow===kind) return; skyNow=kind; const el=$("greetSky"); el.innerHTML=SKY[kind]; el.classList.remove("in"); void el.offsetWidth; el.classList.add("in"); }
 function updateGreeting(){
   const now=new Date(), h=now.getHours();
   const part=h>=5&&h<12?"Good morning":h>=12&&h<17?"Good afternoon":"Good evening";
-  $("greetText").textContent=part+(greetName?", "+greetName:"");
+  $("greetText").textContent=part+(greetName?", "+greetName:""); setSky(h>=5&&h<17?"sun":"moon");
   $("greetTime").textContent=now.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"})+" · "+now.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"});
 }
 updateGreeting(); setInterval(updateGreeting,15000);
