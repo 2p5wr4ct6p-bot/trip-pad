@@ -735,6 +735,7 @@ html.tp-hidden .tk-track{animation-play-state:paused}
 .sp-head{display:flex;align-items:center;gap:8px}
 .sp-ttl{font-weight:800;font-size:14px}
 .sp-head{flex-wrap:wrap}
+.sp-ttl.sp-nike{white-space:nowrap;font:italic 800 clamp(20px,6.2vw,25px)/1 "Barlow Condensed","Arial Narrow",Impact,sans-serif;letter-spacing:-.005em;text-transform:uppercase;transform:skewX(-6deg);display:inline-block;padding-right:4px}
 .sp-count{font:800 11.5px var(--f-body);color:#7a5200;background:linear-gradient(135deg,#fff3a8,#ffcf3a);padding:3px 9px;border-radius:999px;box-shadow:0 0 0 1px rgba(255,190,0,.6),0 0 10px rgba(255,200,0,.35);white-space:nowrap}
 .sp-count.zero{background:var(--chip);color:var(--muted);box-shadow:none}
 .sp-head .sp-add{margin-left:auto}
@@ -1409,7 +1410,7 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
       <div class="cgoal" id="cGoal" hidden><div class="cg-top"><span id="cgTxt"></span><b id="cgPct"></b></div><div class="cg-bar"><i id="cgFill"></i></div></div>
     </div>
     <div class="spiffs" id="spiffBox">
-      <div class="sp-head"><span class="sp-ttl">💰 Spiff tracker</span><span class="sp-count" id="spiffCount">0 eligible cars</span><span class="sp-sum" id="spiffSum"></span><button type="button" class="sp-add" id="spiffAdd">+ Add</button></div>
+      <div class="sp-head"><span class="sp-ttl sp-nike">SPIFF TRACKER</span><span class="sp-count" id="spiffCount">0 eligible cars</span><span class="sp-sum" id="spiffSum"></span><button type="button" class="sp-add" id="spiffAdd">+ Add</button></div>
       <ul class="sp-list" id="spiffList"></ul>
       <button type="button" class="linkbtn sp-more" id="spiffMore" hidden></button>
     </div>
@@ -3301,7 +3302,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v47", tpChecked=0;
+var TP_BUILD="trip-pad-v48", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
