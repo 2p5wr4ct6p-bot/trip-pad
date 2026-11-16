@@ -449,6 +449,38 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
 @keyframes bfflash{0%{opacity:0}15%{opacity:.35}100%{opacity:0}}
 @media (prefers-reduced-motion:reduce){.splash.bf::after{display:none}}
 @media (prefers-reduced-motion:reduce){.splash *{animation:none!important}.splash .sp-bar{width:100%}}
+/* ===== comic (Hero) splash ===== */
+.splash .cm{display:none}
+:root[data-skin="hero"] .splash .cm{display:block}
+:root[data-skin="hero"] .splash{background:#ffcc00;color:#111;transition:opacity .45s ease,visibility .45s,transform .45s cubic-bezier(.5,0,.75,0)}
+:root[data-skin="hero"] .splash.out{transform:scale(1.25) rotate(-4deg)}
+:root[data-skin="hero"] .splash:not(.wait):not(.hold){animation:cmshake .42s .5s linear both}
+:root[data-skin="hero"] .splash .cm-rays{position:absolute;left:50%;top:50%;width:260vmax;height:260vmax;margin:-130vmax 0 0 -130vmax;background:repeating-conic-gradient(from 0deg,#ffe14d 0 9deg,#ffb300 9deg 18deg);animation:cmspin 24s linear infinite}
+:root[data-skin="hero"] .splash .cm-dots{position:absolute;inset:0;background:radial-gradient(rgba(180,40,0,.28) 2.2px,transparent 2.6px) 0 0/13px 13px;-webkit-mask-image:radial-gradient(circle at 50% 50%,transparent 25%,#000 75%);mask-image:radial-gradient(circle at 50% 50%,transparent 25%,#000 75%)}
+:root[data-skin="hero"] .splash .cm-lines{position:absolute;left:50%;top:50%;width:240vmax;height:240vmax;margin:-120vmax 0 0 -120vmax;background:repeating-conic-gradient(from 3deg,rgba(255,255,255,.95) 0 .9deg,transparent .9deg 7deg);
+  -webkit-mask-image:radial-gradient(circle,transparent 17%,#000 30%);mask-image:radial-gradient(circle,transparent 17%,#000 30%);opacity:0;animation:cmlines .9s .4s ease-out both}
+:root[data-skin="hero"] .splash .sp-streak{display:none}
+:root[data-skin="hero"] .splash .sp-in{background:#fff;border:5px solid #111;border-radius:4px;box-shadow:10px 10px 0 #111;padding:16px 22px 18px;gap:12px;transform:rotate(-3deg);align-items:center;animation:cmslam .5s .3s cubic-bezier(.2,1.5,.4,1) both}
+:root[data-skin="hero"] .splash b{font:400 clamp(58px,17vw,104px)/.92 "Bangers","Impact",sans-serif;font-style:normal;letter-spacing:.035em;color:#e62429;-webkit-text-fill-color:#e62429;-webkit-text-stroke:2.5px #111;text-shadow:5px 5px 0 #111;text-align:center;background:none}
+:root[data-skin="hero"] .splash b span:nth-child(1){animation:cmword .4s .55s cubic-bezier(.2,1.6,.4,1) both}
+:root[data-skin="hero"] .splash b span + span{color:#1f5fd6;-webkit-text-fill-color:#1f5fd6;animation:cmword .45s .75s cubic-bezier(.2,1.6,.4,1) both}
+:root[data-skin="hero"] .splash .sp-bar{height:12px;border:3px solid #111;border-radius:0;background:repeating-linear-gradient(-45deg,#ffcc00 0 9px,#e62429 9px 18px);animation:spbar .5s 1s cubic-bezier(.2,.8,.2,1) forwards;align-self:stretch}
+:root[data-skin="hero"] .splash .cm-cap{position:absolute;top:calc(env(safe-area-inset-top,0px) + 22px);left:18px;padding:7px 12px 6px;background:#fff36b;border:3px solid #111;box-shadow:5px 5px 0 #111;font:400 19px/1 "Bangers","Impact",sans-serif;letter-spacing:.06em;color:#111;transform:rotate(-2deg);animation:cmcap .45s .1s cubic-bezier(.2,1.4,.4,1) both}
+:root[data-skin="hero"] .splash .cm-pow{position:absolute;right:max(8px,4vw);bottom:calc(env(safe-area-inset-bottom,0px) + 9vh);width:170px;height:150px;transform:rotate(-12deg);
+  filter:drop-shadow(3px 0 0 #111) drop-shadow(-3px 0 0 #111) drop-shadow(0 3px 0 #111) drop-shadow(0 -3px 0 #111) drop-shadow(7px 7px 0 #111);animation:cmpow .5s 1.05s cubic-bezier(.2,1.8,.4,1) both}
+:root[data-skin="hero"] .splash .cm-pow i{position:absolute;inset:0;display:grid;place-items:center;background:#e62429;font:400 40px/1 "Bangers","Impact",sans-serif;font-style:normal;letter-spacing:.04em;color:#fff200;-webkit-text-stroke:1.5px #111;text-shadow:3px 3px 0 #111;
+  clip-path:polygon(50% 0,61% 22%,84% 6%,78% 32%,100% 34%,82% 52%,98% 72%,72% 70%,74% 96%,56% 78%,40% 100%,36% 76%,10% 90%,20% 64%,0 52%,20% 40%,6% 16%,32% 24%)}
+:root[data-skin="hero"] .splash .cm-zip{position:absolute;left:max(10px,5vw);bottom:calc(env(safe-area-inset-bottom,0px) + 18vh);font:400 30px/1 "Bangers","Impact",sans-serif;color:#fff;-webkit-text-stroke:1.5px #111;text-shadow:3px 3px 0 #111;letter-spacing:.06em;transform:rotate(-14deg);animation:cmzip .5s 1.3s cubic-bezier(.2,1.5,.4,1) both}
+:root[data-skin="hero"] .splash.hold :is(.cm-cap,.cm-pow,.cm-zip){visibility:hidden}
+@keyframes cmspin{to{transform:rotate(360deg)}}
+@keyframes cmshake{0%,100%{transform:none}15%{transform:translate(-9px,5px) rotate(-1deg)}30%{transform:translate(8px,-6px) rotate(1deg)}45%{transform:translate(-6px,-3px)}60%{transform:translate(5px,4px)}80%{transform:translate(-2px,1px)}}
+@keyframes cmlines{0%{opacity:0;transform:scale(1.4)}35%{opacity:1}100%{opacity:.55;transform:scale(1)}}
+@keyframes cmslam{0%{opacity:0;transform:rotate(-14deg) scale(3)}100%{opacity:1;transform:rotate(-3deg) scale(1)}}
+@keyframes cmword{0%{opacity:0;transform:scale(.2) rotate(-10deg)}100%{opacity:1;transform:none}}
+@keyframes cmcap{0%{opacity:0;transform:translateX(-120%) rotate(-2deg)}100%{opacity:1;transform:rotate(-2deg)}}
+@keyframes cmpow{0%{opacity:0;transform:rotate(-40deg) scale(0)}100%{opacity:1;transform:rotate(-12deg) scale(1)}}
+@keyframes cmzip{0%{opacity:0;transform:translateX(-60px) rotate(-14deg)}100%{opacity:1;transform:rotate(-14deg)}}
+@media (prefers-reduced-motion:reduce){:root[data-skin="hero"] .splash{animation:none!important}:root[data-skin="hero"] .splash .cm-lines{opacity:.55}}
 
 /* ---- round 4: coach, follow-ups, year, undo, backup ---- */
 .coach{display:flex;gap:8px;align-items:baseline;margin-top:8px;padding:9px 12px;border-radius:12px;background:var(--accent-soft);font-size:13.5px;font-weight:600;line-height:1.35}
@@ -1221,7 +1253,7 @@ html[data-skin="galaxy"]{background:radial-gradient(60% 40% at 80% 10%,rgba(244,
 .quests,.trophies,.badges,.ious,.spiffs{content-visibility:auto;contain-intrinsic-size:auto 300px}
 html.tp-hidden *{animation-play-state:paused!important}
 </style>
-<div class="splash wait" id="splash" aria-hidden="true"><span class="sp-streak s1"></span><span class="sp-streak s2"></span><div class="sp-in"><b><span>You got</span><span>this!</span></b><span class="sp-bar"></span></div></div>
+<div class="splash wait" id="splash" aria-hidden="true"><span class="cm cm-rays"></span><span class="cm cm-dots"></span><span class="cm cm-lines"></span><span class="cm cm-cap">Meanwhile, at Toyota Marin…</span><span class="cm cm-zip">ZOOM!</span><span class="cm cm-pow"><i>POW!</i></span><span class="sp-streak s1"></span><span class="sp-streak s2"></span><div class="sp-in"><b><span>You got</span><span>this!</span></b><span class="sp-bar"></span></div></div>
 <script>
 try{ if("scrollRestoration" in history) history.scrollRestoration="manual"; }catch(e){}
 (function(){ const top=()=>{ try{ window.scrollTo(0,0); document.documentElement.scrollTop=0; document.body&&(document.body.scrollTop=0); }catch(e){} };
@@ -1232,7 +1264,9 @@ try{ if("scrollRestoration" in history) history.scrollRestoration="manual"; }cat
     const mo=n.getMonth(), dt=n.getDate(), nv1=new Date(n.getFullYear(),10,1).getDay(), tg=1+((4-nv1+7)%7)+21;
     const hp=(mo===10&&dt===tg)?["Give","thanks."]:(mo===11&&(dt===24||dt===25))?["Merry","Christmas."]:((mo===11&&dt===31)||(mo===0&&dt===1))?["New year,","new money."]:(mo===6&&dt===4)?["Happy","4th."]:null, use=hp||pick;
     if(s.length===2){ s[0].textContent=use[0]; s[1].textContent=use[1]; } }catch(e){}
+  try{ const W=[["POW!","ZOOM!"],["BAM!","WHOOSH!"],["KAPOW!","ZING!"],["WHAM!","VROOM!"],["BOOM!","ZAP!"],["SOLD!","CHA-CHING!"]], w=W[Math.floor(Math.random()*W.length)], pw=sp.querySelector(".cm-pow i"), zp=sp.querySelector(".cm-zip"); if(pw){ pw.textContent=w[0]; if(w[0].length>4) pw.style.fontSize=(w[0].length>5?"30px":"34px"); } if(zp) zp.textContent=w[1]; }catch(e){}
   let hold=2000;
+  try{ if(document.documentElement.getAttribute("data-skin")==="hero" || (localStorage.getItem("trippad.theme")==="hero")) hold=2600; }catch(e){}
   try{ const n=new Date(), y=n.getFullYear(), nov1=new Date(y,10,1).getDay(), bfDay=1+((4-nov1+7)%7)+21+1;
     const bf=(n.getMonth()===10 && n.getDate()===bfDay) || /[?&]bf\b/.test(location.search);
     if(bf){ sp.classList.add("bf"); const b=sp.querySelector(".sp-in b"); b.replaceChildren(...["Black","Friday","Baby!"].map(t=>{const x=document.createElement("span"); x.textContent=t; return x;}));
@@ -3186,7 +3220,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v38", tpChecked=0;
+var TP_BUILD="trip-pad-v39", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
