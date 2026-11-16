@@ -707,6 +707,9 @@ html[data-skin="grid"]{background:#01030a}
 </style>
 <div class="splash wait" id="splash" aria-hidden="true"><span class="sp-streak s1"></span><span class="sp-streak s2"></span><div class="sp-in"><b><span>You got</span><span>this!</span></b><span class="sp-bar"></span></div></div>
 <script>
+try{ if("scrollRestoration" in history) history.scrollRestoration="manual"; }catch(e){}
+(function(){ const top=()=>{ try{ window.scrollTo(0,0); document.documentElement.scrollTop=0; document.body&&(document.body.scrollTop=0); }catch(e){} };
+  top(); document.addEventListener("DOMContentLoaded",top); addEventListener("load",top); addEventListener("pageshow",top); addEventListener("tp-enter",top); })();
 (function(){ const sp=document.getElementById("splash"); if(!sp) return;
   try{ const L=[["You got","this!"],["Close","strong."],["One","more."],["Own","today."],["Stay","hungry."],["Make it","count."],["No days","off."],["Sell","the day."]];
     const n=new Date(), doy=Math.floor((n-new Date(n.getFullYear(),0,0))/864e5), pick=L[doy%L.length], s=sp.querySelectorAll(".sp-in b span");
