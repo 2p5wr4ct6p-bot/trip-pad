@@ -621,7 +621,7 @@ html:not(.tp-in) .wrap,html:not(.tp-in) .fab{visibility:hidden}
 /* ---- thank-you popup ---- */
 .thanks-pop{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));z-index:62;width:min(340px,calc(100vw - 32px));transform:translateX(-50%);pointer-events:none;
   display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:18px;color:#fff;background:linear-gradient(120deg,#2f6bff,#9b5bff 55%,#ff4fae);
-  box-shadow:0 18px 40px rgba(60,40,160,.45);animation:thxin .55s cubic-bezier(.2,1.5,.4,1) both,thxout .45s 3.4s ease-in forwards}
+  box-shadow:0 18px 40px rgba(60,40,160,.45);animation:thxin .55s cubic-bezier(.2,1.5,.4,1) both,thxout .45s 4.6s ease-in forwards}
 .thanks-pop .tx-ic{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:24px;background:rgba(255,255,255,.2);animation:thxbeat 1s .5s ease-in-out 3}
 .thanks-pop b{display:block;font:800 16px/1.25 var(--f-body)}
 .thanks-pop small{display:block;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;opacity:.8;margin-bottom:2px}
@@ -1783,9 +1783,9 @@ async function playB64(key,b64){ if(soundPref==="off") return; const ctx=audioCt
 function playAww(){ playB64("aww",AWW_SFX); }
 function showThanks(){
   const o=document.createElement("div"); o.className="thanks-pop"; o.setAttribute("role","status");
-  o.innerHTML='<span class="tx-ic" aria-hidden="true">🙏</span><div><small>Internet deal</small><b>Calvin, thank you for your hard work</b></div>';
+  o.innerHTML='<span class="tx-ic" aria-hidden="true">🙏</span><div><small>Internet deal</small><b>Calvin would like to thank you for your hard work closing an internet deal</b></div>';
   ["💙","✨","💜","⭐","💙"].forEach((h,k)=>{ const s=document.createElement("i"); s.textContent=h; s.style.left=(12+k*18)+"%"; s.style.bottom="60%"; s.style.animationDelay=(0.3+k*0.18)+"s"; o.append(s); });
-  document.body.append(o); setTimeout(()=>o.remove(),4000);
+  document.body.append(o); setTimeout(()=>o.remove(),5200);
   try{ const ctx=audioCtx(); if(ctx && soundPref!=="off"){ const t=ctx.currentTime; [784,1175].forEach((fq,k)=>{ const os=ctx.createOscillator(), g=ctx.createGain(); os.type="sine"; os.frequency.value=fq; g.gain.setValueAtTime(.0001,t+k*.14); g.gain.exponentialRampToValueAtTime(.12,t+k*.14+.02); g.gain.exponentialRampToValueAtTime(.0001,t+k*.14+.7); os.connect(g).connect(ctx.destination); os.start(t+k*.14); os.stop(t+k*.14+.75); }); } }catch(e){}
   try{ tap(); }catch(e){}
 }
