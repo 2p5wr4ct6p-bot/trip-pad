@@ -756,6 +756,18 @@ html[data-skin="grid"]{background:#01030a}
 .totop svg{width:16px;height:16px;color:var(--accent)}
 .totop:active{transform:scale(.97)}
 :root[data-skin="grid"] .totop{border-color:#00eaff;color:#e6fdff;box-shadow:0 0 12px rgba(0,234,255,.4);font-family:"Orbitron",var(--f-body);letter-spacing:.06em}
+
+.greet b em.gname{font-style:normal}
+/* ---- Grid theme: greeting ---- */
+:root[data-skin="grid"] .greet{position:relative;padding-bottom:10px}
+:root[data-skin="grid"] .greet::after{content:"";position:absolute;left:0;bottom:0;width:72%;height:1px;background:linear-gradient(90deg,#00eaff,rgba(0,234,255,.35) 60%,transparent);box-shadow:0 0 8px rgba(0,234,255,.7)}
+:root[data-skin="grid"] .greet b{font-family:"Orbitron",var(--f-body);font-weight:600;font-size:14px;letter-spacing:.22em;text-transform:uppercase;color:#7fe9f7;text-shadow:0 0 8px rgba(0,234,255,.45)}
+:root[data-skin="grid"] .greet b em.gname{display:block;margin-top:4px;font-size:clamp(22px,7vw,28px);font-weight:800;letter-spacing:.07em;color:#e6fdff;
+  text-shadow:0 0 8px #00eaff,0 0 22px rgba(0,234,255,.65),0 0 44px rgba(0,234,255,.3);animation:gateflicker 5s infinite}
+:root[data-skin="grid"] .greet #greetTime{font-family:"Orbitron",var(--f-num);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#74aebd}
+:root[data-skin="grid"] .sky{filter:hue-rotate(150deg) saturate(1.6) drop-shadow(0 0 6px rgba(0,234,255,.8))}
+:root[data-skin="grid"] .rank{background:#020a14;border-color:rgba(0,234,255,.55);box-shadow:0 0 10px rgba(0,234,255,.3);font-family:"Orbitron",var(--f-body);letter-spacing:.05em;--rk1:#00eaff;--rk2:#0096c7}
+@media (prefers-reduced-motion:reduce){:root[data-skin="grid"] .greet b em.gname{animation:none}}
 </style>
 <div class="splash wait" id="splash" aria-hidden="true"><span class="sp-streak s1"></span><span class="sp-streak s2"></span><div class="sp-in"><b><span>You got</span><span>this!</span></b><span class="sp-bar"></span></div></div>
 <script>
@@ -1286,7 +1298,7 @@ function setSky(kind){ if(skyNow===kind) return; skyNow=kind; const el=$("greetS
 function updateGreeting(){
   const now=new Date(), h=now.getHours();
   const part=h>=5&&h<12?"Good morning":h>=12&&h<17?"Good afternoon":"Good evening";
-  $("greetText").textContent=part+(greetName?", "+greetName:""); setSky(h>=5&&h<17?"sun":"moon");
+  { const gt=$("greetText"); gt.replaceChildren(document.createTextNode(part+(greetName?", ":""))); if(greetName){ const n=document.createElement("em"); n.className="gname"; n.textContent=greetName; gt.append(n); } } setSky(h>=5&&h<17?"sun":"moon");
   $("greetTime").textContent=now.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"})+" · "+now.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"});
 }
 updateGreeting(); setInterval(updateGreeting,15000);
