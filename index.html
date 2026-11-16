@@ -545,6 +545,8 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
 .tk-i em.fl{color:#ffd54a;text-shadow:0 0 8px rgba(255,213,74,.4)}
 .tk-i::after{content:"◆";color:#3a4a44;font-size:8px;margin-left:20px;align-self:center}
 @keyframes tkscroll{to{transform:translateX(-50%)}}
+.coach.ups-take{padding:0;gap:0;align-items:stretch;line-height:normal}
+.coach.ups-take b{color:#fff;font-size:inherit;letter-spacing:.04em;text-transform:none}
 html.tp-hidden .tk-track{animation-play-state:paused}
 @media (prefers-reduced-motion:reduce){.tk-win{overflow-x:auto}.tk-track{animation:none}.tk-set[aria-hidden]{display:none}}
 .tag.fu{background:var(--accent-soft);color:var(--accent)}
@@ -2201,8 +2203,19 @@ function renderCoach(mk, units){
     if(eow<dim && k>0) t+=" "+k+" more by Saturday keeps you on pace.";
     else if(eow<dim) t+=" You're ahead of pace this week.";
   }
-  el.replaceChildren(); const b=document.createElement("b"); b.textContent="What it takes"; const s=document.createElement("span"); s.textContent=t; el.append(b,s); el.hidden=false;
+  el.hidden=false; el.classList.add("ups-take"); el.setAttribute("role","img"); el.setAttribute("aria-label","What it takes: "+t);
+  const I=(a,v,c)=>'<span class="tk-i"><b>'+a+'</b><em class="'+(c||"")+'">'+v+'</em></span>';
+  const expect=goal*(day-1)/dim, ahead=units>=expect, items=[];
+  if(need<=0) items.push(I("GOAL","HIT ▲","up"), I("BONUS","EVERY DEAL ▲","up"));
+  else { const per=need/left; items.push(per>=0.6?I("SELL",(Math.round(per*10)/10)+"/DAY","fl"):I("SELL","1 EVERY "+Math.max(1,Math.floor(left/need))+" DAYS","fl"));
+    const eow=Math.min(dim, day+(6-now.getDay())), k=Math.ceil(goal*eow/dim*2)/2-units; if(eow<dim) items.push(k>0?I("BY SAT",k+" MORE","fl"):I("WEEK","AHEAD ▲","up")); }
+  items.push(I("UNITS",units+"/"+goal+(units>=goal?" ▲":""),units>=goal?"up":units?"fl":"dn"), I("NEED",need>0?need+" ▼":"0 ▲",need>0?"dn":"up"),
+    I("PACE",ahead?"AHEAD ▲":"BEHIND ▼",ahead?"up":"dn"), I("DAYS",left+" LEFT",""));
+  setTicker(el,"WHAT IT TAKES",items.join(""));
 }
+function setTicker(el,label,items){ if(items===el.dataset.tk) return; el.dataset.tk=items;
+  el.innerHTML='<span class="tk-lbl"><i></i>'+label+'</span><span class="tk-win"><span class="tk-track"><span class="tk-set">'+items+'</span><span class="tk-set" aria-hidden="true">'+items+'</span></span></span>';
+  requestAnimationFrame(()=>{ const st=el.querySelector(".tk-set"), w=st?st.offsetWidth:0; if(w) el.querySelector(".tk-track").style.setProperty("--tkdur",Math.max(10,w/55).toFixed(1)+"s"); else el.dataset.tk=""; }); }
 
 /* ---------- round 4: customer follow-ups ---------- */
 const FU=[{k:"thanks",label:"Thank-you text",due:0,until:14},{k:"check3",label:"3-day check-in",due:3,until:21}];
@@ -3147,7 +3160,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v35", tpChecked=0;
+var TP_BUILD="trip-pad-v36", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
