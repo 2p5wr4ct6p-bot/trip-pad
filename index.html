@@ -704,6 +704,30 @@ html[data-skin="grid"]{background:#01030a}
 @keyframes gridpulse{0%,100%{box-shadow:0 0 16px rgba(0,234,255,.45),inset 0 0 12px rgba(0,234,255,.2)}50%{box-shadow:0 0 34px rgba(0,234,255,.85),inset 0 0 22px rgba(0,234,255,.35)}}
 :root[data-skin="grid"] .gate-foot{font-family:"Orbitron",var(--f-body);letter-spacing:.15em;color:#7fe9f7}
 @media (prefers-reduced-motion:reduce){:root[data-skin="grid"] .gate::before,:root[data-skin="grid"] .gate-logo b{animation:none}}
+
+/* ---- enter the grid: confirm + digitize ---- */
+.gridask{position:fixed;inset:0;z-index:120;display:grid;place-items:center;padding:24px;background:rgba(0,4,10,.82);backdrop-filter:blur(3px);animation:achvbg .25s ease-out both}
+.gridask-card{width:min(340px,100%);padding:22px 20px 18px;text-align:center;color:#e6fdff;background:#020a14;border:1.5px solid #00eaff;
+  box-shadow:0 0 30px rgba(0,234,255,.45),inset 0 0 20px rgba(0,234,255,.12);clip-path:polygon(16px 0,100% 0,100% calc(100% - 16px),calc(100% - 16px) 100%,0 100%,0 16px);animation:recapin .4s cubic-bezier(.2,1.3,.4,1) both}
+.gridask-k{font:500 11px "Orbitron",var(--f-body);letter-spacing:.3em;text-transform:uppercase;color:#7fe9f7}
+.gridask-q{margin:12px 0 20px;font:700 20px/1.3 "Orbitron",var(--f-body);text-shadow:0 0 12px rgba(0,234,255,.6)}
+.gridask-row{display:flex;gap:10px}
+.gridask-row button{flex:1;padding:13px 10px;font:700 15px "Orbitron",var(--f-body);letter-spacing:.18em;text-transform:uppercase;cursor:pointer;border-radius:4px}
+.gridask-no{background:transparent;color:#7fe9f7;border:1px solid rgba(0,234,255,.35)}
+.gridask-yes{background:#00eaff;color:#001318;border:1px solid #00eaff;box-shadow:0 0 18px rgba(0,234,255,.7)}
+.digitize{position:fixed;inset:0;z-index:130;background:#000;display:grid;place-items:center;overflow:hidden;animation:achvbg .3s ease-out both}
+.digitize canvas{position:absolute;inset:0;width:100%;height:100%}
+.digitize .dz-beam{position:absolute;left:0;right:0;height:3px;top:0;background:linear-gradient(90deg,transparent,#00eaff 15%,#fff 50%,#00eaff 85%,transparent);box-shadow:0 0 22px 8px rgba(0,234,255,.7),0 0 60px 20px rgba(0,234,255,.3);animation:dzbeam 2.2s cubic-bezier(.45,0,.55,1) .2s both}
+@keyframes dzbeam{0%{top:-2%}100%{top:102%}}
+.digitize .dz-in{position:relative;z-index:2;text-align:center;color:#e6fdff;display:flex;flex-direction:column;align-items:center;gap:14px;width:min(320px,86vw)}
+.digitize .dz-t{font:800 clamp(24px,8vw,34px)/1.1 "Orbitron",var(--f-body);letter-spacing:.12em;text-shadow:0 0 12px #00eaff,0 0 30px rgba(0,234,255,.7);animation:dzglitch .18s steps(2) infinite}
+@keyframes dzglitch{0%{transform:translate(0,0);opacity:1}50%{transform:translate(1.5px,-1px);opacity:.82}100%{transform:translate(-1px,1px);opacity:1}}
+.digitize .dz-bar{width:100%;height:4px;background:rgba(0,234,255,.15);overflow:hidden}
+.digitize .dz-bar i{display:block;height:100%;width:0;background:#00eaff;box-shadow:0 0 12px #00eaff;animation:dzbar 2.4s cubic-bezier(.3,0,.2,1) .15s forwards}
+@keyframes dzbar{to{width:100%}}
+.digitize .dz-s{font:500 11px "Orbitron",var(--f-num);letter-spacing:.22em;color:#7fe9f7;min-height:14px}
+.digitize.flash::after{content:"";position:absolute;inset:0;z-index:3;background:#bff9ff;animation:dzflash .5s ease-out forwards}
+@keyframes dzflash{0%{opacity:0}30%{opacity:1}100%{opacity:1}}
 </style>
 <div class="splash wait" id="splash" aria-hidden="true"><span class="sp-streak s1"></span><span class="sp-streak s2"></span><div class="sp-in"><b><span>You got</span><span>this!</span></b><span class="sp-bar"></span></div></div>
 <script>
@@ -1200,7 +1224,7 @@ function applyTheme(){
 function renderThemePicker(){
   const box=document.getElementById("themePick"); if(!box) return; box.replaceChildren();
   const mk=(label,pressed,fn)=>{ const b=document.createElement("button"); b.type="button"; b.className="chipbtn"; b.textContent=label; b.setAttribute("aria-pressed",String(pressed)); b.addEventListener("click",fn); box.append(b); };
-  [["auto","Auto"],["light","Light"],["dark","Dark"],["night","Night Drive"],["oled","OLED"],["grid","Grid"]].forEach(([k,l])=>mk(l,themePref===k,()=>{ themePref=k; try{localStorage.setItem("trippad.theme",k);}catch(e){} applyTheme(); renderThemePicker(); }));
+  [["auto","Auto"],["light","Light"],["dark","Dark"],["night","Night Drive"],["oled","OLED"],["grid","Grid"]].forEach(([k,l])=>mk(l,themePref===k,()=>{ if(k==="grid" && themePref!=="grid"){ askEnterGrid(); return; } themePref=k; try{localStorage.setItem("trippad.theme",k);}catch(e){} applyTheme(); renderThemePicker(); }));
   mk("Toyota red",accentPref==="red",()=>{ accentPref=accentPref==="red"?"blue":"red"; try{localStorage.setItem("trippad.accent",accentPref);}catch(e){} applyTheme(); renderThemePicker(); });
 }
 applyTheme(); renderThemePicker();
@@ -1924,6 +1948,59 @@ $("spiffForm").addEventListener("submit",async e=>{ e.preventDefault();
   try{ await store.saveSpiffs(list); $("spiffScrim").hidden=true; tapSuccess(); }catch(err){ $("spErr").textContent="Couldn't save. Try again."; } });
 $("spDel").addEventListener("click",()=>{ const s=spiffEditing; if(!s) return; askDelete({label:"the "+money(num(s.amount))+" spiff on "+normStock(s.stock)}, async()=>{ try{ await store.saveSpiffs(spiffs.filter(x=>x.id!==s.id)); $("spiffScrim").hidden=true; }catch(e){ $("spErr").textContent="Couldn't delete. Try again."; } }, ()=>{}); });
 $("rankChip").addEventListener("click",()=>{ const t=$("rankTip"); t.hidden=!t.hidden; $("rankChip").setAttribute("aria-expanded",String(!t.hidden)); });
+
+
+/* ---------- enter the grid: confirm + digitize ---------- */
+function askEnterGrid(){
+  if(document.querySelector(".gridask")) return;
+  const o=document.createElement("div"); o.className="gridask"; o.setAttribute("role","dialog"); o.setAttribute("aria-label","Enter the Grid");
+  o.innerHTML='<div class="gridask-card"><div class="gridask-k">Grid theme</div><div class="gridask-q">Are you sure you wish to enter the Grid?</div><div class="gridask-row"><button type="button" class="gridask-no">No</button><button type="button" class="gridask-yes">Yes</button></div></div>';
+  document.body.append(o); try{ tap(); }catch(e){}
+  const close=()=>o.remove();
+  o.querySelector(".gridask-no").addEventListener("click",()=>{ close(); renderThemePicker(); });
+  o.addEventListener("click",e=>{ if(e.target===o) close(); });
+  o.querySelector(".gridask-yes").addEventListener("click",()=>{ close(); digitize(); });
+  setTimeout(()=>{ try{ o.querySelector(".gridask-yes").focus({preventScroll:true}); }catch(e){} },50);
+}
+function digitizeSound(){
+  if(soundPref==="off") return; const ctx=audioCtx(); if(!ctx) return;
+  try{ const t=ctx.currentTime, out=ctx.createGain(); out.gain.value=.5; out.connect(ctx.destination);
+    // data sweep
+    const n=ctx.createBufferSource(), len=ctx.sampleRate*2.6, buf=ctx.createBuffer(1,len,ctx.sampleRate), d=buf.getChannelData(0);
+    for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*(i%800<400?1:.35);
+    n.buffer=buf; const bp=ctx.createBiquadFilter(); bp.type="bandpass"; bp.Q.value=6; bp.frequency.setValueAtTime(300,t); bp.frequency.exponentialRampToValueAtTime(6000,t+2.4);
+    const ng=ctx.createGain(); ng.gain.setValueAtTime(.0001,t); ng.gain.exponentialRampToValueAtTime(.25,t+.3); ng.gain.setValueAtTime(.25,t+2.2); ng.gain.exponentialRampToValueAtTime(.0001,t+2.6);
+    n.connect(bp).connect(ng).connect(out); n.start(t); n.stop(t+2.6);
+    // digital arpeggio climbing
+    const notes=[220,277,330,440,554,659,880,1109,1319,1760];
+    notes.forEach((f,k)=>{ const o=ctx.createOscillator(), g=ctx.createGain(), st=t+.2+k*.2; o.type="square"; o.frequency.value=f;
+      g.gain.setValueAtTime(.0001,st); g.gain.exponentialRampToValueAtTime(.06,st+.01); g.gain.exponentialRampToValueAtTime(.0001,st+.18);
+      const lp=ctx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=3000; o.connect(lp).connect(g).connect(out); o.start(st); o.stop(st+.2); });
+    // final zap
+    const z=ctx.createOscillator(), zg=ctx.createGain(); z.type="sawtooth"; z.frequency.setValueAtTime(2400,t+2.45); z.frequency.exponentialRampToValueAtTime(60,t+2.95);
+    zg.gain.setValueAtTime(.0001,t+2.45); zg.gain.exponentialRampToValueAtTime(.22,t+2.48); zg.gain.exponentialRampToValueAtTime(.0001,t+3);
+    z.connect(zg).connect(out); z.start(t+2.45); z.stop(t+3.05);
+  }catch(e){}
+}
+function digitize(){
+  themePref="grid"; try{ localStorage.setItem("trippad.theme","grid"); }catch(e){}
+  const o=document.createElement("div"); o.className="digitize"; o.setAttribute("role","status"); o.setAttribute("aria-label","Digitizing now");
+  o.innerHTML='<canvas></canvas><div class="dz-beam"></div><div class="dz-in"><div class="dz-t">DIGITIZING NOW</div><div class="dz-bar"><i></i></div><div class="dz-s"></div></div>';
+  document.body.append(o); digitizeSound(); try{ tapSuccess(); }catch(e){}
+  const cv=o.querySelector("canvas"), x=cv.getContext("2d"), dpr=Math.min(2,window.devicePixelRatio||1), W=cv.width=innerWidth*dpr, H=cv.height=innerHeight*dpr, B=Math.round(18*dpr);
+  const cols=Math.ceil(W/B), rows=Math.ceil(H/B), cells=[]; for(let r=0;r<rows;r++) for(let c=0;c<cols;c++) cells.push([c,r,Math.random()]);
+  const t0=performance.now(), dur=2500;
+  (function f(now){ const k=Math.min(1,(now-t0)/dur), beamY=Math.max(0,(now-t0-200)/2200)*H; x.clearRect(0,0,W,H);
+    cells.forEach(([c,r,rnd])=>{ const y=r*B; if(y>beamY) return; const a=Math.max(0,1-((beamY-y)/H)*1.6-rnd*.5); if(a<=0) return;
+      x.fillStyle="rgba(0,234,255,"+(a*0.55)+")"; x.fillRect(c*B+1,y+1,B-2,B-2); });
+    x.strokeStyle="rgba(0,234,255,.12)"; x.lineWidth=1; x.beginPath(); for(let c=0;c<=cols;c++){ x.moveTo(c*B,0); x.lineTo(c*B,H); } for(let r=0;r<=rows;r++){ x.moveTo(0,r*B); x.lineTo(W,r*B); } x.stroke();
+    if(k<1 && o.isConnected) requestAnimationFrame(f); })(t0);
+  const lines=["ESTABLISHING LINK…","MAPPING USER…","LOADING THE GRID…","WELCOME, USER"], sEl=o.querySelector(".dz-s");
+  lines.forEach((l,i)=>setTimeout(()=>{ sEl.textContent=l; },150+i*620));
+  setTimeout(()=>o.classList.add("flash"),2600);
+  setTimeout(()=>{ try{ window.scrollTo(0,0); location.reload(); }catch(e){} },3050);
+  setTimeout(()=>{ if(o.isConnected){ o.remove(); applyTheme(); renderThemePicker(); } },5500);
+}
 
 /* ---------- month, filter, goal ---------- */
 $("prev").addEventListener("click",()=>{view.setMonth(view.getMonth()-1); dayFilter=null; listEnter=true; render();});
