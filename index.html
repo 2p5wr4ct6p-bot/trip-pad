@@ -1304,7 +1304,6 @@ try{ if("scrollRestoration" in history) history.scrollRestoration="manual"; }cat
     if(bf){ sp.classList.add("bf"); const b=sp.querySelector(".sp-in b"); b.replaceChildren(...["Black","Friday","Baby!"].map(t=>{const x=document.createElement("span"); x.textContent=t; return x;}));
       const tag=document.createElement("span"); tag.className="sp-tag"; tag.textContent="Sell it all"; sp.append(tag); hold=3000; } }catch(e){}
   window.startSplash=()=>{ setTimeout(()=>{ sp.classList.add("out"); setTimeout(()=>sp.remove(),700); },hold); };
-  sp.addEventListener("click",()=>{ sp.classList.add("out"); setTimeout(()=>sp.remove(),700); });
   const goNoGate=()=>{ if(!document.getElementById("gate")){ document.documentElement.classList.add("tp-in"); sp.classList.remove("wait"); window.startSplash(); } };
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",goNoGate); else goNoGate();
 })();
@@ -3270,7 +3269,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v42", tpChecked=0;
+var TP_BUILD="trip-pad-v43", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
