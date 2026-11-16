@@ -560,6 +560,19 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
 #matchOut{display:flex;flex-direction:column;gap:6px}
 .today{content-visibility:auto;contain-intrinsic-size:auto 320px}
 .sheet > *{flex-shrink:0}
+.setbtn{display:grid;place-items:center;margin-left:4px}
+.setbtn svg{width:21px;height:21px;transition:transform .5s cubic-bezier(.3,1.5,.5,1)}
+.setbtn:active svg,.setbtn[aria-expanded="true"] svg{transform:rotate(90deg)}
+.setsheet{gap:18px}
+.setsheet .sethead{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.setsheet .sethead .btn{width:auto;flex:none;padding:10px 22px}
+.setsheet .setgrp{display:flex;flex-direction:column;gap:10px;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--bg)}
+.setsheet .setgrp > h3{margin:0;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.setsheet .soundrow{align-items:stretch}
+.setsheet .soundpick{justify-content:flex-start}
+.setsheet .soundlbl{display:none}
+.setsheet .totop{margin:0;align-self:stretch}
+.setsheet .setnote{margin:0;font-size:12px;color:var(--muted)}
 .ups-take{padding:0;background:#04070a;border-radius:10px;overflow:hidden;display:flex;align-items:stretch;font:700 13px var(--f-num);color:#e8f5e9;
   box-shadow:inset 0 0 0 1px #1c2b24,0 2px 10px rgba(0,0,0,.25);position:relative}
 .ups-take::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 1px,transparent 1px 3px)}
@@ -1322,6 +1335,7 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
       <button class="icon" id="prev" type="button" aria-label="Previous month">‹</button>
       <span id="monthLabel"></span>
       <button class="icon" id="next" type="button" aria-label="Next month">›</button>
+      <button class="icon setbtn" id="setBtn" type="button" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
     </div>
   </div>
 
@@ -1458,10 +1472,7 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
     <label class="chipbtn" for="importFile">Restore from backup</label>
     <input type="file" id="importFile" accept="application/json,.json" hidden>
   </div>
-  <section class="soundrow" aria-label="Theme"><span class="soundlbl">Theme</span><div class="soundpick" id="themePick"></div></section>
   <button type="button" class="totop" id="toTop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>Go to top of page</button>
-  <button type="button" class="totop" id="lockCard">📱 Make lock screen card</button>
-  <section class="soundrow" aria-label="Deal sound"><span class="soundlbl">Sound when you log a deal</span><div class="soundpick" id="soundPick"></div></section>
   <footer class="copyright">© 2026 Lora Enterprises. All rights reserved.</footer>
 </div>
 
@@ -1615,6 +1626,20 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
     <p class="formhint" id="matchNote" style="margin:0"></p>
     <div id="matchOut"></div>
     <div class="row2"><button class="btn" type="button" id="matchClose">Done</button></div>
+  </div>
+</div>
+<div class="scrim" id="setScrim" hidden>
+  <div class="sheet setsheet" role="dialog" aria-label="Settings">
+    <div class="sethead"><h2>Settings</h2><button class="btn primary" type="button" id="setClose">Done</button></div>
+    <div class="setgrp"><h3>🎨 Theme</h3>
+  <section class="soundrow" aria-label="Theme"><span class="soundlbl">Theme</span><div class="soundpick" id="themePick"></div></section>
+    </div>
+    <div class="setgrp"><h3>🔊 Sound when you log a deal</h3>
+  <section class="soundrow" aria-label="Deal sound"><span class="soundlbl">Sound when you log a deal</span><div class="soundpick" id="soundPick"></div></section>
+    </div>
+    <div class="setgrp"><h3>📱 Lock screen card</h3><p class="setnote">Makes a picture of this month's numbers you can save and set as your lock screen.</p>
+  <button type="button" class="totop" id="lockCard">📱 Make lock screen card</button>
+    </div>
   </div>
 </div>
 <div class="scrim" id="goalScrim" hidden>
@@ -2805,6 +2830,12 @@ function buildLenderPicks(){ const box=$("fLenderPicks"); box.replaceChildren();
   b.dataset.l=nm; b.addEventListener("click",()=>{ $("fLender").value=$("fLender").value===nm?"":nm; syncLenderPicks(); }); box.append(b); }); syncLenderPicks(); }
 function syncLenderPicks(){ const v=$("fLender").value.trim().toLowerCase(); $("fLenderPicks").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.l.toLowerCase()===v))); }
 $("fLender").addEventListener("input",syncLenderPicks); buildLenderPicks();
+/* settings sheet */
+function openSettings(){ $("setScrim").hidden=false; $("setBtn").setAttribute("aria-expanded","true"); try{ tap(); }catch(e){} }
+function closeSettings(){ $("setScrim").hidden=true; $("setBtn").setAttribute("aria-expanded","false"); }
+$("setBtn").addEventListener("click",openSettings);
+$("setClose").addEventListener("click",closeSettings);
+$("setScrim").addEventListener("click",e=>{ if(e.target===$("setScrim")) closeSettings(); });
 
 /* ===== round 8: today's plan, ups, calculator, customer book, paycheck match, stips, voice notes, E/O ===== */
 var upsData, plan, upsStack;
@@ -3220,7 +3251,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v39", tpChecked=0;
+var TP_BUILD="trip-pad-v40", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
