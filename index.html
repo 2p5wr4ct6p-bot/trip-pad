@@ -631,6 +631,16 @@ html:not(.tp-in) .wrap,html:not(.tp-in) .fab{visibility:hidden}
 @keyframes thxbeat{0%,100%{transform:scale(1)}40%{transform:scale(1.25)}}
 @keyframes thxfloat{0%{opacity:0;transform:translateY(0) scale(.6)}20%{opacity:1}100%{opacity:0;transform:translateY(-90px) scale(1.1)}}
 @media (prefers-reduced-motion:reduce){.thanks-pop,.thanks-pop *{animation-duration:.01s!important}}
+
+/* ---- OLED theme: true black, no lit backgrounds ---- */
+:root[data-skin="oled"]{--bg:#000;--card:#000;--chip:#0e0e0e;--line:#1f1f1f;--ink:#f5f5f7;--muted:#8e8e93;
+  --accent:#4f8cff;--accent-ink:#000;--accent-soft:#0b1a33;--good:#30d158;--warn:#ffb340;--bad:#ff453a;color-scheme:dark;
+  --hg1:#4f8cff;--hg2:#40c8e0;--hg3:#30d158;--hg4:#ff375f;--hg5:#bf5af2}
+:root[data-skin="oled"] body,:root[data-skin="oled"]{background:#000}
+:root[data-skin="oled"] .board::before{display:none}
+:root[data-skin="oled"] :is(.board,.badges,.cal,.year,.race,.team,.deal,.paycard,.spiffs){box-shadow:none;border-color:#1f1f1f}
+:root[data-skin="oled"] .fab{box-shadow:none}
+:root[data-skin="oled"] .spiffs{background:#000}
 </style>
 <div class="splash wait" id="splash" aria-hidden="true"><span class="sp-streak s1"></span><span class="sp-streak s2"></span><div class="sp-in"><b><span>You got</span><span>this!</span></b><span class="sp-bar"></span></div></div>
 <script>
@@ -1116,14 +1126,14 @@ let themePref="auto", accentPref="blue";
 try{ themePref=localStorage.getItem("trippad.theme")||"auto"; accentPref=localStorage.getItem("trippad.accent")||"blue"; }catch(e){}
 function applyTheme(){
   if(themePref==="auto"){ if(hostTheme) rootEl.setAttribute("data-theme",hostTheme); else rootEl.removeAttribute("data-theme"); }
-  else rootEl.setAttribute("data-theme",themePref==="night"?"dark":themePref);
-  if(themePref==="night") rootEl.setAttribute("data-skin","night"); else rootEl.removeAttribute("data-skin");
+  else rootEl.setAttribute("data-theme",(themePref==="night"||themePref==="oled")?"dark":themePref);
+  if(themePref==="night"||themePref==="oled") rootEl.setAttribute("data-skin",themePref); else rootEl.removeAttribute("data-skin");
   if(accentPref==="red") rootEl.setAttribute("data-accent","red"); else rootEl.removeAttribute("data-accent");
 }
 function renderThemePicker(){
   const box=document.getElementById("themePick"); if(!box) return; box.replaceChildren();
   const mk=(label,pressed,fn)=>{ const b=document.createElement("button"); b.type="button"; b.className="chipbtn"; b.textContent=label; b.setAttribute("aria-pressed",String(pressed)); b.addEventListener("click",fn); box.append(b); };
-  [["auto","Auto"],["light","Light"],["dark","Dark"],["night","Night Drive"]].forEach(([k,l])=>mk(l,themePref===k,()=>{ themePref=k; try{localStorage.setItem("trippad.theme",k);}catch(e){} applyTheme(); renderThemePicker(); }));
+  [["auto","Auto"],["light","Light"],["dark","Dark"],["night","Night Drive"],["oled","OLED"]].forEach(([k,l])=>mk(l,themePref===k,()=>{ themePref=k; try{localStorage.setItem("trippad.theme",k);}catch(e){} applyTheme(); renderThemePicker(); }));
   mk("Toyota red",accentPref==="red",()=>{ accentPref=accentPref==="red"?"blue":"red"; try{localStorage.setItem("trippad.accent",accentPref);}catch(e){} applyTheme(); renderThemePicker(); });
 }
 applyTheme(); renderThemePicker();
