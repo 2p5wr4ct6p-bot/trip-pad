@@ -659,8 +659,9 @@ html.tp-hidden .tk-track{animation-play-state:paused}
   --accent:#4d8dff;--accent-ink:#020615;--accent-soft:#16224a;--good:#3dffa8;--warn:#ffc35c;--bad:#ff6b8a;color-scheme:dark;
   --hg1:#4d8dff;--hg2:#00e5ff;--hg3:#3dffa8;--hg4:#ff3dc8;--hg5:#a45bff}
 :root[data-skin="night"] body{background:radial-gradient(120% 55% at 50% -12%,#1b2070 0%,transparent 62%),radial-gradient(80% 40% at 100% 100%,#2a0a4a 0%,transparent 70%),#060714}
-:root[data-skin="night"] :is(.board,.badges,.cal,.year,.race,.team,.deal){box-shadow:0 0 0 1px rgba(77,141,255,.22),0 0 26px rgba(77,141,255,.10)}
-:root[data-skin="night"] .ring{filter:drop-shadow(0 0 8px rgba(77,141,255,.55))}
+:root[data-skin="night"] :is(.board,.badges,.cal,.year,.race,.team,.deal,.today,.quests,.trophies,.spiffs,.ious,.paycard){box-shadow:0 0 0 1px rgba(255,64,190,.38),0 0 22px rgba(255,64,190,.16),0 0 48px rgba(168,85,255,.08)}
+:root[data-skin="night"] .board{box-shadow:0 0 0 1px rgba(255,64,190,.5),0 0 28px rgba(255,64,190,.24),0 0 60px rgba(168,85,255,.14)}
+:root[data-skin="night"] .ring{filter:drop-shadow(0 0 8px rgba(255,64,190,.6))}
 :root[data-skin="night"]:not([data-accent="red"]) .fab{background:linear-gradient(90deg,#3d6bff,#b14dff);color:#fff;box-shadow:0 0 26px rgba(130,90,255,.6)}
 :root[data-skin="night"] .amt{text-shadow:0 0 18px rgba(61,255,168,.35)}
 /* snow */
@@ -3269,7 +3270,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v43", tpChecked=0;
+var TP_BUILD="trip-pad-v44", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
