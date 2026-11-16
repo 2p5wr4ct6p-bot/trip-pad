@@ -797,6 +797,8 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
       <label class="f">Vehicle<input id="fVeh" autocomplete="off" autocapitalize="characters" placeholder="2026 RAV4 XLE" style="text-transform:uppercase"></label>
       <div class="f full"><span class="f">Type</span>
         <div class="seg" id="fType"><button type="button" data-v="New">New</button><button type="button" data-v="Used">Used</button><button type="button" data-v="CPO">TCUV</button></div></div>
+      <div class="f full"><span class="f">Deal source</span>
+        <div class="seg" id="fSource"><button type="button" data-v="Showroom">Showroom</button><button type="button" data-v="Internet">Internet</button><button type="button" data-v="Phone">Phone</button><button type="button" data-v="Campaign">Campaign</button></div></div>
       <div class="f full"><span class="f">Status</span>
         <div class="seg" id="fStatus"><button type="button" data-v="pending">Pending</button><button type="button" data-v="funded">Funded</button><button type="button" data-v="cash">Cash deal</button><button type="button" data-v="unwound">Unwound</button></div></div>
       <label class="f">Front gross<input id="fFront" class="num" inputmode="decimal" placeholder="0"></label>
@@ -1186,11 +1188,11 @@ function renderCal(mk, live){
 }
 function csvMonth(){
   const mk=monthKey(view), rows=deals.filter(d=>(d.date||"").startsWith(mk)).sort((a,b)=>(a.date||"").localeCompare(b.date||""));
-  const head=["Date processed","Deal #","Customer","Vehicle","Stock #","Type","Status","Credit","Split with","Front gross","Back gross","Commission","Products","Veritas bonus","Trade-in","Doc processor","Paid","Notes"];
+  const head=["Date processed","Deal #","Customer","Vehicle","Stock #","Type","Source","Status","Credit","Split with","Front gross","Back gross","Commission","Products","Veritas bonus","Trade-in","Doc processor","Paid","Notes"];
   const esc=v=>{ const s=String(v==null?"":v); return /[",\n\r]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; };
   const lines=[head.map(esc).join(",")];
   rows.forEach(d=>{ const [y,m,dd]=(d.date||"--").split("-");
-    lines.push([m+"/"+dd+"/"+y, d.dealNo, d.customer, d.vehicle, d.stock, d.type==="CPO"?"TCUV":d.type, d.status==="cash"?"Cash deal":d.status, d.split?"50%":"100%", d.partner,
+    lines.push([m+"/"+dd+"/"+y, d.dealNo, d.customer, d.vehicle, d.stock, d.type==="CPO"?"TCUV":d.type, d.source||"", d.status==="cash"?"Cash deal":d.status, d.split?"50%":"100%", d.partner,
       num(d.front), num(d.back), num(d.commission), (d.products||[]).join("; "), d.veritas?"Yes":"No", d.trade?"Trade":"No trade", d.processor, d.paid?"Yes":"No", d.notes].map(esc).join(",")); });
   const live=rows.filter(d=>d.status!=="unwound");
   lines.push(""); lines.push(["Totals","","","","","","",live.reduce((s,d)=>s+(d.split?.5:1),0)+" units","",live.reduce((s,d)=>s+num(d.front),0),live.reduce((s,d)=>s+num(d.back),0),live.reduce((s,d)=>s+num(d.commission),0)].map(esc).join(","));
@@ -1299,7 +1301,7 @@ function render(){
     const v=document.createElement("div"); v.className="veh"; v.textContent=[d.vehicle?String(d.vehicle).toUpperCase():"",d.stock?"STOCK# "+String(d.stock).toUpperCase():""].filter(Boolean).join(" · ")||"Processed "+new Date(+y,+m-1,+dd).toLocaleDateString("en-US");
     const tags=document.createElement("div"); tags.className="tags";
     const tag=(t,cl)=>{const s=document.createElement("span"); s.className="tag "+(cl||""); s.textContent=t; tags.append(s);};
-    tag(d.status==="cash"?"cash deal":(d.status||"pending"),d.status||"pending"); if(d.type&&d.type!=="New") tag(d.type==="CPO"?"TCUV":d.type);
+    tag(d.status==="cash"?"cash deal":(d.status||"pending"),d.status||"pending"); if(d.type&&d.type!=="New") tag(d.type==="CPO"?"TCUV":d.type); if(d.source) tag(d.source);
     tag(d.split?"50% credit":"100% credit", d.split?"split":"funded");
     if(d.split&&d.partner) tag("w/ "+d.partner,"split");
     if((d.products||[]).length) tag((d.products.length)+" product"+(d.products.length>1?"s":""));
@@ -1327,6 +1329,7 @@ function render(){
 /* ---------- form ---------- */
 function segVal(id){return $(id).querySelector('[aria-pressed="true"]')?.dataset.v;}
 function setSeg(id,v){$(id).querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===v)));}
+$("fSource").addEventListener("click",e=>{const b=e.target.closest("button"); if(!b)return; setSeg("fSource", b.getAttribute("aria-pressed")==="true" ? "" : b.dataset.v);});
 $("fProc").addEventListener("click",e=>{const b=e.target.closest("button"); if(!b)return; setSeg("fProc", b.getAttribute("aria-pressed")==="true" ? "" : b.dataset.v);});
 ["fType","fStatus","fSplit","fVeritas","fTrade","fPaid"].forEach(id=>$(id).addEventListener("click",e=>{const b=e.target.closest("button"); if(!b)return; setSeg(id,b.dataset.v); if(id==="fSplit")$("partnerWrap").hidden=b.dataset.v!=="yes";}));
 PRODUCTS.forEach(p=>{const b=document.createElement("button"); b.type="button"; b.className="chipbtn"; b.textContent=p; b.dataset.p=p; b.setAttribute("aria-pressed","false");
@@ -1342,7 +1345,7 @@ function openForm(d){
   $("formTitle").textContent=d?"Edit deal":"Log a deal";
   $("fDate").value=d?.date||(monthKey(view)===monthKey(new Date())?today():monthKey(view)+"-01");
   $("fDeal").value=d?.dealNo||""; $("fStock").value=d?.stock||""; $("fCust").value=d?.customer||""; $("fVeh").value=d?.vehicle||"";
-  const lp=d?{}:lastPrefs(); setSeg("fType",d?.type||lp.type||"New"); setSeg("fStatus",d?.status||"pending"); setSeg("fSplit",d?.split?"yes":"no"); setSeg("fVeritas",d?.veritas?"yes":"no"); setSeg("fTrade",d?.trade?"yes":"no"); setTimeout(updateSpiffHint,0); setSeg("fProc",d?(d.processor||""):(lp.processor||"")); setSeg("fPaid",d?.paid?"yes":"no"); setFu(d); $("quickHint").hidden=!!d||!(lp.type||lp.processor);
+  const lp=d?{}:lastPrefs(); setSeg("fType",d?.type||lp.type||"New"); setSeg("fSource",d?.source||""); setSeg("fStatus",d?.status||"pending"); setSeg("fSplit",d?.split?"yes":"no"); setSeg("fVeritas",d?.veritas?"yes":"no"); setSeg("fTrade",d?.trade?"yes":"no"); setTimeout(updateSpiffHint,0); setSeg("fProc",d?(d.processor||""):(lp.processor||"")); setSeg("fPaid",d?.paid?"yes":"no"); setFu(d); $("quickHint").hidden=!!d||!(lp.type||lp.processor);
   $("partnerWrap").hidden=!d?.split; $("fPartner").value=d?.partner||""; syncPartner();
   $("fFront").value=d?.front??""; $("fBack").value=d?.back??""; $("fComm").value=d?.commission??"";
   $("fProds").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String((d?.products||[]).includes(b.dataset.p))));
@@ -1362,7 +1365,7 @@ $("form").addEventListener("submit",async e=>{
   const split=segVal("fSplit")==="yes";
   const d={id:editing?.id||("d"+Date.now().toString(36)+Math.random().toString(36).slice(2,6)),
     created:editing?.created||Date.now(), date:$("fDate").value, dealNo:$("fDeal").value.trim(), stock:$("fStock").value.trim().toUpperCase(),
-    customer:$("fCust").value.trim().toUpperCase(), vehicle:$("fVeh").value.trim().toUpperCase(), type:segVal("fType"), status:segVal("fStatus"),
+    customer:$("fCust").value.trim().toUpperCase(), vehicle:$("fVeh").value.trim().toUpperCase(), type:segVal("fType"), source:segVal("fSource")||"", status:segVal("fStatus"),
     split, partner:split?$("fPartner").value.trim():"", front:num($("fFront").value), back:num($("fBack").value),
     commission:num($("fComm").value), products:[...$("fProds").querySelectorAll('[aria-pressed="true"]')].map(b=>b.dataset.p),
     notes:$("fNotes").value.trim(), veritas:segVal("fVeritas")==="yes", trade:segVal("fTrade")==="yes", processor:segVal("fProc")||"", paid:segVal("fPaid")==="yes", fu:readFu()};
