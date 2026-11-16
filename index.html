@@ -483,12 +483,13 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
 .cal,.year,.team{content-visibility:auto;contain-intrinsic-size:auto 420px}
 @media (prefers-reduced-motion:reduce){.undo.in{animation:none}.ybar .yb i{transition:none}}
 
-.mix{border-top:1px solid var(--line);padding-top:10px}
-.mixgrid{display:grid;grid-template-columns:auto repeat(3,minmax(0,1fr));gap:4px 6px;align-items:center;text-align:center;font-size:13px}
-.mixgrid .mh{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-.mixgrid .mp{font-size:11px;font-weight:700;color:var(--muted);text-align:left;padding-right:4px}
-.mixgrid .mv{font-family:var(--f-num);font-weight:700;background:var(--chip);border-radius:8px;padding:5px 0}
-.mixgrid .mv small{display:block;font-family:var(--f-body);font-weight:500;font-size:10px;color:var(--muted);margin-top:1px}
+.mix{border-top:1px solid var(--line);padding-top:12px}
+.mixgrid{display:grid;grid-template-columns:44px repeat(3,minmax(0,1fr));column-gap:14px;row-gap:10px;align-items:end}
+.mixgrid .mh{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.mixgrid .mp{font-size:12px;font-weight:700;color:var(--muted);align-self:center}
+.mixgrid .mv{display:flex;flex-direction:column;gap:5px;font-family:var(--f-num);font-weight:700;font-size:15px;line-height:1}
+.mixgrid .mv i{display:block;height:4px;border-radius:2px;background:var(--chip);overflow:hidden}
+.mixgrid .mv i b{display:block;height:100%;width:var(--w,0%);border-radius:2px;background:var(--accent);transition:width .6s cubic-bezier(.2,.8,.2,1)}
 .mixgrid .mv.none{color:var(--muted);font-weight:500}
 </style>
 <div class="splash" id="splash" aria-hidden="true"><span class="sp-streak s1"></span><span class="sp-streak s2"></span><div class="sp-in"><b><span>You got</span><span>this!</span></b><span class="sp-bar"></span></div></div>
@@ -1326,13 +1327,14 @@ function setFu(d){ fuPrev=d||null; const fu=(d&&d.fu)||{};
 /* ---------- VSA / RX by vehicle type ---------- */
 function renderMix(live){
   const T=[["New","New"],["Used","Used"],["CPO","TCUV"]], g=$("mixGrid"); g.replaceChildren();
-  const cell=(t,c,title)=>{ const e=document.createElement("span"); e.className=c||""; e.textContent=t; if(title) e.title=title; g.append(e); };
-  cell("",""); T.forEach(([,l])=>cell(l,"mh"));
-  ["VSA","RX"].forEach(p=>{ cell(p,"mp");
-    T.forEach(([v])=>{ const ds=live.filter(d=>(d.type||"New")===v), n=ds.filter(d=>(d.products||[]).includes(p)).length;
-      cell(ds.length?Math.round(n/ds.length*100)+"%":"—", ds.length?"mv":"mv none", ds.length?n+" of "+ds.length+" "+(v==="CPO"?"TCUV":v)+" deals":"No "+(v==="CPO"?"TCUV":v)+" deals");
-      if(ds.length){ const sm=document.createElement("small"); sm.textContent=n+"/"+ds.length; g.lastChild.append(sm); } }); });
+  const mk=(tag,c,t)=>{ const e=document.createElement(tag); if(c) e.className=c; if(t!=null) e.textContent=t; return e; };
+  g.append(mk("span")); T.forEach(([,l])=>g.append(mk("span","mh",l)));
+  ["VSA","RX"].forEach(p=>{ g.append(mk("span","mp",p));
+    T.forEach(([v,l])=>{ const ds=live.filter(d=>(d.type||"New")===v), n=ds.filter(d=>(d.products||[]).includes(p)).length, pc=ds.length?Math.round(n/ds.length*100):0;
+      const c=mk("span",ds.length?"mv":"mv none",ds.length?pc+"%":"—"); c.setAttribute("aria-label",p+" on "+l+": "+(ds.length?n+" of "+ds.length+" deals":"no deals"));
+      const bar=mk("i"), fill=mk("b"); fill.style.setProperty("--w",pc+"%"); bar.append(fill); c.append(bar); g.append(c); }); });
 }
+
 
 /* ---------- round 4: year view ---------- */
 function renderYear(){
