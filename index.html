@@ -712,6 +712,20 @@ html:not(.tp-in) .wrap,html:not(.tp-in) .fab{visibility:hidden}
 @keyframes gatepulse{0%,100%{box-shadow:0 10px 40px rgba(155,91,255,.45)}50%{box-shadow:0 10px 60px rgba(255,79,174,.7)}}
 .gate-foot{margin:22px 0 0;font-size:11px;opacity:.45}
 @media (prefers-reduced-motion:reduce){.gate *,.gate-btn::after{animation:none!important}}
+.gate-logo{position:relative}
+.gate .gate-logo .gate-beta{display:block;opacity:1;position:absolute;top:-22px;right:-10px;z-index:2;padding:5px 12px 4px;border-radius:9px;font:900 15px/1 "Sora",var(--f-body);letter-spacing:.14em;color:#3a1600;
+  background:linear-gradient(135deg,#fff36b,#ffb300 55%,#ff7a00);border:2.5px solid #fff;box-shadow:0 6px 18px rgba(0,0,0,.4),0 0 22px rgba(255,190,0,.55);
+  transform:rotate(12deg) scale(0);animation:betapop .7s .55s cubic-bezier(.3,1.7,.5,1) forwards,betawob 2.6s 1.4s ease-in-out infinite;text-shadow:0 1px 0 rgba(255,255,255,.6)}
+.gate-beta::after{content:"";position:absolute;inset:0;border-radius:7px;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.75) 50%,transparent 65%);background-size:250% 100%;animation:betashine 2.6s 1.4s ease-in-out infinite}
+@keyframes betapop{0%{transform:rotate(-30deg) scale(0)}70%{transform:rotate(16deg) scale(1.25)}100%{transform:rotate(12deg) scale(1)}}
+@keyframes betawob{0%,100%{transform:rotate(12deg) scale(1)}50%{transform:rotate(7deg) scale(1.07)}}
+@keyframes betashine{0%{background-position:150% 0}60%,100%{background-position:-60% 0}}
+.gate{overflow-y:auto;place-items:start center;grid-template-columns:minmax(0,1fr)}
+.gate-in{margin:auto 0}
+.gate-disc{margin-top:6px;max-height:24vh;overflow-y:auto;-webkit-overflow-scrolling:touch;text-align:left;font-size:10.5px;line-height:1.45;opacity:.55;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)}
+:root[data-theme="light"] .gate-disc{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.12);opacity:.7}
+.gate-disc p{margin:0 0 6px} .gate-disc p:last-child{margin:0;font-weight:700}
+@media (prefers-reduced-motion:reduce){.gate-beta{transform:rotate(12deg) scale(1)}}
 
 /* ---- thank-you popup ---- */
 .thanks-pop{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));z-index:62;width:min(340px,calc(100vw - 32px));transform:translateX(-50%);pointer-events:none;
@@ -1227,10 +1241,16 @@ try{ if("scrollRestoration" in history) history.scrollRestoration="manual"; }cat
 <div class="gate" id="gate" role="dialog" aria-label="Welcome">
   <div class="gate-bg" aria-hidden="true"><i></i><i></i><i></i></div>
   <div class="gate-in">
-    <div class="gate-logo"><span>Welcome to the</span><b>Fun Trip Pad<em>.</em></b></div>
+    <div class="gate-logo"><strong class="gate-beta" aria-label="Beta">BETA</strong><span>Welcome to the</span><b>Fun Trip Pad<em>.</em></b></div>
     <p class="gate-sub" id="gateSub"></p>
     <button type="button" class="gate-btn" id="gateBtn">Enter</button>
     <p class="gate-foot">© 2026 Lora Enterprises</p>
+    <div class="gate-disc" role="note" aria-label="Beta disclaimer">
+      <p>The version you are accessing is a beta release and is still undergoing testing and development before its official launch. It may contain bugs, glitches, incomplete features, or other issues and may not perform as described. This beta is provided “as is” and “as available”, without any express or implied warranties, including warranties of merchantability or fitness for a particular purpose.</p>
+      <p>The primary purpose of this beta release is to gather feedback on performance and identify defects. You are advised to safeguard important data, use the system cautiously, and not rely on its correct functioning or stability. Any downloading, uploading, or use of the system is at your own risk, and you are solely responsible for any damage to your computer system, loss of data, or other harm arising from its use.</p>
+      <p>The publisher and its affiliates shall not be liable for any direct, indirect, special, consequential, or other damages arising out of the use or inability to use the beta system, even if advised of the possibility of such damages. The beta may be modified, updated, or discontinued at any time without prior notice.</p>
+      <p>By continuing to use this beta version, you acknowledge and accept these terms and conditions.</p>
+    </div>
   </div>
 </div>
 <script>
@@ -3160,7 +3180,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v36", tpChecked=0;
+var TP_BUILD="trip-pad-v37", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
