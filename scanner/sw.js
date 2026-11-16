@@ -1,5 +1,5 @@
 // License Scan offline cache. Bump VERSION when the app changes.
-const VERSION = "license-scan-v1";
+const VERSION = "license-scan-v2";
 const CORE = ["./", "./index.html", "./manifest.webmanifest", "./zxing-reader.js", "./zxing_reader.wasm", "./icon-192.png", "./apple-touch-icon.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(VERSION).then(c => c.addAll(CORE)).then(() => self.skipWaiting())); });
 self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k.startsWith("license-scan-") && k !== VERSION).map(k => caches.delete(k)))).then(() => self.clients.claim())); });

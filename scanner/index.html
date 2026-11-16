@@ -343,6 +343,7 @@ function showResult(img,text){
   const box=$("details"); box.replaceChildren(); current=null;
   if(text){
     const p=parseAAMVA(text); current=p;
+    try{ if(new URLSearchParams(location.search).has("embed") && window.parent!==window) parent.postMessage({type:"tp-license",first:title(p.first),middle:title(p.middle),last:title(p.last)},location.origin); }catch(e){}
     const name=[title(p.first),title(p.middle),title(p.last)].filter(Boolean).join(" ")||"Name not found";
     $("rTitle").textContent="Back of license";
     const who=document.createElement("div"); who.className="who";
