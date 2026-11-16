@@ -728,6 +728,29 @@ html[data-skin="grid"]{background:#01030a}
 .digitize .dz-s{font:500 11px "Orbitron",var(--f-num);letter-spacing:.22em;color:#7fe9f7;min-height:14px}
 .digitize.flash::after{content:"";position:absolute;inset:0;z-index:3;background:#bff9ff;animation:dzflash .5s ease-out forwards}
 @keyframes dzflash{0%{opacity:0}30%{opacity:1}100%{opacity:1}}
+
+/* ---- IOU tracker ---- */
+.ious{border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px;background:color-mix(in srgb,var(--accent) 4%,var(--card))}
+.iou-head{display:flex;align-items:center;gap:8px}
+.iou-ttl{font-weight:800;font-size:14px}
+.iou-sum{flex:1;font-size:12px;color:var(--muted);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iou-add{border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:5px 12px;font-weight:800;font-size:12px;cursor:pointer}
+.iou-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.iou-row{border-radius:10px;background:var(--chip);padding:10px 11px;display:flex;flex-direction:column;gap:8px}
+.iou-top{display:flex;align-items:center;gap:8px;border:0;background:none;padding:0;color:var(--ink);font:inherit;text-align:left;cursor:pointer;width:100%}
+.iou-top b{font-size:14px;font-weight:800;flex:1;min-width:0}
+.iou-top b em{font-style:normal;font-family:var(--f-num);color:var(--accent);margin-left:2px}
+.iou-top small{font-size:12px;color:var(--muted);font-weight:600;white-space:nowrap}
+.iou-note{font-size:12px;color:var(--muted);margin-top:-4px}
+.iou-seg{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.iou-seg button{border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:9px;padding:7px 6px;font-weight:700;font-size:12.5px;cursor:pointer}
+.iou-seg button.on.unpaid{background:color-mix(in srgb,var(--warn) 16%,var(--card));border-color:var(--warn);color:var(--warn)}
+.iou-seg button.on.paid{background:color-mix(in srgb,var(--good) 16%,var(--card));border-color:var(--good);color:var(--good)}
+.iou-row.paid{opacity:.7}
+.iou-row.paid .iou-top b{text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--good) 70%,transparent)}
+.iou-empty{font-size:13px;color:var(--muted);padding:2px 2px 4px}
+.iou-more{align-self:flex-start;border:0;background:none;padding:2px 0;color:var(--muted);font-weight:700;font-size:12px;cursor:pointer}
+.iou-picks{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 </style>
 <div class="splash wait" id="splash" aria-hidden="true"><span class="sp-streak s1"></span><span class="sp-streak s2"></span><div class="sp-in"><b><span>You got</span><span>this!</span></b><span class="sp-bar"></span></div></div>
 <script>
@@ -817,6 +840,11 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
       <div class="sp-head"><span class="sp-ttl">💰 Spiffs</span><span class="sp-sum" id="spiffSum"></span><button type="button" class="sp-add" id="spiffAdd">+ Add</button></div>
       <ul class="sp-list" id="spiffList"></ul>
       <button type="button" class="linkbtn sp-more" id="spiffMore" hidden></button>
+    </div>
+    <div class="ious" id="iouBox">
+      <div class="iou-head"><span class="iou-ttl">🤝 IOUs</span><span class="iou-sum" id="iouSum"></span><button type="button" class="iou-add" id="iouAdd">+ IOU</button></div>
+      <ul class="iou-list" id="iouList"></ul>
+      <button type="button" class="iou-more" id="iouMore" hidden></button>
     </div>
     <div class="goal">
       <div class="goalrow"><span id="goalText"></span><button type="button" id="goalEdit">Set goal</button></div>
@@ -972,6 +1000,17 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
     <div class="row2"><button class="btn danger" type="button" id="spDel" hidden>Delete</button><button class="btn" type="button" id="spCancel">Cancel</button><button class="btn primary" type="submit">Save spiff</button></div>
   </form>
 </div>
+<div class="scrim" id="iouScrim" hidden>
+  <form class="sheet" id="iouForm" novalidate>
+    <h2 id="iouTitle">Add an IOU</h2>
+    <label class="f">Who owes you a half?<input id="iouWho" autocomplete="off" placeholder="Teammate's name"></label>
+    <div class="iou-picks" id="iouPicks"></div>
+    <label class="f">Deal # or note (optional)<input id="iouNote" autocomplete="off" placeholder="e.g. Deal 723524 · gave him the full deal"></label>
+    <label class="f">Date<input id="iouDate" type="date"></label>
+    <p class="formhint" id="iouErr" style="color:var(--bad)"></p>
+    <div class="row2"><button class="btn danger" type="button" id="iouDel" hidden>Delete</button><button class="btn" type="button" id="iouCancel">Cancel</button><button class="btn primary" type="submit">Save IOU</button></div>
+  </form>
+</div>
 <div class="scrim" id="goalScrim" hidden>
   <form class="sheet" id="goalForm" novalidate>
     <h2>Monthly unit goal</h2>
@@ -995,13 +1034,14 @@ let editing=null;
 /* ---------- storage: account (db) with on-device fallback ---------- */
 function localStore(){
   const K="trippad.deals", G="trippad.goal";
-  try{deals=JSON.parse(localStorage.getItem(K)||"[]");goal=num(localStorage.getItem(G))||15;spiffs=JSON.parse(localStorage.getItem("trippad.spiffs")||"[]");}catch(e){}
+  try{deals=JSON.parse(localStorage.getItem(K)||"[]");goal=num(localStorage.getItem(G))||15;spiffs=JSON.parse(localStorage.getItem("trippad.spiffs")||"[]");ious=JSON.parse(localStorage.getItem("trippad.ious")||"[]");}catch(e){}
   const persist=()=>{try{localStorage.setItem(K,JSON.stringify(deals));}catch(e){}};
   return {
     async save(d){const i=deals.findIndex(x=>x.id===d.id); if(i>=0)deals[i]=d; else deals.push(d); persist(); render();},
     async remove(id){deals=deals.filter(x=>x.id!==id); persist(); render();},
     async saveGoal(n){goal=n; try{localStorage.setItem(G,String(n));}catch(e){} render();},
-    async saveSpiffs(list){spiffs=list; try{localStorage.setItem("trippad.spiffs",JSON.stringify(list));}catch(e){} render();}
+    async saveSpiffs(list){spiffs=list; try{localStorage.setItem("trippad.spiffs",JSON.stringify(list));}catch(e){} render();},
+    async saveIous(list){ious=list; try{localStorage.setItem("trippad.ious",JSON.stringify(list));}catch(e){} render();}
   };
 }
 async function init(){
@@ -1389,7 +1429,7 @@ function render(){
     $("bestMonthLbl").textContent=best?new Date(+best.k.slice(0,4),+best.k.slice(5,7)-1,1).toLocaleString("en-US",{month:"short",year:"2-digit"}).replace(" "," '"):""; }
   $("goalText").textContent=goal?(units>=goal?"Goal hit: "+units+" of "+goal:(goal-units)+" to go for "+goal+" units"):"No goal set";
 
-  renderMix(live); renderCotm(live); renderRank(); renderSpiffs(); renderAlert(); renderFuBar(); renderCoach(mk, units); renderCal(mk, live); renderYear(); if(typeof renderBackup==="function") renderBackup();
+  renderMix(live); renderCotm(live); renderRank(); renderSpiffs(); renderIous(); renderAlert(); renderFuBar(); renderCoach(mk, units); renderCal(mk, live); renderYear(); if(typeof renderBackup==="function") renderBackup();
   let shown, headText="";
   if(searchQ){ shown=deals.filter(d=>matches(d,searchQ)).sort((a,b)=>(b.date||"").localeCompare(a.date||"")); headText=shown.length+" result"+(shown.length===1?"":"s")+" for “"+searchQ+"” in all months"; }
   else if(filter==="followup"){ shown=overdue(); headText="Pending over "+FOLLOW_DAYS+" days · all months"; }
@@ -1688,7 +1728,7 @@ function renderBackup(){
 }
 function backedUp(){ lsSet(BK,Date.now()); renderBackup(); }
 $("exportBtn").addEventListener("click",async()=>{
-  const data=JSON.stringify({app:"trip-pad",version:1,exported:new Date().toISOString(),goal,deals,spiffs},null,1);
+  const data=JSON.stringify({app:"trip-pad",version:1,exported:new Date().toISOString(),goal,deals,spiffs,ious},null,1);
   const name="trip-pad-backup-"+today()+".json";
   const file=new File([data],name,{type:"application/json"});
   try{ if(navigator.canShare&&navigator.canShare({files:[file]})){ await navigator.share({files:[file],title:"Trip Pad backup"}); backedUp(); setNote("Backup ready. Save it to Files, email it, or AirDrop it."); return; } }
@@ -1706,6 +1746,7 @@ $("importFile").addEventListener("change",async e=>{
     for(const d of list){ if(!d||!d.id) continue; const i=deals.findIndex(x=>x.id===d.id); if(i>=0)updated++; else added++; await store.save(d); }
     if(j.goal&&!Array.isArray(j)) await store.saveGoal(num(j.goal));
     if(!Array.isArray(j)&&Array.isArray(j.spiffs)){ const ids=new Set(j.spiffs.map(x=>x.id)); await store.saveSpiffs(spiffs.filter(x=>!ids.has(x.id)).concat(j.spiffs)); }
+    if(!Array.isArray(j)&&Array.isArray(j.ious)){ const ids2=new Set(j.ious.map(x=>x.id)); await store.saveIous(ious.filter(x=>!ids2.has(x.id)).concat(j.ious)); }
     setNote("Restored: "+added+" new deal"+(added===1?"":"s")+(updated?", "+updated+" updated":"")+".");
   }catch(err){ setNote("That file isn't a Trip Pad backup. Pick a file named trip-pad-backup-….json.","warn"); }
 });
@@ -2002,6 +2043,49 @@ function digitize(){
   setTimeout(()=>{ if(o.isConnected){ o.remove(); applyTheme(); renderThemePicker(); } },5500);
 }
 
+
+/* ---------- IOUs: a teammate owes you a half ---------- */
+let ious=[], iouShowPaid=false, iouEditing=null;
+function renderIous(){
+  const box=$("iouList"); if(!box) return; box.replaceChildren();
+  const open=ious.filter(i=>!i.paid).sort((a,b)=>(a.date||"").localeCompare(b.date||"")), paid=ious.filter(i=>i.paid).sort((a,b)=>(b.paidDate||"").localeCompare(a.paidDate||""));
+  const owedBy={}; open.forEach(i=>{ owedBy[i.who]=(owedBy[i.who]||0)+0.5; });
+  $("iouSum").textContent=open.length?open.length+" owed to you"+(paid.length?" · "+paid.length+" paid":""):(paid.length?"All paid up ✓":"");
+  const list=[...open,...(iouShowPaid?paid:[])];
+  if(!list.length){ const li=document.createElement("li"); li.className="iou-empty"; li.textContent=paid.length?"Nobody owes you right now. Nice.":"Tap + IOU when a teammate owes you a half."; box.append(li); }
+  list.forEach(i=>{ const li=document.createElement("li"); li.className="iou-row"+(i.paid?" paid":"");
+    const top=document.createElement("button"); top.type="button"; top.className="iou-top"; top.setAttribute("aria-label","Edit IOU from "+i.who);
+    const b=document.createElement("b"); b.textContent=i.who+" owes you a half";
+    const sm=document.createElement("small"); const ago=i.date?Math.max(0,daysSince(i.date)):0; sm.textContent=i.paid?"Paid "+shortDate(i.paidDate):(i.date?(ago===0?"Today":shortDate(i.date)+" · "+ago+(ago===1?" day":" days")):"");
+    top.append(b,sm); top.addEventListener("click",()=>openIou(i)); li.append(top);
+    if(i.note){ const n=document.createElement("div"); n.className="iou-note"; n.textContent=i.note; li.append(n); }
+    const seg=document.createElement("div"); seg.className="iou-seg";
+    [["unpaid","Not paid yet"],["paid","Debt paid ✓"]].forEach(([k,l])=>{ const btn=document.createElement("button"); btn.type="button"; btn.className=k+((i.paid?"paid":"unpaid")===k?" on":""); btn.textContent=l;
+      btn.setAttribute("aria-pressed",String((i.paid?"paid":"unpaid")===k));
+      btn.addEventListener("click",()=>setIouPaid(i,k==="paid")); seg.append(btn); });
+    li.append(seg); box.append(li); });
+  const more=$("iouMore"); more.hidden=!paid.length; more.textContent=iouShowPaid?"Hide paid IOUs":"Show paid IOUs ("+paid.length+")";
+}
+async function setIouPaid(i,paid){ if(!!i.paid===paid) return;
+  const n={...i, paid, paidDate:paid?today():""};
+  try{ await store.saveIous(ious.map(x=>x.id===i.id?n:x)); if(paid){ try{ tapSuccess(); }catch(e){} confetti(0.8); cheer("DEBT PAID", n.who+" paid you back the half"); } else { try{ tap(); }catch(e){} } }
+  catch(e){ setNote("Couldn't update the IOU. Try again.","warn"); } }
+function openIou(i){ iouEditing=i||null; $("iouTitle").textContent=i?"Edit IOU":"Add an IOU";
+  $("iouWho").value=i?.who||""; $("iouNote").value=i?.note||""; $("iouDate").value=i?.date||today(); $("iouDel").hidden=!i; $("iouErr").textContent="";
+  const pk=$("iouPicks"); pk.replaceChildren(); PARTNERS.forEach(nm=>{ const b=document.createElement("button"); b.type="button"; b.className="chipbtn"; b.textContent=nm; b.setAttribute("aria-pressed",String($("iouWho").value===nm));
+    b.addEventListener("click",()=>{ $("iouWho").value=nm; pk.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",String(x===b))); }); pk.append(b); });
+  $("iouScrim").hidden=false; }
+$("iouAdd").addEventListener("click",()=>openIou(null));
+$("iouMore").addEventListener("click",()=>{ iouShowPaid=!iouShowPaid; renderIous(); });
+$("iouCancel").addEventListener("click",()=>$("iouScrim").hidden=true);
+$("iouScrim").addEventListener("click",e=>{ if(e.target===$("iouScrim")) $("iouScrim").hidden=true; });
+$("iouWho").addEventListener("input",()=>$("iouPicks").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",String(x.textContent===$("iouWho").value.trim()))));
+$("iouForm").addEventListener("submit",async e=>{ e.preventDefault();
+  const who=$("iouWho").value.trim().replace(/\s+/g," "); if(!who){ $("iouErr").textContent="Enter who owes you."; return; }
+  const n={id:iouEditing?.id||("iou"+Date.now().toString(36)), who:who.charAt(0).toUpperCase()+who.slice(1), note:$("iouNote").value.trim(), date:$("iouDate").value||today(), paid:!!iouEditing?.paid, paidDate:iouEditing?.paidDate||""};
+  try{ await store.saveIous(ious.filter(x=>x.id!==n.id).concat(n)); $("iouScrim").hidden=true; tapSuccess(); }catch(err){ $("iouErr").textContent="Couldn't save. Try again."; } });
+$("iouDel").addEventListener("click",()=>{ const i=iouEditing; if(!i) return; askDelete({label:"the IOU from "+i.who}, async()=>{ try{ await store.saveIous(ious.filter(x=>x.id!==i.id)); $("iouScrim").hidden=true; }catch(e){ $("iouErr").textContent="Couldn't delete. Try again."; } }, ()=>{}); });
+
 /* ---------- month, filter, goal ---------- */
 $("prev").addEventListener("click",()=>{view.setMonth(view.getMonth()-1); dayFilter=null; listEnter=true; render();});
 let searchT=0;
@@ -2019,7 +2103,7 @@ document.querySelectorAll(".filters .chipbtn").forEach(b=>b.addEventListener("cl
 $("goalEdit").addEventListener("click",()=>{$("goalInput").value=goal||""; $("goalScrim").hidden=false; $("goalInput").focus();});
 $("goalCancel").addEventListener("click",()=>$("goalScrim").hidden=true);
 $("goalForm").addEventListener("submit",async e=>{e.preventDefault(); $("goalScrim").hidden=true; try{await store.saveGoal(num($("goalInput").value));}catch(err){setNote("Couldn't save the goal. Try again.","warn");}});
-document.addEventListener("keydown",e=>{if(e.key==="Escape"){ if(!$("delScrim").hidden){ closeDelete(true); return; } closeForm(); $("goalScrim").hidden=true; $("recapScrim").hidden=true; $("spiffScrim").hidden=true;}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){ if(!$("delScrim").hidden){ closeDelete(true); return; } closeForm(); $("goalScrim").hidden=true; $("recapScrim").hidden=true; $("spiffScrim").hidden=true; $("iouScrim").hidden=true;}});
 $("recapBtn").addEventListener("click",openRecap);
 $("shotBtn").addEventListener("click",saveRecapShot);
 $("recapScrim").addEventListener("click",e=>{ if(e.target===$("recapScrim")) $("recapScrim").hidden=true; });
