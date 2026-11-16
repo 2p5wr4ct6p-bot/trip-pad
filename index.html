@@ -592,6 +592,9 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
 
 /* ---- enter screen ---- */
 .splash.wait{display:none}
+.splash.hold,.splash.hold *{animation-play-state:paused!important}
+.splash.hold .sp-in,.splash.hold .sp-streak,.splash.hold .sp-tag{visibility:hidden}
+html:not(.tp-in) .wrap,html:not(.tp-in) .fab{visibility:hidden}
 .gate{position:fixed;inset:0;z-index:110;display:grid;place-items:center;padding:24px;overflow:hidden;color:#fff;background:#07091a;transition:opacity .5s ease,transform .5s cubic-bezier(.5,0,.2,1)}
 .gate.go{opacity:0;transform:scale(1.08);pointer-events:none}
 .gate-bg i{position:absolute;width:70vmax;height:70vmax;border-radius:50%;filter:blur(60px);opacity:.55;animation:gateblob 12s ease-in-out infinite alternate}
@@ -630,7 +633,7 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
       const tag=document.createElement("span"); tag.className="sp-tag"; tag.textContent="Sell it all"; sp.append(tag); hold=3000; } }catch(e){}
   window.startSplash=()=>{ setTimeout(()=>{ sp.classList.add("out"); setTimeout(()=>sp.remove(),700); },hold); };
   sp.addEventListener("click",()=>{ sp.classList.add("out"); setTimeout(()=>sp.remove(),700); });
-  const goNoGate=()=>{ if(!document.getElementById("gate")){ sp.classList.remove("wait"); window.startSplash(); } };
+  const goNoGate=()=>{ if(!document.getElementById("gate")){ document.documentElement.classList.add("tp-in"); sp.classList.remove("wait"); window.startSplash(); } };
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",goNoGate); else goNoGate();
 })();
 </script>
@@ -653,8 +656,9 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
     try{ if(window.audioCtx && (typeof soundPref==="undefined"||soundPref!=="off")){ const ctx=audioCtx(); if(ctx){ const bin=atob(ENTER_SFX), arr=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) arr[i]=bin.charCodeAt(i);
       ctx.decodeAudioData(arr.buffer, buf=>{ const src=ctx.createBufferSource(); src.buffer=buf; src.connect(ctx.destination); src.start(); }, ()=>{}); } } }catch(e){}
     try{ if(window.tapSuccess) tapSuccess(); }catch(e){}
+    if(sp) sp.classList.remove("wait"), sp.classList.add("hold");
     g.classList.add("go");
-    setTimeout(()=>{ g.remove(); if(sp){ sp.classList.remove("wait"); if(window.startSplash) startSplash(); } window.dispatchEvent(new Event("tp-enter")); },520);
+    setTimeout(()=>{ g.remove(); document.documentElement.classList.add("tp-in"); if(sp){ sp.classList.remove("hold"); if(window.startSplash) startSplash(); } window.dispatchEvent(new Event("tp-enter")); },520);
   });
 })();
 </script>
