@@ -528,6 +528,25 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
 #matchOut{display:flex;flex-direction:column;gap:6px}
 .today{content-visibility:auto;contain-intrinsic-size:auto 320px}
 .sheet > *{flex-shrink:0}
+.ups-take{padding:0;background:#04070a;border-radius:10px;overflow:hidden;display:flex;align-items:stretch;font:700 13px var(--f-num);color:#e8f5e9;
+  box-shadow:inset 0 0 0 1px #1c2b24,0 2px 10px rgba(0,0,0,.25);position:relative}
+.ups-take::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 1px,transparent 1px 3px)}
+.tk-lbl{flex:none;display:flex;align-items:center;gap:6px;padding:0 8px;background:linear-gradient(180deg,#2457e6,#1238a8);color:#fff;font:800 10px var(--f-body);letter-spacing:.07em;z-index:1;box-shadow:4px 0 10px rgba(0,0,0,.5)}
+.tk-lbl i{width:7px;height:7px;border-radius:50%;background:#ff3b47;box-shadow:0 0 6px #ff3b47;animation:tkblink 1.2s steps(2) infinite}
+@keyframes tkblink{50%{opacity:.25}}
+.tk-win{flex:1;min-width:0;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 14px,#000 calc(100% - 14px),transparent);mask-image:linear-gradient(90deg,transparent,#000 14px,#000 calc(100% - 14px),transparent)}
+.tk-track{display:inline-flex;white-space:nowrap;animation:tkscroll var(--tkdur,20s) linear infinite;will-change:transform}
+.tk-set{display:inline-flex;align-items:center;gap:26px;padding:10px 26px 10px 0}
+.tk-i{display:inline-flex;gap:6px;align-items:baseline;letter-spacing:.04em}
+.tk-i b{color:#fff;font-weight:800}
+.tk-i em{font-style:normal;color:#cfd8dc}
+.tk-i em.up{color:#22ff88;text-shadow:0 0 8px rgba(34,255,136,.45)}
+.tk-i em.dn{color:#ff4d5a;text-shadow:0 0 8px rgba(255,77,90,.45)}
+.tk-i em.fl{color:#ffd54a;text-shadow:0 0 8px rgba(255,213,74,.4)}
+.tk-i::after{content:"◆";color:#3a4a44;font-size:8px;margin-left:20px;align-self:center}
+@keyframes tkscroll{to{transform:translateX(-50%)}}
+html.tp-hidden .tk-track{animation-play-state:paused}
+@media (prefers-reduced-motion:reduce){.tk-win{overflow-x:auto}.tk-track{animation:none}.tk-set[aria-hidden]{display:none}}
 .tag.fu{background:var(--accent-soft);color:var(--accent)}
 .year{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:12px}
 .ybars{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;align-items:end;height:120px}
@@ -1315,7 +1334,7 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
     <div class="ups">
       <div class="ups-top"><span class="ups-ttl">Ups today<b id="upsToday">0</b></span><span class="ups-ratio" id="upsRatio"></span><button type="button" class="ups-undo" id="upsUndo" aria-label="Remove last up">−1</button></div>
       <div class="ups-btns" id="upsBtns"></div>
-      <p class="ups-take" id="upsTake"></p>
+      <p class="ups-take" id="upsTake" role="img"></p>
     </div>
     <div class="td-tools">
       <button type="button" class="td-tool" id="calcOpen">🧮<span>Payment</span></button>
@@ -2778,9 +2797,16 @@ function renderUps(){ const t=today(), o=(upsData||{})[t]||{}, mk=monthKey(new D
   $("upsRatio").textContent=m.ups?"Close rate "+Math.round(m.rate*100)+"% ("+m.sold+"/"+m.ups+")":"";
   const units=unitsIn(mk), left=Math.max(0,goal-units), st=m.ups>=5?m:all, take=$("upsTake");
   const dim=new Date(new Date().getFullYear(),new Date().getMonth()+1,0).getDate(), daysLeft=dim-new Date().getDate()+1;
-  if(left<=0) take.textContent="🎉 Goal hit. Every up from here is bonus money.";
-  else if(st.ups>=3 && st.rate>0){ const need=Math.ceil(left/st.rate); take.textContent="What it takes: at your "+Math.round(st.rate*100)+"% close rate, about "+need+" more up"+(need===1?"":"s")+" ("+Math.ceil(need/daysLeft)+" a day) to hit "+goal+"."; }
-  else take.textContent="Tap an up every time you take a customer. After a few, Trip Pad shows how many ups it takes to hit your goal."; }
+  const need=(left>0&&st.ups>=3&&st.rate>0)?Math.ceil(left/st.rate):0, upT=upsOn(t), soldT=deals.filter(d=>d.date===t&&d.status!=="unwound").length;
+  const comm=deals.filter(d=>(d.date||"").startsWith(mk)&&d.status!=="unwound").reduce((a,d)=>a+num(d.commission),0);
+  const I=(s,v,c)=>'<span class="tk-i"><b>'+s+'</b><em class="'+(c||"")+'">'+v+'</em></span>';
+  const items=[ left<=0?I("GOAL","HIT ▲","up"):need?I("NEED",need+" UPS","fl")+I("PACE",Math.ceil(need/daysLeft)+"/DAY","fl"):I("NEED","LOG UPS","fl"),
+    I("UPS",upT+(upT?" ▲":""),upT?"up":""), m.ups?I("CLOSE",Math.round(m.rate*100)+"% "+(m.rate>=all.rate?"▲":"▼"),m.rate>=all.rate?"up":"dn"):"",
+    I("SOLD",soldT+(soldT?" ▲":""),soldT?"up":""), I("UNITS",units+"/"+goal+(units>=goal?" ▲":""),units>=goal?"up":units?"fl":"dn"),
+    I("LEFT",left>0?left+" ▼":"0 ▲",left>0?"dn":"up"), I("COMM",money(comm)+(comm>0?" ▲":""),comm>0?"up":""), I("DAYS",daysLeft+" LEFT","") ].join("");
+  take.setAttribute("aria-label", left<=0?"Goal hit. Every up from here is bonus money.":need?"What it takes: at your "+Math.round(st.rate*100)+"% close rate, about "+need+" more ups ("+Math.ceil(need/daysLeft)+" a day) to hit "+goal+".":"Tap an up every time you take a customer to see what it takes.");
+  if(items!==take.dataset.tk){ take.dataset.tk=items; take.innerHTML='<span class="tk-lbl"><i></i>WHAT IT TAKES</span><span class="tk-win"><span class="tk-track"><span class="tk-set">'+items+'</span><span class="tk-set" aria-hidden="true">'+items+'</span></span></span>';
+    requestAnimationFrame(()=>{ const s=take.querySelector(".tk-set"), w=s?s.offsetWidth:0; if(w) take.querySelector(".tk-track").style.setProperty("--tkdur",Math.max(10,w/55).toFixed(1)+"s"); else take.dataset.tk=""; }); } }
 /* --- today's plan --- */
 var planEditing=null;
 function annivToday(){ const t=new Date(), mmdd=today().slice(5), y=t.getFullYear(), seen={}; const out=[];
