@@ -638,6 +638,8 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
         <div class="prods" id="fProds"></div></div>
       <div class="f full"><span class="f">Veritas bonus</span>
         <div class="seg" id="fVeritas"><button type="button" data-v="no">No</button><button type="button" data-v="yes">Yes</button></div></div>
+      <div class="f full"><span class="f">Trade-in</span>
+        <div class="seg" id="fTrade"><button type="button" data-v="no">No trade</button><button type="button" data-v="yes">Trade</button></div></div>
       <label class="f full">Notes<textarea id="fNotes"></textarea></label>
       <div class="f full"><span class="f">Customer follow-ups</span><div class="prods" id="fFu"></div></div>
       <div class="f full"><span class="f">Doc processor</span>
@@ -1002,12 +1004,12 @@ function renderCal(mk, live){
 }
 function csvMonth(){
   const mk=monthKey(view), rows=deals.filter(d=>(d.date||"").startsWith(mk)).sort((a,b)=>(a.date||"").localeCompare(b.date||""));
-  const head=["Date processed","Deal #","Customer","Vehicle","Stock #","Type","Status","Credit","Split with","Front gross","Back gross","Commission","Products","Veritas bonus","Doc processor","Paid","Notes"];
+  const head=["Date processed","Deal #","Customer","Vehicle","Stock #","Type","Status","Credit","Split with","Front gross","Back gross","Commission","Products","Veritas bonus","Trade-in","Doc processor","Paid","Notes"];
   const esc=v=>{ const s=String(v==null?"":v); return /[",\n\r]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; };
   const lines=[head.map(esc).join(",")];
   rows.forEach(d=>{ const [y,m,dd]=(d.date||"--").split("-");
     lines.push([m+"/"+dd+"/"+y, d.dealNo, d.customer, d.vehicle, d.stock, d.type==="CPO"?"TCUV":d.type, d.status==="cash"?"Cash deal":d.status, d.split?"50%":"100%", d.partner,
-      num(d.front), num(d.back), num(d.commission), (d.products||[]).join("; "), d.veritas?"Yes":"No", d.processor, d.paid?"Yes":"No", d.notes].map(esc).join(",")); });
+      num(d.front), num(d.back), num(d.commission), (d.products||[]).join("; "), d.veritas?"Yes":"No", d.trade?"Trade":"No trade", d.processor, d.paid?"Yes":"No", d.notes].map(esc).join(",")); });
   const live=rows.filter(d=>d.status!=="unwound");
   lines.push(""); lines.push(["Totals","","","","","","",live.reduce((s,d)=>s+(d.split?.5:1),0)+" units","",live.reduce((s,d)=>s+num(d.front),0),live.reduce((s,d)=>s+num(d.back),0),live.reduce((s,d)=>s+num(d.commission),0)].map(esc).join(","));
   return {name:"trip-pad-"+mk+".csv", text:"﻿"+lines.join("\r\n")};
@@ -1116,6 +1118,7 @@ function render(){
     if(d.split&&d.partner) tag("w/ "+d.partner,"split");
     if((d.products||[]).length) tag((d.products.length)+" product"+(d.products.length>1?"s":""));
     if(d.veritas) tag("Veritas bonus","funded");
+    if(d.trade) tag("Trade");
     if(d.processor) tag("Docs: "+d.processor);
     if(d.paid) tag("Paid ✓","paid");
     { const due=fuDue(d); if(due.length) tag(due[0].label+" due","fu"); else if(d.fu&&d.fu.thanks&&d.fu.check3&&surveyDone(d.fu)) tag("Follow-ups ✓","paid"); }
@@ -1138,7 +1141,7 @@ function render(){
 function segVal(id){return $(id).querySelector('[aria-pressed="true"]')?.dataset.v;}
 function setSeg(id,v){$(id).querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===v)));}
 $("fProc").addEventListener("click",e=>{const b=e.target.closest("button"); if(!b)return; setSeg("fProc", b.getAttribute("aria-pressed")==="true" ? "" : b.dataset.v);});
-["fType","fStatus","fSplit","fVeritas","fPaid"].forEach(id=>$(id).addEventListener("click",e=>{const b=e.target.closest("button"); if(!b)return; setSeg(id,b.dataset.v); if(id==="fSplit")$("partnerWrap").hidden=b.dataset.v!=="yes";}));
+["fType","fStatus","fSplit","fVeritas","fTrade","fPaid"].forEach(id=>$(id).addEventListener("click",e=>{const b=e.target.closest("button"); if(!b)return; setSeg(id,b.dataset.v); if(id==="fSplit")$("partnerWrap").hidden=b.dataset.v!=="yes";}));
 PRODUCTS.forEach(p=>{const b=document.createElement("button"); b.type="button"; b.className="chipbtn"; b.textContent=p; b.dataset.p=p; b.setAttribute("aria-pressed","false");
   b.addEventListener("click",()=>b.setAttribute("aria-pressed",String(b.getAttribute("aria-pressed")!=="true"))); $("fProds").append(b);});
 
@@ -1152,7 +1155,7 @@ function openForm(d){
   $("formTitle").textContent=d?"Edit deal":"Log a deal";
   $("fDate").value=d?.date||(monthKey(view)===monthKey(new Date())?today():monthKey(view)+"-01");
   $("fDeal").value=d?.dealNo||""; $("fStock").value=d?.stock||""; $("fCust").value=d?.customer||""; $("fVeh").value=d?.vehicle||"";
-  const lp=d?{}:lastPrefs(); setSeg("fType",d?.type||lp.type||"New"); setSeg("fStatus",d?.status||"pending"); setSeg("fSplit",d?.split?"yes":"no"); setSeg("fVeritas",d?.veritas?"yes":"no"); setSeg("fProc",d?(d.processor||""):(lp.processor||"")); setSeg("fPaid",d?.paid?"yes":"no"); setFu(d); $("quickHint").hidden=!!d||!(lp.type||lp.processor);
+  const lp=d?{}:lastPrefs(); setSeg("fType",d?.type||lp.type||"New"); setSeg("fStatus",d?.status||"pending"); setSeg("fSplit",d?.split?"yes":"no"); setSeg("fVeritas",d?.veritas?"yes":"no"); setSeg("fTrade",d?.trade?"yes":"no"); setSeg("fProc",d?(d.processor||""):(lp.processor||"")); setSeg("fPaid",d?.paid?"yes":"no"); setFu(d); $("quickHint").hidden=!!d||!(lp.type||lp.processor);
   $("partnerWrap").hidden=!d?.split; $("fPartner").value=d?.partner||""; syncPartner();
   $("fFront").value=d?.front??""; $("fBack").value=d?.back??""; $("fComm").value=d?.commission??"";
   $("fProds").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String((d?.products||[]).includes(b.dataset.p))));
@@ -1175,7 +1178,7 @@ $("form").addEventListener("submit",async e=>{
     customer:$("fCust").value.trim().toUpperCase(), vehicle:$("fVeh").value.trim().toUpperCase(), type:segVal("fType"), status:segVal("fStatus"),
     split, partner:split?$("fPartner").value.trim():"", front:num($("fFront").value), back:num($("fBack").value),
     commission:num($("fComm").value), products:[...$("fProds").querySelectorAll('[aria-pressed="true"]')].map(b=>b.dataset.p),
-    notes:$("fNotes").value.trim(), veritas:segVal("fVeritas")==="yes", processor:segVal("fProc")||"", paid:segVal("fPaid")==="yes", fu:readFu()};
+    notes:$("fNotes").value.trim(), veritas:segVal("fVeritas")==="yes", trade:segVal("fTrade")==="yes", processor:segVal("fProc")||"", paid:segVal("fPaid")==="yes", fu:readFu()};
   $("save").disabled=true;
   const dayBefore=deals.filter(x=>x.date===d.date && x.status!=="unwound" && x.id!==d.id).length;
   const wasLiveSameDay=!!editing && editing.status!=="unwound" && editing.date===d.date;
