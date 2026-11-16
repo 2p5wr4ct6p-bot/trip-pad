@@ -3146,6 +3146,16 @@ init();
 
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
+/* update check: when the app comes back to the front, look for a newer version and offer it */
+var TP_BUILD="trip-pad-v35", tpChecked=0;
+function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
+  fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
+    const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
+    b.style.cssText="position:fixed;left:50%;transform:translateX(-50%);top:calc(10px + env(safe-area-inset-top,0px));z-index:90;border:0;border-radius:999px;padding:11px 18px;font:700 14px system-ui,sans-serif;color:#fff;background:linear-gradient(90deg,#2457e6,#8b3dff);box-shadow:0 6px 20px rgba(0,0,0,.35);cursor:pointer;max-width:calc(100% - 32px)";
+    b.addEventListener("click",async()=>{ b.textContent="Updating…"; try{ const rg=await navigator.serviceWorker?.getRegistration(); if(rg) await rg.update(); }catch(e){} location.reload(); });
+    document.body.append(b); }).catch(()=>{}); }
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible") tpCheckUpdate(); });
+window.addEventListener("load",()=>setTimeout(tpCheckUpdate,4000));
 </script>
 </body>
 </html>
