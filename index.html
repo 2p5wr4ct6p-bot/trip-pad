@@ -1281,6 +1281,15 @@ html[data-skin="galaxy"]{background:radial-gradient(60% 40% at 80% 10%,rgba(244,
 /* ---- smoothness: keep animation work on the GPU, skip offscreen work ---- */
 .confetti,.snow,.mx-rain,.zoomcar,.pow,.hi5,.shout,.thanks-pop,.undo,.fab{will-change:transform;transform:translateZ(0)}
 .fab{transform:translateX(-50%) translateZ(0)}
+/* subtle glow around Log a deal */
+.fab{--fabglow:color-mix(in srgb,var(--accent) 60%,transparent);filter:drop-shadow(0 0 7px var(--fabglow));animation:fabglow 3.2s ease-in-out infinite}
+@keyframes fabglow{0%,100%{filter:drop-shadow(0 0 6px var(--fabglow))}50%{filter:drop-shadow(0 0 14px var(--fabglow))}}
+:root[data-skin="night"] .fab{--fabglow:rgba(255,64,190,.6)}
+:root[data-skin="princess"] .fab,:root[data-skin="synth"] .fab{--fabglow:rgba(255,62,165,.55)}
+:root[data-skin="gold"] .fab,:root[data-skin="rush"] .fab{--fabglow:rgba(245,197,66,.55)}
+:root[data-skin="hero"] .fab{animation:none;filter:none}
+html.tp-hidden .fab{animation-play-state:paused}
+@media (prefers-reduced-motion:reduce){.fab{animation:none}}
 :root[data-skin="gr"] .fab{transform:translateX(-50%) skewX(-10deg) translateZ(0)}
 .deal,.trophy,.qrow,.sp-row,.iou-row{contain:layout paint}
 .quests,.trophies,.badges,.ious,.spiffs{content-visibility:auto;contain-intrinsic-size:auto 300px}
@@ -3269,7 +3278,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v45", tpChecked=0;
+var TP_BUILD="trip-pad-v46", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
