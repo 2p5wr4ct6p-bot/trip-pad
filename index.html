@@ -751,6 +751,11 @@ html[data-skin="grid"]{background:#01030a}
 .iou-empty{font-size:13px;color:var(--muted);padding:2px 2px 4px}
 .iou-more{align-self:flex-start;border:0;background:none;padding:2px 0;color:var(--muted);font-weight:700;font-size:12px;cursor:pointer}
 .iou-picks{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+
+.totop{align-self:center;display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:11px 20px;font-weight:700;font-size:14px;cursor:pointer}
+.totop svg{width:16px;height:16px;color:var(--accent)}
+.totop:active{transform:scale(.97)}
+:root[data-skin="grid"] .totop{border-color:#00eaff;color:#e6fdff;box-shadow:0 0 12px rgba(0,234,255,.4);font-family:"Orbitron",var(--f-body);letter-spacing:.06em}
 </style>
 <div class="splash wait" id="splash" aria-hidden="true"><span class="sp-streak s1"></span><span class="sp-streak s2"></span><div class="sp-in"><b><span>You got</span><span>this!</span></b><span class="sp-bar"></span></div></div>
 <script>
@@ -915,6 +920,7 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
     <input type="file" id="importFile" accept="application/json,.json" hidden>
   </div>
   <section class="soundrow" aria-label="Theme"><span class="soundlbl">Theme</span><div class="soundpick" id="themePick"></div></section>
+  <button type="button" class="totop" id="toTop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>Go to top of page</button>
   <section class="soundrow" aria-label="Deal sound"><span class="soundlbl">Sound when you log a deal</span><div class="soundpick" id="soundPick"></div></section>
   <footer class="copyright">© 2026 Lora Enterprises. All rights reserved.</footer>
 </div>
@@ -2105,6 +2111,7 @@ $("goalCancel").addEventListener("click",()=>$("goalScrim").hidden=true);
 $("goalForm").addEventListener("submit",async e=>{e.preventDefault(); $("goalScrim").hidden=true; try{await store.saveGoal(num($("goalInput").value));}catch(err){setNote("Couldn't save the goal. Try again.","warn");}});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){ if(!$("delScrim").hidden){ closeDelete(true); return; } closeForm(); $("goalScrim").hidden=true; $("recapScrim").hidden=true; $("spiffScrim").hidden=true; $("iouScrim").hidden=true;}});
 $("recapBtn").addEventListener("click",openRecap);
+$("toTop").addEventListener("click",()=>{ try{ tap(); }catch(e){} window.scrollTo({top:0,behavior:reduceMotion()?"auto":"smooth"}); });
 $("shotBtn").addEventListener("click",saveRecapShot);
 $("recapScrim").addEventListener("click",e=>{ if(e.target===$("recapScrim")) $("recapScrim").hidden=true; });
 
