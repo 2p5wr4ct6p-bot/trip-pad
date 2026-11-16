@@ -457,6 +457,77 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
 .alertbar.fu .dot{background:var(--accent);animation:none}
 .alertbar.fu .go{color:var(--accent)}
 .alertbar + .alertbar{margin-top:-6px}
+
+/* ===== round 8: today, ups, tools ===== */
+.today{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.td-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.td-head h3{margin:0;font-size:15px}
+.td-head h3 span{font-weight:600;color:var(--muted);font-size:12px;margin-left:8px}
+.td-add{border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:5px 12px;font-weight:800;font-size:12px;cursor:pointer}
+.td-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.td-item{display:flex;align-items:center;gap:8px;background:var(--chip);border-radius:10px;padding:8px 10px;font-size:14px;min-width:0}
+.td-item .td-main{flex:1;min-width:0;border:0;background:none;color:var(--ink);font:inherit;text-align:left;cursor:pointer;padding:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.td-item .td-main small{color:var(--muted);font-weight:500;margin-left:6px}
+.td-item .td-time{font:700 12px var(--f-num);color:var(--accent);min-width:52px}
+.td-item.done .td-main{text-decoration:line-through;color:var(--muted)}
+.td-item.hot{background:color-mix(in srgb,var(--bad) 14%,var(--chip));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--bad) 45%,transparent)}
+.td-item.warm{background:color-mix(in srgb,var(--warn) 12%,var(--chip))}
+.td-chk{width:24px;height:24px;flex:none;border-radius:7px;border:2px solid var(--line);background:var(--card);cursor:pointer;display:grid;place-items:center;font-size:13px;color:var(--good);padding:0}
+.td-item.done .td-chk{border-color:var(--good);background:color-mix(in srgb,var(--good) 15%,var(--card))}
+.td-ico{flex:none;text-decoration:none;font-size:16px;padding:2px 3px}
+.td-empty{color:var(--muted);font-size:13px;text-align:center;padding:4px 0;list-style:none}
+.ups{border-top:1px solid var(--line);padding-top:10px;display:flex;flex-direction:column;gap:8px}
+.ups-top{display:flex;align-items:center;gap:8px}
+.ups-ttl{font-weight:800;font-size:14px}
+.ups-ttl b{font:800 18px var(--f-num);margin-left:4px;color:var(--accent)}
+.ups-ratio{flex:1;font-size:12px;color:var(--muted);font-weight:700;text-align:right}
+.ups-undo{border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:8px;padding:3px 9px;font-weight:800;font-size:12px;cursor:pointer}
+.ups-btns{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.ups-btns button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:8px 2px;font-weight:700;font-size:12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;transition:transform .12s}
+.ups-btns button:active{transform:scale(.94)}
+.ups-btns button b{font:800 15px var(--f-num)}
+.ups-take{margin:0;font-size:13px;font-weight:600;color:var(--ink);background:var(--accent-soft);border-radius:10px;padding:8px 10px}
+.td-tools{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;border-top:1px solid var(--line);padding-top:10px}
+.td-tool{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:12px;padding:8px 2px;font-size:20px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none}
+.td-tool span{font-size:11px;font-weight:700;color:var(--muted)}
+.alertbar.eo{background:color-mix(in srgb,var(--bad) 13%,var(--card));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--bad) 45%,transparent)}
+.alertbar.eo .dot{background:var(--bad)} .alertbar.eo .go{color:var(--bad)}
+.tag.eo{background:color-mix(in srgb,var(--warn) 16%,var(--chip));color:var(--warn)}
+.tag.eo.hot{background:var(--bad);color:#fff}
+.stips .chipbtn[data-st="need"]{border-style:dashed;border-color:var(--warn);color:var(--warn);background:color-mix(in srgb,var(--warn) 8%,transparent)}
+.stips .chipbtn[data-st="got"]{border-color:var(--good);color:var(--good);background:color-mix(in srgb,var(--good) 12%,transparent)}
+.stiphint{margin:4px 0 0;font-size:12px;color:var(--muted)}
+.stiplink{margin-left:8px;color:var(--accent);text-transform:none;letter-spacing:0;font-weight:700;text-decoration:none}
+.eodate{margin-top:8px}
+.notesf{display:flex;flex-direction:column;gap:4px}
+.noteshead{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.micbtn{border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:4px 11px;font-weight:800;font-size:12px;cursor:pointer}
+.micbtn.on{background:var(--bad);border-color:var(--bad);color:#fff;animation:micpulse 1.2s ease-in-out infinite}
+@keyframes micpulse{50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--bad) 25%,transparent)}}
+.michint{margin:0;font-size:12px;color:var(--muted)}
+.calcout{display:flex;flex-direction:column;align-items:center;gap:2px;background:var(--accent-soft);border-radius:14px;padding:12px}
+.calcout span{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.calcout b{font:800 34px var(--f-num);color:var(--accent)}
+.calcout small{font-size:12px;color:var(--muted);text-align:center}
+.calcterms{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.calcterms div{background:var(--chip);border-radius:10px;padding:6px 2px;text-align:center;font-size:11px;color:var(--muted);font-weight:700}
+.calcterms div b{display:block;font:700 13px var(--f-num);color:var(--ink)}
+.calcterms div.on{box-shadow:inset 0 0 0 1.5px var(--accent)}
+.bk-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.bk-row{display:flex;align-items:center;gap:8px;background:var(--chip);border-radius:10px;padding:9px 10px;min-width:0}
+.bk-row .bk-main{flex:1;min-width:0;border:0;background:none;color:var(--ink);font:inherit;text-align:left;cursor:pointer;padding:0}
+.bk-row .bk-main b{display:block;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bk-row .bk-main small{display:block;font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bk-row.soon{background:color-mix(in srgb,var(--accent) 12%,var(--chip))}
+.bk-sec{margin:6px 0 2px;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.mt-row{display:flex;align-items:center;gap:8px;background:var(--chip);border-radius:10px;padding:8px 10px;font-size:13px}
+.mt-row input{width:20px;height:20px;flex:none;accent-color:var(--good);margin:0;padding:0}
+.mt-row span{flex:1;min-width:0}
+.mt-row.bad{background:color-mix(in srgb,var(--warn) 14%,var(--chip))}
+.mt-row.miss{background:color-mix(in srgb,var(--bad) 10%,var(--chip));cursor:pointer}
+#matchOut{display:flex;flex-direction:column;gap:6px}
+.today{content-visibility:auto;contain-intrinsic-size:auto 320px}
+.sheet > *{flex-shrink:0}
 .tag.fu{background:var(--accent-soft);color:var(--accent)}
 .year{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:12px}
 .ybars{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;align-items:end;height:120px}
@@ -1238,6 +1309,22 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
     <div class="lnds" id="lndBox" hidden><div class="sechd">Lenders · avg days to fund</div><div id="lndRows"></div></div>
   </section>
 
+  <section class="today" id="todaySec" aria-label="Today's plan">
+    <div class="td-head"><h3>📋 Today<span id="tdDate"></span></h3><button type="button" class="td-add" id="planAdd">+ Appt</button></div>
+    <ul class="td-list" id="tdList"></ul>
+    <div class="ups">
+      <div class="ups-top"><span class="ups-ttl">Ups today<b id="upsToday">0</b></span><span class="ups-ratio" id="upsRatio"></span><button type="button" class="ups-undo" id="upsUndo" aria-label="Remove last up">−1</button></div>
+      <div class="ups-btns" id="upsBtns"></div>
+      <p class="ups-take" id="upsTake"></p>
+    </div>
+    <div class="td-tools">
+      <button type="button" class="td-tool" id="calcOpen">🧮<span>Payment</span></button>
+      <button type="button" class="td-tool" id="bookOpen">📒<span>Customers</span></button>
+      <button type="button" class="td-tool" id="matchOpen">💵<span>Match pay</span></button>
+      <a class="td-tool" href="https://claude.ai/artifact/5TWM8Mn8v3b8GknKnaHooN" target="_blank" rel="noopener">✅<span>Pre-Check</span></a>
+    </div>
+  </section>
+
   <section class="quests" aria-label="Daily quests"><div class="qh"><h3>⚔️ Daily quests</h3><span id="qCount"></span></div><div id="qList"></div><div class="qchest" id="qChest"></div></section>
 
   
@@ -1246,6 +1333,7 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
 
   <button type="button" class="alertbar" id="alertBar" hidden><span class="dot" aria-hidden="true"></span><span id="alertText"></span><span class="go">Review ›</span></button>
   <button type="button" class="alertbar fu" id="fuBar" hidden><span class="dot" aria-hidden="true"></span><span id="fuText"></span><span class="go">Review ›</span></button>
+  <button type="button" class="alertbar eo" id="eoBar" hidden><span class="dot" aria-hidden="true"></span><span id="eoText"></span><span class="go">Open ›</span></button>
   <div class="bkbar" id="bkBar" hidden><span id="bkText"></span><button type="button" id="bkNow">Back up now</button><button type="button" class="later" id="bkLater">Later</button></div>
 
   <div class="tools">
@@ -1326,6 +1414,7 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
       <div class="f full"><span class="f">Status</span>
         <div class="seg" id="fStatus"><button type="button" data-v="pending">Pending</button><button type="button" data-v="funded">Funded</button><button type="button" data-v="cash">Cash deal</button><button type="button" data-v="unwound">Unwound</button></div></div>
       <div class="f full"><span class="f">Lender</span><div class="lenders" id="fLenderPicks"></div><input id="fLender" autocomplete="off" placeholder="Other lender (type it)"></div>
+      <div class="f full"><span class="f">Stips<a class="stiplink" href="https://claude.ai/artifact/5TWM8Mn8v3b8GknKnaHooN" target="_blank" rel="noopener">Pre-Check ›</a></span><div class="prods stips" id="fStips"></div><p class="stiphint">Tap once = needed, tap again = got it ✓</p></div>
       <label class="f">Front gross<input id="fFront" class="num" inputmode="decimal" placeholder="0"></label>
       <label class="f">Back gross<input id="fBack" class="num" inputmode="decimal" placeholder="0"></label>
       <div class="f full"><span class="f">Products sold</span>
@@ -1334,7 +1423,10 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
         <div class="seg" id="fVeritas"><button type="button" data-v="no">No</button><button type="button" data-v="yes">Yes</button></div></div>
       <div class="f full"><span class="f">Trade-in</span>
         <div class="seg" id="fTrade"><button type="button" data-v="no">No trade</button><button type="button" data-v="yes">Trade</button></div></div>
-      <label class="f full">Notes<textarea id="fNotes"></textarea></label>
+      <div class="f full"><span class="f">E/O</span>
+        <div class="seg" id="fEo"><button type="button" data-v="no">No E/O</button><button type="button" data-v="yes">Has E/O</button></div>
+        <label class="f eodate" id="eoWrap" hidden>E/O expires (reminder that day)<input id="fEoDate" type="date"></label></div>
+      <div class="f full notesf"><div class="noteshead"><label class="f" for="fNotes">Notes</label><button type="button" class="micbtn" id="micBtn">🎙️ Voice note</button></div><textarea id="fNotes"></textarea><p class="michint" id="micHint" hidden></p></div>
       <div class="f full"><span class="f">Customer follow-ups</span><div class="prods" id="fFu"></div><div class="futexts" id="fuTexts"></div></div>
       <div class="f full"><span class="f">Doc processor</span>
         <div class="seg" id="fProc"><button type="button" data-v="Nikki">Nikki</button><button type="button" data-v="Vicky">Vicky</button></div></div>
@@ -1393,6 +1485,58 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
     <div class="row2"><button class="btn danger" type="button" id="iouDel" hidden>Delete</button><button class="btn" type="button" id="iouCancel">Cancel</button><button class="btn primary" type="submit">Save IOU</button></div>
   </form>
 </div>
+<div class="scrim" id="calcScrim" hidden>
+  <form class="sheet" id="calcForm" novalidate>
+    <h2>Payment calculator</h2>
+    <div class="seg" id="cMode"><button type="button" data-v="pay" aria-pressed="true">Find payment</button><button type="button" data-v="price" aria-pressed="false">Find price</button></div>
+    <div class="grid">
+      <label class="f" id="cPriceWrap">Selling price<input id="cPrice" class="num" inputmode="decimal" placeholder="35000"></label>
+      <label class="f" id="cTargetWrap" hidden>Target payment /mo<input id="cTarget" class="num" inputmode="decimal" placeholder="550"></label>
+      <label class="f">Cash down + rebates<input id="cDown" class="num" inputmode="decimal" placeholder="0"></label>
+      <label class="f">Trade equity<input id="cTrade" class="num" inputmode="decimal" placeholder="0"></label>
+      <label class="f">Tax %<input id="cTax" class="num" inputmode="decimal"></label>
+      <label class="f">Fees (doc, DMV)<input id="cFees" class="num" inputmode="decimal" placeholder="0"></label>
+      <label class="f">APR %<input id="cApr" class="num" inputmode="decimal" placeholder="6.99"></label>
+      <div class="f full"><span class="f">Term (months)</span><div class="seg" id="cTerm"><button type="button" data-v="36">36</button><button type="button" data-v="48">48</button><button type="button" data-v="60">60</button><button type="button" data-v="72" aria-pressed="true">72</button><button type="button" data-v="84">84</button></div></div>
+    </div>
+    <div class="calcout"><span id="cOutLbl">Monthly payment</span><b id="cOut">—</b><small id="cOutSub"></small></div>
+    <div class="calcterms" id="cTerms"></div>
+    <div class="row2"><button class="btn" type="button" id="calcClear">Clear</button><button class="btn primary" type="button" id="calcClose">Done</button></div>
+  </form>
+</div>
+<div class="scrim" id="planScrim" hidden>
+  <form class="sheet" id="planForm" novalidate>
+    <h2 id="planTitle">Add to today</h2>
+    <div class="seg" id="plKind"><button type="button" data-v="appt">Appointment</button><button type="button" data-v="call">Callback</button><button type="button" data-v="delivery">Delivery</button></div>
+    <label class="f">Customer<input id="plWho" autocomplete="off" autocapitalize="words"></label>
+    <div class="grid"><label class="f">Date<input id="plDate" type="date"></label><label class="f">Time<input id="plTime" type="time"></label></div>
+    <label class="f">Phone (optional)<input id="plPhone" type="tel" inputmode="tel" autocomplete="off"></label>
+    <label class="f">Note (optional)<input id="plNote" autocomplete="off" placeholder="e.g. test drive Camry XSE"></label>
+    <p class="formhint" id="plErr" style="color:var(--bad)"></p>
+    <div class="row2"><button class="btn danger" type="button" id="plDel" hidden>Delete</button><button class="btn" type="button" id="plCancel">Cancel</button><button class="btn primary" type="submit">Save</button></div>
+  </form>
+</div>
+<div class="scrim" id="bookScrim" hidden>
+  <div class="sheet" role="dialog" aria-label="Customer book">
+    <h2>Customer book</h2>
+    <input type="search" id="bookQ" placeholder="Search name, car, phone" autocomplete="off" aria-label="Search customers">
+    <div id="bookSoon"></div>
+    <ul class="bk-list" id="bookList"></ul>
+    <div class="row2"><button class="btn primary" type="button" id="bookClose">Done</button></div>
+  </div>
+</div>
+<div class="scrim" id="matchScrim" hidden>
+  <div class="sheet" role="dialog" aria-label="Match your paycheck">
+    <h2>Match your paycheck</h2>
+    <p class="formhint" style="margin:0">Paste your commission statement or snap a photo of it. Trip Pad finds your deal numbers, checks the amounts, marks them paid, and flags anything missing.</p>
+    <button type="button" class="snapbtn" id="matchSnap" hidden>📷 Snap the statement</button><input type="file" id="matchFile" accept="image/*" capture="environment" hidden>
+    <textarea id="matchText" rows="6" placeholder="Paste statement text here"></textarea>
+    <button class="btn primary" type="button" id="matchGo">Match it</button>
+    <p class="formhint" id="matchNote" style="margin:0"></p>
+    <div id="matchOut"></div>
+    <div class="row2"><button class="btn" type="button" id="matchClose">Done</button></div>
+  </div>
+</div>
 <div class="scrim" id="goalScrim" hidden>
   <form class="sheet" id="goalForm" novalidate>
     <h2>Monthly unit goal</h2>
@@ -1418,6 +1562,7 @@ let editing=null;
 function localStore(){
   const K="trippad.deals", G="trippad.goal";
   try{deals=JSON.parse(localStorage.getItem(K)||"[]");goal=num(localStorage.getItem(G))||15;commGoal=num(localStorage.getItem("trippad.commgoal"))||0;spiffs=JSON.parse(localStorage.getItem("trippad.spiffs")||"[]");ious=JSON.parse(localStorage.getItem("trippad.ious")||"[]");}catch(e){}
+  try{upsData=(JSON.parse(localStorage.getItem("trippad.ups")||"{}").byDay)||{}; plan=(JSON.parse(localStorage.getItem("trippad.plan")||"{}").list)||[];}catch(e){}
   const persist=()=>{try{localStorage.setItem(K,JSON.stringify(deals));}catch(e){}};
   return {
     async save(d){const i=deals.findIndex(x=>x.id===d.id); if(i>=0)deals[i]=d; else deals.push(d); persist(); render();},
@@ -1425,7 +1570,8 @@ function localStore(){
     async saveGoal(n){goal=n; try{localStorage.setItem(G,String(n));}catch(e){} render();},
     async saveSpiffs(list){spiffs=list; try{localStorage.setItem("trippad.spiffs",JSON.stringify(list));}catch(e){} render();},
     async saveIous(list){ious=list; try{localStorage.setItem("trippad.ious",JSON.stringify(list));}catch(e){} render();},
-    async saveCommGoal(n){commGoal=n; try{localStorage.setItem("trippad.commgoal",String(n));}catch(e){} render();}
+    async saveCommGoal(n){commGoal=n; try{localStorage.setItem("trippad.commgoal",String(n));}catch(e){} render();},
+    async saveDoc(k,o){ if(k==="ups") upsData=o.byDay; else if(k==="plan") plan=o.list; try{localStorage.setItem("trippad."+k,JSON.stringify(o));}catch(e){} render();}
   };
 }
 async function init(){
@@ -1820,7 +1966,7 @@ function render(){
     $("bestMonthLbl").textContent=best?new Date(+best.k.slice(0,4),+best.k.slice(5,7)-1,1).toLocaleString("en-US",{month:"short",year:"2-digit"}).replace(" "," '"):""; }
   $("goalText").textContent=goal?(units>=goal?"Goal hit: "+units+" of "+goal:(goal-units)+" to go for "+goal+" units"):"No goal set";
 
-  renderMix(live); renderCotm(live); renderBoss(mk, units); renderQuests(); renderTrophies(); renderCGoal(mk, live); renderWrapBanner(); renderSources(live); renderLenders(live); renderOwed(); renderMonthEnd(mk, units); renderRank(); renderSpiffs(); renderIous(); renderAlert(); renderFuBar(); renderCoach(mk, units); renderCal(mk, live); renderYear(); if(typeof renderBackup==="function") renderBackup();
+  renderMix(live); renderCotm(live); renderBoss(mk, units); renderQuests(); renderTrophies(); renderCGoal(mk, live); renderWrapBanner(); renderSources(live); renderLenders(live); renderOwed(); renderMonthEnd(mk, units); renderRank(); renderSpiffs(); renderIous(); renderAlert(); try{ renderToday(); }catch(e){} renderFuBar(); renderCoach(mk, units); renderCal(mk, live); renderYear(); if(typeof renderBackup==="function") renderBackup();
   let shown, headText="";
   if(searchQ){ shown=deals.filter(d=>matches(d,searchQ)).sort((a,b)=>(b.date||"").localeCompare(a.date||"")); headText=shown.length+" result"+(shown.length===1?"":"s")+" for “"+searchQ+"” in all months"; }
   else if(filter==="followup"){ shown=overdue(); headText="Pending over "+FOLLOW_DAYS+" days · all months"; }
@@ -1854,6 +2000,8 @@ function render(){
     if((d.products||[]).length) tag((d.products.length)+" product"+(d.products.length>1?"s":""));
     if(d.veritas) tag("Veritas bonus","funded");
     if(d.trade) tag("Trade");
+    if(d.eo) tag("E/O "+(d.eo===today()?"today":md(d.eo)), d.eo===today()?"eo hot":"eo");
+    { const sc=stipCount(d); if(sc.need) tag("Stips "+sc.got+"/"+sc.need, sc.got<sc.need?"follow":"paid"); }
     { const sp=spiffOfDeal(d); if(sp) tag("💰 Spiff "+money(num(sp.amount)),"spiff"); }
     if(d.processor) tag("Docs: "+d.processor);
     if(d.paid) tag("Paid ✓","paid");
@@ -1897,10 +2045,11 @@ function openForm(d){
   $("fFront").value=d?.front??""; $("fBack").value=d?.back??""; $("fComm").value=d?.commission??"";
   $("fProds").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String((d?.products||[]).includes(b.dataset.p))));
   $("fNotes").value=d?.notes||"";
+  setStips(d?.stips||{}); setSeg("fEo",d?.eo?"yes":"no"); $("fEoDate").value=d?.eo||""; $("eoWrap").hidden=!d?.eo; stopMic();
   $("del").hidden=!d; $("confirm").hidden=true; $("formErr").hidden=true;
   $("scrim").hidden=false; setTimeout(()=>$("fDeal").focus({preventScroll:true}),50);
 }
-function closeForm(){$("scrim").hidden=true; editing=null;}
+function closeForm(){$("scrim").hidden=true; editing=null; try{ stopMic(); }catch(e){}}
 $("add").addEventListener("click",()=>openForm(null));
 $("cancel").addEventListener("click",closeForm);
 $("scrim").addEventListener("click",e=>{if(e.target===$("scrim"))closeForm();});
@@ -1908,6 +2057,7 @@ $("form").addEventListener("submit",async e=>{
   e.preventDefault();
   if(!$("fDeal").value.trim()){$("formErr").textContent="Add the deal number to save this deal."; $("formErr").hidden=false; return;}
   if(!$("fDate").value){$("formErr").textContent="Pick the date the deal was processed."; $("formErr").hidden=false; return;}
+  if(segVal("fEo")==="yes"&&!$("fEoDate").value){$("formErr").textContent="Pick the E/O expiration date."; $("formErr").hidden=false; return;}
   const ctx=audioCtx(); const isNew=!editing; badgeWatch=Date.now()+4000; if(isNew) celebrateUntil=Date.now()+4000; if(!isNew && editing.status!=="unwound" && segVal("fStatus")==="unwound") mournUntil=Date.now()+4000;
   const split=segVal("fSplit")==="yes";
   const d={id:editing?.id||("d"+Date.now().toString(36)+Math.random().toString(36).slice(2,6)),
@@ -1915,7 +2065,7 @@ $("form").addEventListener("submit",async e=>{
     customer:$("fCust").value.trim().toUpperCase(), vehicle:$("fVeh").value.trim().toUpperCase(), type:segVal("fType"), source:segVal("fSource")||"", status:segVal("fStatus"),
     split, partner:split?$("fPartner").value.trim():"", front:num($("fFront").value), back:num($("fBack").value),
     commission:num($("fComm").value), products:[...$("fProds").querySelectorAll('[aria-pressed="true"]')].map(b=>b.dataset.p),
-    notes:$("fNotes").value.trim(), veritas:segVal("fVeritas")==="yes", trade:segVal("fTrade")==="yes", phone:$("fPhone").value.trim(), lender:$("fLender").value.trim(), fundedDate:(segVal("fStatus")==="funded"?(editing&&editing.status==="funded"?(editing.fundedDate||""):today()):""), processor:segVal("fProc")||"", paid:segVal("fPaid")==="yes", fu:readFu()};
+    notes:$("fNotes").value.trim(), veritas:segVal("fVeritas")==="yes", trade:segVal("fTrade")==="yes", phone:$("fPhone").value.trim(), lender:$("fLender").value.trim(), fundedDate:(segVal("fStatus")==="funded"?(editing&&editing.status==="funded"?(editing.fundedDate||""):today()):""), processor:segVal("fProc")||"", paid:segVal("fPaid")==="yes", fu:readFu(), stips:readStips(), eo:(segVal("fEo")==="yes"?($("fEoDate").value||""):"")};
   $("save").disabled=true;
   const dayBefore=deals.filter(x=>x.date===d.date && x.status!=="unwound" && x.id!==d.id).length;
   const wasLiveSameDay=!!editing && editing.status!=="unwound" && editing.date===d.date;
@@ -2122,7 +2272,7 @@ function renderBackup(){
 }
 function backedUp(){ lsSet(BK,Date.now()); renderBackup(); }
 $("exportBtn").addEventListener("click",async()=>{
-  const data=JSON.stringify({app:"trip-pad",version:1,exported:new Date().toISOString(),goal,deals,spiffs,ious},null,1);
+  const data=JSON.stringify({app:"trip-pad",version:1,exported:new Date().toISOString(),goal,deals,spiffs,ious,ups:upsData||{},plan:plan||[]},null,1);
   const name="trip-pad-backup-"+today()+".json";
   const file=new File([data],name,{type:"application/json"});
   try{ if(navigator.canShare&&navigator.canShare({files:[file]})){ await navigator.share({files:[file],title:"Trip Pad backup"}); backedUp(); setNote("Backup ready. Save it to Files, email it, or AirDrop it."); return; } }
@@ -2141,6 +2291,8 @@ $("importFile").addEventListener("change",async e=>{
     if(j.goal&&!Array.isArray(j)) await store.saveGoal(num(j.goal));
     if(!Array.isArray(j)&&Array.isArray(j.spiffs)){ const ids=new Set(j.spiffs.map(x=>x.id)); await store.saveSpiffs(spiffs.filter(x=>!ids.has(x.id)).concat(j.spiffs)); }
     if(!Array.isArray(j)&&Array.isArray(j.ious)){ const ids2=new Set(j.ious.map(x=>x.id)); await store.saveIous(ious.filter(x=>!ids2.has(x.id)).concat(j.ious)); }
+    if(!Array.isArray(j)&&j.ups&&typeof j.ups==="object") await store.saveDoc("ups",{byDay:Object.assign({},j.ups,upsData||{})});
+    if(!Array.isArray(j)&&Array.isArray(j.plan)){ const ids3=new Set(j.plan.map(x=>x.id)); await store.saveDoc("plan",{list:(plan||[]).filter(x=>!ids3.has(x.id)).concat(j.plan)}); }
     setNote("Restored: "+added+" new deal"+(added===1?"":"s")+(updated?", "+updated+" updated":"")+".");
   }catch(err){ setNote("That file isn't a Trip Pad backup. Pick a file named trip-pad-backup-….json.","warn"); }
 });
@@ -2561,6 +2713,196 @@ function buildLenderPicks(){ const box=$("fLenderPicks"); box.replaceChildren();
   b.dataset.l=nm; b.addEventListener("click",()=>{ $("fLender").value=$("fLender").value===nm?"":nm; syncLenderPicks(); }); box.append(b); }); syncLenderPicks(); }
 function syncLenderPicks(){ const v=$("fLender").value.trim().toLowerCase(); $("fLenderPicks").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.l.toLowerCase()===v))); }
 $("fLender").addEventListener("input",syncLenderPicks); buildLenderPicks();
+
+/* ===== round 8: today's plan, ups, calculator, customer book, paycheck match, stips, voice notes, E/O ===== */
+var upsData, plan, upsStack;
+var UPS_SRC=[["Showroom","🚶"],["Phone","📞"],["Internet","💻"],["Campaign","📣"]];
+var STIPS=["Paystubs","Proof of residence","References","Insurance","License","Bank statements","Down payment"];
+var PRECHECK_URL="https://claude.ai/artifact/5TWM8Mn8v3b8GknKnaHooN";
+function ymd(dt){ return dt.getFullYear()+"-"+String(dt.getMonth()+1).padStart(2,"0")+"-"+String(dt.getDate()).padStart(2,"0"); }
+function tomorrowKey(){ const d=new Date(); d.setDate(d.getDate()+1); return ymd(d); }
+function md(s){ if(!s) return ""; const [y,m,d]=s.split("-").map(Number); return new Date(y,m-1,d).toLocaleDateString("en-US",{month:"short",day:"numeric"}); }
+function fmtTime(t){ if(!t) return ""; let [h,m]=t.split(":").map(Number); const ap=h>=12?"pm":"am"; h=h%12||12; return h+(m?":"+String(m).padStart(2,"0"):"")+ap; }
+function smsHref(ph,msg){ return "sms:"+ph+"&body="+encodeURIComponent(msg); }
+/* --- E/O --- */
+function eoDue(k){ return deals.filter(d=>d.eo===k && d.status!=="unwound"); }
+function renderEoBar(){ const bar=$("eoBar"); if(!bar) return; const l=eoDue(today()); bar.hidden=!l.length; if(!l.length) return;
+  $("eoText").textContent=l.length===1?"E/O expires today on deal #"+l[0].dealNo+(l[0].customer?" ("+l[0].customer+")":"")+".":l.length+" E/Os expire today. Take care of them."; }
+$("eoBar").addEventListener("click",()=>{ const l=eoDue(today()); if(l.length===1) openForm(l[0]); else { filter="all"; searchQ=""; $("searchBox").value=""; dayFilter=null; render(); $("log").scrollIntoView({behavior:"smooth",block:"start"}); } });
+function syncEo(){ const on=segVal("fEo")==="yes"; $("eoWrap").hidden=!on; if(on&&!$("fEoDate").value){ const d=new Date(); d.setDate(d.getDate()+10); $("fEoDate").value=ymd(d); } }
+$("fEo").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; setSeg("fEo",b.dataset.v); syncEo(); });
+/* --- stips --- */
+STIPS.forEach(s=>{ const b=document.createElement("button"); b.type="button"; b.className="chipbtn"; b.dataset.s=s; b.dataset.st=""; b.textContent=s;
+  b.addEventListener("click",()=>{ const n={"":"need",need:"got",got:""}[b.dataset.st||""]; b.dataset.st=n; b.textContent=s+(n==="got"?" ✓":""); b.setAttribute("aria-pressed",String(n==="got")); }); $("fStips").append(b); });
+function setStips(o){ $("fStips").querySelectorAll("button").forEach(b=>{ const st=(o&&o[b.dataset.s])||""; b.dataset.st=st; b.textContent=b.dataset.s+(st==="got"?" ✓":""); b.setAttribute("aria-pressed",String(st==="got")); }); }
+function readStips(){ const o={}; $("fStips").querySelectorAll("button").forEach(b=>{ if(b.dataset.st) o[b.dataset.s]=b.dataset.st; }); return o; }
+function stipCount(d){ const v=Object.values(d.stips||{}); return {need:v.length, got:v.filter(x=>x==="got").length}; }
+function stipsOpen(){ return deals.filter(d=>d.status==="pending" && (()=>{ const c=stipCount(d); return c.need>c.got; })()); }
+/* --- voice notes --- */
+var dictNs=null, recog=null, micOn=false, micBase="";
+(async()=>{ try{ if(!window.claude) return; const d=await claude.use("dictation"); if(!d) return; dictNs=d;
+  d.onPartial(({text})=>{ if(micOn) $("fNotes").value=joinNote(micBase,text); });
+  d.onFinal(({text})=>{ micBase=joinNote(micBase,text); $("fNotes").value=micBase; });
+  d.onState(({state})=>setMic(state==="listening")); }catch(e){} })();
+function joinNote(a,b){ b=String(b||"").trim(); if(!b) return a||""; if(!a||!a.trim()) return b.charAt(0).toUpperCase()+b.slice(1); return a.replace(/\s+$/,"")+" "+b; }
+function setMic(on){ micOn=on; const b=$("micBtn"); b.classList.toggle("on",on); b.textContent=on?"⏹ Stop":"🎙️ Voice note"; }
+function micHint(t){ const h=$("micHint"); h.textContent=t; h.hidden=!t; }
+function stopMic(){ try{ if(dictNs&&micOn) dictNs.stop().catch(()=>{}); }catch(e){} try{ if(recog) recog.stop(); }catch(e){} setMic(false); micHint(""); }
+$("micBtn").addEventListener("click",()=>{ const ta=$("fNotes");
+  if(micOn){ stopMic(); return; }
+  micBase=ta.value; micHint("");
+  if(dictNs){ setMic(true); dictNs.start().catch(err=>{ setMic(false); const c=err&&err.code; micHint(c==="not_granted"?"Mic access is off. Tap the 🎙️ on your keyboard to dictate instead.":"Couldn't start the mic. Tap again."); }); return; }
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(SR){ try{ recog=new SR(); recog.lang="en-US"; recog.interimResults=true; recog.continuous=true;
+      recog.onresult=e=>{ let fin="", part=""; for(let i=e.resultIndex;i<e.results.length;i++){ const r=e.results[i]; if(r.isFinal) fin+=r[0].transcript; else part+=r[0].transcript; } if(fin) micBase=joinNote(micBase,fin); ta.value=joinNote(micBase,part); };
+      recog.onerror=e=>{ setMic(false); if(e.error==="not-allowed"||e.error==="service-not-allowed") micHint("Mic is blocked here. Tap the notes box, then the 🎙️ on your iPhone keyboard."); };
+      recog.onend=()=>{ setMic(false); ta.value=micBase; };
+      recog.start(); setMic(true); return; }catch(e){} }
+  micHint("Tap the notes box, then the 🎙️ on your iPhone keyboard to dictate."); ta.focus(); });
+/* --- ups log --- */
+function upsOn(k){ const o=(upsData||{})[k]||{}; return UPS_SRC.reduce((a,[s])=>a+(o[s]|0),0); }
+function closeStats(prefix){ let ups=0, sold=0; Object.keys(upsData||{}).forEach(k=>{ if(prefix && !k.startsWith(prefix)) return; const u=upsOn(k); if(!u) return; ups+=u; sold+=deals.filter(d=>d.date===k && d.status!=="unwound").length; }); return {ups, sold, rate:ups?Math.min(1,sold/ups):0}; }
+async function addUp(src,delta){ if(!store||!store.saveDoc) return; const t=today(), all=Object.assign({},upsData||{}), o=Object.assign({},all[t]||{});
+  o[src]=Math.max(0,(o[src]|0)+delta); all[t]=o;
+  const cut=new Date(); cut.setDate(cut.getDate()-400); const ck=ymd(cut); Object.keys(all).forEach(k=>{ if(k<ck) delete all[k]; });
+  upsStack=upsStack||[]; if(delta>0) upsStack.push(src);
+  try{ await store.saveDoc("ups",{byDay:all}); }catch(e){} }
+UPS_SRC.forEach(([s,ic])=>{ const b=document.createElement("button"); b.type="button"; b.dataset.s=s; b.innerHTML='<span aria-hidden="true">'+ic+'</span><b>0</b>'+s;
+  b.addEventListener("click",()=>{ try{ tap(); }catch(e){} addUp(s,1); }); $("upsBtns").append(b); });
+$("upsUndo").addEventListener("click",()=>{ const o=(upsData||{})[today()]||{}; upsStack=upsStack||[]; let s=upsStack.pop(); if(!s||!(o[s]>0)) s=(UPS_SRC.map(x=>x[0]).filter(k=>o[k]>0).pop()); if(s) addUp(s,-1); });
+function renderUps(){ const t=today(), o=(upsData||{})[t]||{}, mk=monthKey(new Date());
+  $("upsToday").textContent=upsOn(t);
+  $("upsBtns").querySelectorAll("button").forEach(b=>{ b.querySelector("b").textContent=o[b.dataset.s]|0; });
+  $("upsUndo").hidden=!upsOn(t);
+  const m=closeStats(mk), all=closeStats("");
+  $("upsRatio").textContent=m.ups?"Close rate "+Math.round(m.rate*100)+"% ("+m.sold+"/"+m.ups+")":"";
+  const units=unitsIn(mk), left=Math.max(0,goal-units), st=m.ups>=5?m:all, take=$("upsTake");
+  const dim=new Date(new Date().getFullYear(),new Date().getMonth()+1,0).getDate(), daysLeft=dim-new Date().getDate()+1;
+  if(left<=0) take.textContent="🎉 Goal hit. Every up from here is bonus money.";
+  else if(st.ups>=3 && st.rate>0){ const need=Math.ceil(left/st.rate); take.textContent="What it takes: at your "+Math.round(st.rate*100)+"% close rate, about "+need+" more up"+(need===1?"":"s")+" ("+Math.ceil(need/daysLeft)+" a day) to hit "+goal+"."; }
+  else take.textContent="Tap an up every time you take a customer. After a few, Trip Pad shows how many ups it takes to hit your goal."; }
+/* --- today's plan --- */
+var planEditing=null;
+function annivToday(){ const t=new Date(), mmdd=today().slice(5), y=t.getFullYear(), seen={}; const out=[];
+  deals.filter(d=>d.date && d.status!=="unwound" && d.date.slice(5)===mmdd && +d.date.slice(0,4)<y).forEach(d=>{ const k=(d.customer||d.id); if(seen[k]) return; seen[k]=1; out.push({d,years:y-+d.date.slice(0,4)}); }); return out; }
+function annivMsg(nm,car,years){ const hi=nm?"Hi "+nm+", ":"Hi, ";
+  return years>=3?hi+"it's Jonathan from Toyota Marin. Hard to believe it's been "+years+" years with your "+car+"! Values are strong right now, so if you've thought about upgrading, I'd love to show you what your "+car+" is worth. No pressure.":hi+"it's Jonathan from Toyota Marin. Happy "+(years===1?"1-year":years+"-year")+" anniversary with your "+car+"! Hope it's been great. If you or anyone you know needs anything, I'm here."; }
+function renderToday(){ const list=$("tdList"); if(!list) return; const t=today(), tm=tomorrowKey();
+  $("tdDate").textContent=new Date().toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"});
+  list.replaceChildren(); let n=0;
+  const add=(cls,ico,label,sub,onClick,extra)=>{ const li=document.createElement("li"); li.className="td-item "+(cls||""); if(ico) li.append(ico);
+    const m=document.createElement("button"); m.type="button"; m.className="td-main"; m.textContent=label; if(sub){ const s=document.createElement("small"); s.textContent=sub; m.append(s); } if(onClick) m.addEventListener("click",onClick); li.append(m); (extra||[]).forEach(x=>li.append(x)); list.append(li); n++; };
+  const lnk=(href,txt,lbl)=>{ const a=document.createElement("a"); a.className="td-ico"; a.href=href; a.textContent=txt; a.setAttribute("aria-label",lbl); if(href.startsWith("sms")){a.target="_blank"; a.rel="noopener";} return a; };
+  const span=(cls,txt)=>{ const s=document.createElement("span"); s.className=cls; s.textContent=txt; return s; };
+  eoDue(t).forEach(d=>add("hot",span("td-time","E/O"),"⚠️ E/O expires today · #"+d.dealNo,d.customer||"",()=>openForm(d)));
+  eoDue(tm).forEach(d=>add("warm",span("td-time","E/O"),"E/O expires tomorrow · #"+d.dealNo,d.customer||"",()=>openForm(d)));
+  const kinds={appt:"🤝",call:"📞",delivery:"🔑"};
+  (plan||[]).filter(p=>p.date===t).sort((a,b)=>(a.time||"99").localeCompare(b.time||"99")).forEach(p=>{
+    const chk=document.createElement("button"); chk.type="button"; chk.className="td-chk"; chk.textContent=p.done?"✓":""; chk.setAttribute("aria-label",p.done?"Mark not done":"Mark done");
+    chk.addEventListener("click",()=>{ try{ tap(); }catch(e){} savePlan((plan||[]).map(x=>x.id===p.id?Object.assign({},x,{done:!x.done}):x)); });
+    const ex=[]; const ph=phoneDigits(p.phone); if(ph){ ex.push(lnk("tel:"+ph,"📞","Call")); ex.push(lnk(smsHref(ph,(firstName(p.who)?"Hi "+firstName(p.who)+", ":"Hi, ")+"it's Jonathan from Toyota Marin. "+(p.kind==="delivery"?"Your car will be ready for you":"Just confirming our appointment")+(p.time?" at "+fmtTime(p.time):"")+" today. See you soon!"),"💬","Text")); }
+    const li=document.createElement("li"); li.className="td-item"+(p.done?" done":""); li.append(chk, span("td-time",fmtTime(p.time)||"Today"));
+    const m=document.createElement("button"); m.type="button"; m.className="td-main"; m.textContent=(kinds[p.kind]||"🤝")+" "+(p.who||"Customer"); if(p.note){ const s=document.createElement("small"); s.textContent=p.note; m.append(s); }
+    m.addEventListener("click",()=>openPlan(p)); li.append(m); ex.forEach(x=>li.append(x)); list.append(li); n++; });
+  const fu=fuList().length; if(fu) add("",span("td-time","Texts"),"💬 "+fu+" follow-up text"+(fu===1?"":"s")+" due","",()=>$("fuBar").click());
+  spiffs.filter(s=>s.expires===t && !spiffDeal(s)).forEach(s=>add("warm",span("td-time","Spiff"),"💰 Last day: "+money(num(s.amount))+" on "+s.stock,s.note||"",()=>openSpiff(s)));
+  annivToday().forEach(({d,years})=>{ const ph=phoneDigits(d.phone), car=modelOf(d.vehicle)||"car", ex=ph?[lnk(smsHref(ph,annivMsg(firstName(d.customer),car,years)),"💬","Text")]:[];
+    add("",span("td-time",years+" yr"),"🎂 "+(d.customer||"Customer")+" · "+(years>=3?"trade-cycle time":"anniversary"),d.vehicle||"",()=>openBook(d.customer||""),ex); });
+  const so=stipsOpen().length; if(so) add("",span("td-time","Stips"),"📎 "+so+" pending deal"+(so===1?"":"s")+" waiting on stips","",()=>{ filter="pending"; searchQ=""; $("searchBox").value=""; dayFilter=null; render(); $("log").scrollIntoView({behavior:"smooth",block:"start"}); });
+  const tmc=(plan||[]).filter(p=>p.date===tm).length;
+  if(!n){ const li=document.createElement("li"); li.className="td-empty"; li.textContent="Nothing on the board yet. Tap + Appt to plan your day."+(tmc?" ("+tmc+" set for tomorrow)":""); list.append(li); }
+  else if(tmc){ const li=document.createElement("li"); li.className="td-empty"; li.textContent=tmc+" more set for tomorrow."; list.append(li); }
+  renderUps(); renderEoBar(); }
+async function savePlan(list){ const cut=new Date(); cut.setDate(cut.getDate()-30); const ck=ymd(cut); list=list.filter(p=>(p.date||"")>=ck);
+  if(store&&store.saveDoc) await store.saveDoc("plan",{list}); }
+function openPlan(p){ planEditing=p||null; $("planTitle").textContent=p?"Edit":"Add to today"; setSeg("plKind",p?.kind||"appt"); $("plWho").value=p?.who||""; $("plDate").value=p?.date||today(); $("plTime").value=p?.time||""; $("plPhone").value=p?.phone||""; $("plNote").value=p?.note||""; $("plErr").textContent=""; $("plDel").hidden=!p; $("planScrim").hidden=false; setTimeout(()=>$("plWho").focus({preventScroll:true}),50); }
+$("plKind").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) setSeg("plKind",b.dataset.v); });
+$("planAdd").addEventListener("click",()=>openPlan(null));
+$("plCancel").addEventListener("click",()=>{ $("planScrim").hidden=true; });
+$("planScrim").addEventListener("click",e=>{ if(e.target===$("planScrim")) $("planScrim").hidden=true; });
+$("planForm").addEventListener("submit",async e=>{ e.preventDefault(); const who=$("plWho").value.trim(); if(!who){ $("plErr").textContent="Add the customer's name."; return; }
+  const p={id:planEditing?.id||("p"+Date.now().toString(36)), kind:segVal("plKind")||"appt", who, date:$("plDate").value||today(), time:$("plTime").value, phone:$("plPhone").value.trim(), note:$("plNote").value.trim(), done:planEditing?.done||false};
+  try{ await savePlan((plan||[]).filter(x=>x.id!==p.id).concat(p)); $("planScrim").hidden=true; tapSuccess(); }catch(err){ $("plErr").textContent="Couldn't save. Try again."; } });
+$("plDel").addEventListener("click",async()=>{ const p=planEditing; if(!p) return; try{ await savePlan((plan||[]).filter(x=>x.id!==p.id)); $("planScrim").hidden=true; }catch(e){ $("plErr").textContent="Couldn't delete. Try again."; } });
+/* --- payment calculator --- */
+function calcPrefs(){ try{ return JSON.parse(localStorage.getItem("trippad.calc")||"{}"); }catch(e){ return {}; } }
+function pmt(A,apr,n){ const r=apr/1200; if(A<=0) return 0; return r?A*r/(1-Math.pow(1+r,-n)):A/n; }
+function principalFor(P,apr,n){ const r=apr/1200; return r?P*(1-Math.pow(1+r,-n))/r:P*n; }
+function calcRun(){ const mode=segVal("cMode")||"pay", tax=num($("cTax").value)/100, fees=num($("cFees").value), down=num($("cDown").value), tr=num($("cTrade").value), apr=num($("cApr").value), term=+(segVal("cTerm")||72);
+  try{ localStorage.setItem("trippad.calc",JSON.stringify({tax:$("cTax").value,fees:$("cFees").value,apr:$("cApr").value,term})); }catch(e){}
+  $("cPriceWrap").hidden=mode!=="pay"; $("cTargetWrap").hidden=mode!=="price";
+  const terms=$("cTerms"); terms.replaceChildren();
+  if(mode==="pay"){ const price=num($("cPrice").value), A=price*(1+tax)+fees-down-tr; $("cOutLbl").textContent="Monthly payment";
+    $("cOut").textContent=price?"$"+pmt(A,apr,term).toFixed(2):"—"; $("cOutSub").textContent=price?"Amount financed "+money(Math.max(0,A))+" · tax "+money(price*tax)+" · "+term+" mo at "+apr+"%":"Enter a selling price.";
+    [36,48,60,72,84].forEach(n=>{ const d=document.createElement("div"); d.className=n===term?"on":""; d.innerHTML=n+" mo<b>"+(price?"$"+Math.round(pmt(A,apr,n)):"—")+"</b>"; terms.append(d); }); }
+  else { const P=num($("cTarget").value), A=principalFor(P,apr,term), price=(A+down+tr-fees)/(1+tax); $("cOutLbl").textContent="Max selling price";
+    $("cOut").textContent=P?money(Math.max(0,price)):"—"; $("cOutSub").textContent=P?"Finance up to "+money(A)+" for $"+P+"/mo · "+term+" mo at "+apr+"%":"Enter the payment the customer wants.";
+    [36,48,60,72,84].forEach(n=>{ const a=principalFor(P,apr,n), pr=(a+down+tr-fees)/(1+tax); const d=document.createElement("div"); d.className=n===term?"on":""; d.innerHTML=n+" mo<b>"+(P?"$"+(Math.max(0,pr)/1000).toFixed(1)+"k":"—")+"</b>"; terms.append(d); }); } }
+function openCalc(){ const p=calcPrefs(); if(!$("cTax").value) $("cTax").value=p.tax!=null&&p.tax!==""?p.tax:"9.25"; if(!$("cFees").value&&p.fees) $("cFees").value=p.fees; if(!$("cApr").value&&p.apr) $("cApr").value=p.apr; if(p.term) setSeg("cTerm",String(p.term)); calcRun(); $("calcScrim").hidden=false; }
+["cMode","cTerm"].forEach(id=>$(id).addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; setSeg(id,b.dataset.v); calcRun(); }));
+$("calcForm").addEventListener("input",calcRun); $("calcForm").addEventListener("submit",e=>e.preventDefault());
+$("calcOpen").addEventListener("click",openCalc);
+$("calcClose").addEventListener("click",()=>{ $("calcScrim").hidden=true; });
+$("calcClear").addEventListener("click",()=>{ ["cPrice","cTarget","cDown","cTrade"].forEach(id=>$(id).value=""); calcRun(); });
+$("calcScrim").addEventListener("click",e=>{ if(e.target===$("calcScrim")) $("calcScrim").hidden=true; });
+/* --- customer book --- */
+function custList(){ const by={}; deals.filter(d=>d.customer && d.status!=="unwound").forEach(d=>{ const k=d.customer.trim().toUpperCase(); (by[k]=by[k]||[]).push(d); });
+  return Object.keys(by).map(name=>{ const ds=by[name].sort((a,b)=>(b.date||"").localeCompare(a.date||"")); return {name, ds, last:ds[0], phone:(ds.find(x=>x.phone)||{}).phone||""}; }); }
+function nextAnniv(s){ const [y,m,d]=s.split("-").map(Number), now=new Date(); now.setHours(0,0,0,0); let yr=now.getFullYear(), a=new Date(yr,m-1,d); if(a<now) a=new Date(++yr,m-1,d); return {years:yr-y, date:a, days:Math.round((a-now)/864e5)}; }
+function bookRow(c, soon){ const li=document.createElement("li"); li.className="bk-row"+(soon?" soon":""); const d=c.last, car=modelOf(d.vehicle)||"car";
+  const m=document.createElement("button"); m.type="button"; m.className="bk-main"; const b=document.createElement("b"); b.textContent=c.name; const s=document.createElement("small");
+  if(soon) s.textContent=(soon.years>=3?"🔁 "+soon.years+" yrs (trade cycle)":"🎂 "+soon.years+" yr")+" "+(soon.days===0?"today":soon.days===1?"tomorrow":"in "+soon.days+" days")+" · "+(d.vehicle||"");
+  else s.textContent=[d.vehicle||"", "sold "+md(d.date)+(d.date.slice(0,4)!==String(new Date().getFullYear())?" "+d.date.slice(0,4):""), c.ds.length>1?c.ds.length+" deals":""].filter(Boolean).join(" · ");
+  m.append(b,s); m.addEventListener("click",()=>{ $("bookScrim").hidden=true; openForm(d); }); li.append(m);
+  const ph=phoneDigits(c.phone); if(ph){ const msg=soon?annivMsg(firstName(c.name),car,soon.years):(firstName(c.name)?"Hi "+firstName(c.name)+", ":"Hi, ")+"it's Jonathan from Toyota Marin. Just checking in on your "+car+". Anything I can help with?";
+    [["tel:"+ph,"📞","Call"],[smsHref(ph,msg),"💬","Text"]].forEach(([h,t,l])=>{ const a=document.createElement("a"); a.className="td-ico"; a.href=h; a.textContent=t; a.setAttribute("aria-label",l); if(h.startsWith("sms")){a.target="_blank"; a.rel="noopener";} li.append(a); }); }
+  return li; }
+function renderBook(){ const q=$("bookQ").value.trim().toUpperCase(), all=custList(), soonBox=$("bookSoon"), list=$("bookList"); soonBox.replaceChildren(); list.replaceChildren();
+  const match=c=>!q || c.name.includes(q) || c.ds.some(d=>(d.vehicle||"").includes(q) || (d.phone||"").replace(/\D/g,"").includes(q.replace(/\D/g,"")||"~") || (d.dealNo||"").includes(q));
+  if(!q){ const soon=all.map(c=>({c,a:nextAnniv(c.last.date)})).filter(x=>x.a.years>=1 && x.a.days<=30).sort((a,b)=>a.a.days-b.a.days);
+    if(soon.length){ const h=document.createElement("p"); h.className="bk-sec"; h.textContent="Coming up · next 30 days"; const ul=document.createElement("ul"); ul.className="bk-list"; soon.forEach(x=>ul.append(bookRow(x.c,x.a))); soonBox.append(h,ul); } }
+  const rows=all.filter(match).sort((a,b)=>(b.last.date||"").localeCompare(a.last.date||""));
+  if(!q && rows.length){ const h=document.createElement("p"); h.className="bk-sec"; h.textContent="All customers · "+rows.length; soonBox.append(h); }
+  rows.slice(0,80).forEach(c=>list.append(bookRow(c,null)));
+  if(!rows.length){ const li=document.createElement("li"); li.className="td-empty"; li.textContent=all.length?"No customers match that.":"Customers show up here once you add names to your deals."; list.append(li); } }
+function openBook(q){ $("bookQ").value=q||""; renderBook(); $("bookScrim").hidden=false; }
+$("bookOpen").addEventListener("click",()=>openBook(""));
+$("bookQ").addEventListener("input",renderBook);
+$("bookClose").addEventListener("click",()=>{ $("bookScrim").hidden=true; });
+$("bookScrim").addEventListener("click",e=>{ if(e.target===$("bookScrim")) $("bookScrim").hidden=true; });
+/* --- paycheck matching --- */
+var matchFound=[];
+function runMatch(text){ const lines=String(text||"").split(/\r?\n/), out=$("matchOut"); out.replaceChildren(); matchFound=[];
+  const cand=deals.filter(d=>d.dealNo && d.status!=="unwound");
+  cand.forEach(d=>{ const no=String(d.dealNo).replace(/[^\w]/g,""); if(no.length<3) return; const re=new RegExp("(^|[^0-9A-Za-z])"+no+"([^0-9A-Za-z]|$)","i"); const ln=lines.find(l=>re.test(l)); if(ln===undefined) return;
+    const amts=(ln.replace(re," ").match(/-?\$\s?\d[\d,]*(?:\.\d{1,2})?|-?\d[\d,]*\.\d{2}/g)||[]).map(x=>num(x)).filter(a=>a!==0); const c=num(d.commission);
+    const ok=!amts.length || !c || amts.some(a=>Math.abs(Math.abs(a)-c)<1.01); matchFound.push({d,amts,ok}); });
+  const hdr=t=>{ const p=document.createElement("p"); p.className="bk-sec"; p.textContent=t; out.append(p); };
+  if(!matchFound.length){ $("matchNote").textContent="Didn't find any of your deal numbers in that. Check the paste, or snap a clearer photo."; }
+  else { const fresh=matchFound.filter(x=>!x.d.paid); $("matchNote").textContent="Found "+matchFound.length+" of your deals"+(fresh.length?", "+fresh.length+" not marked paid yet.":", all already marked paid.");
+    hdr("On this check");
+    matchFound.forEach(x=>{ const row=document.createElement("label"); row.className="mt-row"+(x.ok?"":" bad"); const cb=document.createElement("input"); cb.type="checkbox"; cb.checked=!x.d.paid; cb.disabled=!!x.d.paid; x.cb=cb;
+      const s=document.createElement("span"); s.textContent="#"+x.d.dealNo+" "+(x.d.customer||"")+(x.d.paid?" · already paid ✓":"")+(x.ok?(x.amts.length?" · "+money(Math.abs(x.amts.find(a=>Math.abs(Math.abs(a)-num(x.d.commission))<1.01)||x.amts[0]))+" ✓":""):" · ⚠️ check shows "+x.amts.map(a=>money(a)).join(" / ")+", you logged "+money(num(x.d.commission)));
+      row.append(cb,s); out.append(row); });
+    if(fresh.length){ const b=document.createElement("button"); b.type="button"; b.className="btn primary"; b.textContent="Mark checked deals paid"; b.addEventListener("click",markMatched); out.append(b); } }
+  const maxDate=matchFound.reduce((m,x)=>(x.d.date||"")>m?x.d.date:m,""); const cutoff=new Date(); cutoff.setDate(cutoff.getDate()-14);
+  const ids=new Set(matchFound.map(x=>x.d.id)); const miss=deals.filter(d=>!d.paid && !ids.has(d.id) && (d.status==="funded"||d.status==="cash") && (maxDate?(d.date||"")<=maxDate:(d.date||"")<=ymd(cutoff))).sort((a,b)=>(a.date||"").localeCompare(b.date||""));
+  if(miss.length && (matchFound.length || text.trim())){ hdr("⚠️ Missing · funded but not on this check");
+    miss.forEach(d=>{ const r=document.createElement("div"); r.className="mt-row miss"; r.textContent="#"+(d.dealNo||"?")+" "+(d.customer||"")+" · "+md(d.date)+" · "+money(num(d.commission)); r.addEventListener("click",()=>{ $("matchScrim").hidden=true; openForm(d); }); out.append(r); }); } }
+async function markMatched(){ const pick=matchFound.filter(x=>x.cb&&x.cb.checked&&!x.d.paid); let n=0;
+  for(const x of pick){ try{ await store.save(Object.assign({},x.d,{paid:true})); n++; }catch(e){} }
+  runMatch($("matchText").value); $("matchNote").textContent="✅ Marked "+n+" deal"+(n===1?"":"s")+" paid."; if(n){ try{ tapSuccess(); }catch(e){} cheer("PAID","Marked "+n+" deal"+(n===1?"":"s")+" paid"); } }
+const PAY_PROMPT='This photo shows a car salesperson\'s commission or pay statement from a dealership. List every deal on it. Reply with ONLY one JSON object: {"lines":[{"dealNo":string,"customer":string|null,"amount":number|null}]}. dealNo = the deal number exactly as printed. amount = the commission paid to the salesperson for that deal (plain number, negative for chargebacks). Use {"lines":[]} if you find none.';
+$("matchOpen").addEventListener("click",()=>{ $("matchSnap").hidden=!(typeof snapSample!=="undefined"&&snapSample); $("matchNote").textContent=""; $("matchOut").replaceChildren(); $("matchScrim").hidden=false; });
+$("matchGo").addEventListener("click",()=>runMatch($("matchText").value));
+$("matchClose").addEventListener("click",()=>{ $("matchScrim").hidden=true; });
+$("matchScrim").addEventListener("click",e=>{ if(e.target===$("matchScrim")) $("matchScrim").hidden=true; });
+$("matchSnap").addEventListener("click",()=>$("matchFile").click());
+$("matchFile").addEventListener("change",async e=>{ const f=e.target.files[0]; e.target.value=""; if(!f||typeof snapSample==="undefined"||!snapSample) return; const btn=$("matchSnap"); btn.disabled=true; $("matchNote").textContent="Reading your statement… this can take 10–30 seconds.";
+  try{ const j=await snapSample.json(PAY_PROMPT,{images:[f]}); const ls=(j&&Array.isArray(j.lines))?j.lines:[]; $("matchText").value=ls.map(l=>[l.dealNo||"",l.customer||"",(l.amount!=null&&l.amount!=="")?"$"+Number(l.amount).toFixed(2):""].join("  ")).join("\n"); runMatch($("matchText").value); if(!ls.length) $("matchNote").textContent="Couldn't find deals in that photo. Try a closer, flatter shot."; }
+  catch(err){ const c=err&&err.code; $("matchNote").textContent=c==="rate_limited"?"Too many tries right now. Wait a minute.":"Couldn't read that photo. Try again or paste the text."; }
+  btn.disabled=false; });
+renderToday();
 function renderLenders(live){ const box=$("lndRows"), sec=$("lndBox"); const all=deals.filter(d=>d.lender&&d.status!=="unwound"); sec.hidden=!all.length; if(!all.length) return; box.replaceChildren();
   const by={}; all.forEach(d=>{ const k=d.lender; (by[k]=by[k]||{n:0,m:0,days:[]}); by[k].n++; if(live.includes(d)) by[k].m++; if(d.fundedDate&&d.date) by[k].days.push(Math.max(0,dayDiff(d.date,d.fundedDate))); });
   Object.entries(by).sort((a,b)=>b[1].m-a[1].m||b[1].n-a[1].n).slice(0,6).forEach(([k,v])=>{ const row=document.createElement("div"); row.className="lrow";
