@@ -786,6 +786,14 @@ html:not(.tp-in) .wrap,html:not(.tp-in) .fab{visibility:hidden}
 .gate-disc{margin-top:6px;max-height:24vh;overflow-y:auto;-webkit-overflow-scrolling:touch;text-align:left;font-size:10.5px;line-height:1.45;opacity:.55;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)}
 :root[data-theme="light"] .gate-disc{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.12);opacity:.7}
 .gate-disc p{margin:0 0 6px} .gate-disc p:last-child{margin:0;font-weight:700}
+/* enter screen: fits the screen, never scrolls */
+html:not(.tp-in),html:not(.tp-in) body{overflow:hidden;overscroll-behavior:none}
+.gate{overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;height:100dvh;overscroll-behavior:none;touch-action:none;
+  padding:calc(env(safe-area-inset-top,0px) + 34px) max(24px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 16px) max(24px,env(safe-area-inset-left,0px))}
+.gate-in{margin:0;max-height:100%;min-height:0}
+.gate-in > *{flex-shrink:0}
+.gate-in > .gate-disc{flex:0 1 auto;min-height:56px;max-height:26vh;touch-action:pan-y;overscroll-behavior:contain}
+@media (max-height:620px){.gate-btn{margin-top:8px;padding:14px 22px}.gate-foot{margin-top:10px}.gate-in{gap:10px}}
 @media (prefers-reduced-motion:reduce){.gate-beta{transform:rotate(12deg) scale(1)}}
 
 /* ---- thank-you popup ---- */
@@ -3262,7 +3270,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v41", tpChecked=0;
+var TP_BUILD="trip-pad-v42", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
