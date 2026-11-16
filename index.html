@@ -585,6 +585,34 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
 .setsheet .soundlbl{display:none}
 .setsheet .totop{margin:0;align-self:stretch}
 .setsheet .setnote{margin:0;font-size:12px;color:var(--muted)}
+/* background picker */
+html[data-bg="midnight"][data-bgm="dark"] body{background:radial-gradient(120% 60% at 50% -10%,#16193a 0%,transparent 60%),#05060d!important;background-attachment:fixed!important}
+html[data-bg="midnight"][data-bgm="light"] body{background:radial-gradient(120% 60% at 50% -10%,#e3e7ff 0%,transparent 60%),#f6f7fb!important;background-attachment:fixed!important}
+html[data-bg="ocean"][data-bgm="dark"] body{background:radial-gradient(120% 60% at 50% -10%,#0d4a6e 0%,transparent 65%),radial-gradient(80% 50% at 100% 100%,#063a3a 0%,transparent 70%),#03111b!important;background-attachment:fixed!important}
+html[data-bg="ocean"][data-bgm="light"] body{background:radial-gradient(120% 60% at 50% -10%,#c9eefa 0%,transparent 65%),#eef9fc!important;background-attachment:fixed!important}
+html[data-bg="forest"][data-bgm="dark"] body{background:radial-gradient(120% 60% at 50% -10%,#14492e 0%,transparent 65%),#040f09!important;background-attachment:fixed!important}
+html[data-bg="forest"][data-bgm="light"] body{background:radial-gradient(120% 60% at 50% -10%,#cdeedb 0%,transparent 65%),#eff8f2!important;background-attachment:fixed!important}
+html[data-bg="plum"][data-bgm="dark"] body{background:radial-gradient(120% 60% at 50% -10%,#4b1460 0%,transparent 65%),radial-gradient(80% 50% at 0% 100%,#2a0a3a 0%,transparent 70%),#0f0416!important;background-attachment:fixed!important}
+html[data-bg="plum"][data-bgm="light"] body{background:radial-gradient(120% 60% at 50% -10%,#efd6fa 0%,transparent 65%),#f8f0fb!important;background-attachment:fixed!important}
+html[data-bg="crimson"][data-bgm="dark"] body{background:radial-gradient(120% 60% at 50% -10%,#5c0d1d 0%,transparent 65%),#120306!important;background-attachment:fixed!important}
+html[data-bg="crimson"][data-bgm="light"] body{background:radial-gradient(120% 60% at 50% -10%,#ffd6dd 0%,transparent 65%),#fdf0f2!important;background-attachment:fixed!important}
+html[data-bg="sunset"][data-bgm="dark"] body{background:linear-gradient(180deg,#2c0f45 0%,#5a1638 45%,#1a0712 100%)!important;background-attachment:fixed!important}
+html[data-bg="sunset"][data-bgm="light"] body{background:linear-gradient(180deg,#ffe3d1 0%,#ffe0ea 50%,#fff6f1 100%)!important;background-attachment:fixed!important}
+html[data-bg="aurora"][data-bgm="dark"] body{background:radial-gradient(90% 50% at 10% 0%,#0f5f5a 0%,transparent 60%),radial-gradient(90% 50% at 90% 10%,#3d1a7a 0%,transparent 60%),radial-gradient(80% 50% at 50% 100%,#0a3d62 0%,transparent 70%),#050913!important;background-attachment:fixed!important}
+html[data-bg="aurora"][data-bgm="light"] body{background:radial-gradient(90% 50% at 10% 0%,#c8f5ea 0%,transparent 60%),radial-gradient(90% 50% at 90% 10%,#e2d6ff 0%,transparent 60%),#f5f8fc!important;background-attachment:fixed!important}
+html[data-bg="gold"][data-bgm="dark"] body{background:radial-gradient(120% 60% at 50% -10%,#4a3608 0%,transparent 65%),#0d0a02!important;background-attachment:fixed!important}
+html[data-bg="gold"][data-bgm="light"] body{background:radial-gradient(120% 60% at 50% -10%,#ffecb3 0%,transparent 65%),#fffaeb!important;background-attachment:fixed!important}
+html[data-bg="carbon"][data-bgm="dark"] body{background:repeating-linear-gradient(45deg,rgba(255,255,255,.025) 0 2px,transparent 2px 6px),linear-gradient(180deg,#1a1c20,#0b0c0e)!important;background-attachment:fixed!important}
+html[data-bg="carbon"][data-bgm="light"] body{background:repeating-linear-gradient(45deg,rgba(0,0,0,.03) 0 2px,transparent 2px 6px),#eceef1!important;background-attachment:fixed!important}
+html[data-bg="black"][data-bgm="dark"] body{background:#000!important;background-attachment:fixed!important}
+html[data-bg="black"][data-bgm="light"] body{background:#fff!important;background-attachment:fixed!important}
+.bgpick{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:10px}
+.bgsw{display:flex;flex-direction:column;align-items:center;gap:5px;border:0;background:none;padding:0;cursor:pointer;color:var(--muted);font:700 11px var(--f-body)}
+.bgsw i{display:block;width:100%;aspect-ratio:1;border-radius:14px;border:2px solid var(--line);box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);transition:transform .2s,border-color .2s,box-shadow .2s}
+.bgsw[aria-pressed="true"]{color:var(--ink)}
+.bgsw[aria-pressed="true"] i{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 35%,transparent);transform:scale(1.04)}
+.bgsw:active i{transform:scale(.94)}
+.bgsw.def i{display:grid;place-items:center;font-size:20px;background:repeating-conic-gradient(var(--chip) 0 25%,var(--card) 0 50%) 0 0/16px 16px}
 #setScrim{align-items:center;padding:20px max(16px,env(safe-area-inset-right,0px)) 20px max(16px,env(safe-area-inset-left,0px));z-index:40;
   background:rgba(8,10,20,.42);-webkit-backdrop-filter:blur(14px) saturate(140%);backdrop-filter:blur(14px) saturate(140%);animation:setfade .25s ease-out both}
 #setScrim .setsheet{max-width:460px;max-height:min(86vh,760px);border-radius:24px;padding:0 0 18px;gap:14px;border:1px solid color-mix(in srgb,var(--ink) 12%,transparent);
@@ -986,6 +1014,10 @@ html[data-skin="grid"]{background:#01030a}
 .iou-seg button,.iou-seg button.on.unpaid,.iou-seg button.on.paid{position:relative;z-index:1;border:0;background:none;border-radius:999px;padding:7px 6px;font-weight:800;font-size:12.5px;color:var(--muted);transition:color .25s}
 .iou-seg button.on.unpaid{color:var(--warn)} .iou-seg button.on.paid{color:var(--good)}
 .iou-empty{text-align:center;padding:8px 4px;border:1px dashed var(--line);border-radius:12px}
+.iou-exp{flex:none;font:700 11.5px var(--f-body);padding:3px 9px;border-radius:999px;margin-left:49px;align-self:flex-start;background:var(--card);color:var(--muted);border:1px solid var(--line)}
+.iou-exp.soon{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 60%,transparent);background:color-mix(in srgb,var(--bad) 12%,var(--card));animation:ioubadge 1.6s ease-in-out infinite}
+.iou-exp.gone{color:#fff;background:var(--bad);border-color:var(--bad)}
+.iou-row.expsoon::before{background:var(--bad);color:var(--bad)}
 /* debt paid handshake */
 .dp{position:fixed;inset:0;z-index:62;display:grid;place-items:center;padding:24px;cursor:pointer;background:radial-gradient(80% 60% at 50% 45%,rgba(14,52,34,.975),rgba(4,8,10,.985));animation:achvbg .35s ease-out both}
 .dp.out{animation:spout .45s cubic-bezier(.4,0,.2,1) both}
@@ -1389,6 +1421,7 @@ html.tp-hidden *{animation-play-state:paused!important}
 <div class="splash wait" id="splash" aria-hidden="true"><span class="cm cm-rays"></span><span class="cm cm-dots"></span><span class="cm cm-lines"></span><span class="cm cm-cap">Meanwhile, at Toyota Marin…</span><span class="cm cm-zip">ZOOM!</span><span class="cm cm-pow"><i>POW!</i></span><span class="sp-streak s1"></span><span class="sp-streak s2"></span><div class="sp-in"><b><span>You got</span><span>this!</span></b><span class="sp-bar"></span></div></div>
 <script>
 try{ if("scrollRestoration" in history) history.scrollRestoration="manual"; }catch(e){}
+try{ const _b=localStorage.getItem("trippad.bg"); if(_b){ const r=document.documentElement; r.setAttribute("data-bg",_b); r.setAttribute("data-bgm",(r.getAttribute("data-theme")||(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark"))==="light"?"light":"dark"); } }catch(e){}
 (function(){ const top=()=>{ try{ window.scrollTo(0,0); document.documentElement.scrollTop=0; document.body&&(document.body.scrollTop=0); }catch(e){} };
   top(); document.addEventListener("DOMContentLoaded",top); addEventListener("load",top); addEventListener("pageshow",top); addEventListener("tp-enter",top); })();
 (function(){ const sp=document.getElementById("splash"); if(!sp) return;
@@ -1689,6 +1722,7 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
     <div class="iou-picks" id="iouPicks"></div>
     <label class="f">Deal # or note (optional)<input id="iouNote" autocomplete="off" placeholder="e.g. Deal 723524 · gave him the full deal"></label>
     <label class="f">Date<input id="iouDate" type="date"></label>
+    <label class="f">Expires (optional)<input id="iouExp" type="date"></label>
     <p class="formhint" id="iouErr" style="color:var(--bad)"></p>
     <div class="row2"><button class="btn danger" type="button" id="iouDel" hidden>Delete</button><button class="btn" type="button" id="iouCancel">Cancel</button><button class="btn primary" type="submit">Save IOU</button></div>
   </form>
@@ -1751,6 +1785,7 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
     <div class="setgrp"><h3>🎨 Theme</h3>
   <section class="soundrow" aria-label="Theme"><span class="soundlbl">Theme</span><div class="soundpick" id="themePick"></div></section>
     </div>
+    <div class="setgrp"><h3>🖼️ Background</h3><div class="bgpick" id="bgPick"></div><p class="setnote">Pick a background to go with any theme. “Theme” uses the theme’s own background.</p></div>
     <div class="setgrp"><h3>🔊 Sound when you log a deal</h3>
   <section class="soundrow" aria-label="Deal sound"><span class="soundlbl">Sound when you log a deal</span><div class="soundpick" id="soundPick"></div></section>
     </div>
@@ -2014,6 +2049,7 @@ function applyTheme(){
   if(["night","oled","grid","gold","diamond","princess","hero","gr","synth","matrix","galaxy","sunset","rush","notebook","xmas","spooky"].includes(themePref)) rootEl.setAttribute("data-skin",themePref); else rootEl.removeAttribute("data-skin");
   if(accentPref==="red") rootEl.setAttribute("data-accent","red"); else rootEl.removeAttribute("data-accent");
   if(typeof syncSeasonFx==="function") syncSeasonFx();
+  if(typeof applyBg==="function") applyBg();
 }
 function renderThemePicker(){
   const box=document.getElementById("themePick"); if(!box) return; box.replaceChildren();
@@ -2847,13 +2883,13 @@ function digitize(){
 let ious=[], iouShowPaid=false, iouEditing=null;
 function renderIous(){
   const box=$("iouList"); if(!box) return; box.replaceChildren();
-  const open=ious.filter(i=>!i.paid).sort((a,b)=>(a.date||"").localeCompare(b.date||"")), paid=ious.filter(i=>i.paid).sort((a,b)=>(b.paidDate||"").localeCompare(a.paidDate||""));
+  const open=ious.filter(i=>!i.paid).sort((a,b)=>((a.expires||"9999")+(a.date||"")).localeCompare((b.expires||"9999")+(b.date||""))), paid=ious.filter(i=>i.paid).sort((a,b)=>(b.paidDate||"").localeCompare(a.paidDate||""));
   const owedBy={}; open.forEach(i=>{ owedBy[i.who]=(owedBy[i.who]||0)+0.5; });
-  const units=open.length*0.5; $("iouCount").textContent=open.length?(open.length+(open.length===1?" half":" halves")+" owed"):"All square ✓"; $("iouCount").classList.toggle("zero",!open.length); $("iouBox").classList.toggle("has-open",!!open.length); $("iouBox").classList.toggle("has-old",open.some(i=>i.date&&daysSince(i.date)>=14));
-  $("iouSum").textContent=open.length?String(units)+" unit"+(units===1?"":"s")+" coming back to you"+(paid.length?" · "+paid.length+" paid back":""):(paid.length?paid.length+" paid back":""); $("iouSum").hidden=!$("iouSum").textContent;
+  const units=open.length*0.5; $("iouCount").textContent=open.length?(open.length+(open.length===1?" half":" halves")+" owed"):"All square ✓"; $("iouCount").classList.toggle("zero",!open.length); $("iouBox").classList.toggle("has-open",!!open.length); const expSoon=open.filter(i=>i.expires&&dayDiff(today(),i.expires)<=3); $("iouBox").classList.toggle("has-old",open.some(i=>i.date&&daysSince(i.date)>=14)||expSoon.length>0);
+  $("iouSum").textContent=open.length?String(units)+" unit"+(units===1?"":"s")+" coming back to you"+(paid.length?" · "+paid.length+" paid back":""):(paid.length?paid.length+" paid back":""); if(expSoon.length) $("iouSum").textContent="⏳ "+expSoon.length+" expiring soon · "+$("iouSum").textContent; $("iouSum").hidden=!$("iouSum").textContent;
   const list=[...open,...(iouShowPaid?paid:[])];
   if(!list.length){ const li=document.createElement("li"); li.className="iou-empty"; li.textContent=paid.length?"Nobody owes you right now. Nice.":"Tap + IOU when a teammate owes you a half."; box.append(li); }
-  list.forEach(i=>{ const ago=i.date?Math.max(0,daysSince(i.date)):0; const li=document.createElement("li"); li.className="iou-row"+(i.paid?" paid":(ago>=14?" old":""));
+  list.forEach(i=>{ const ago=i.date?Math.max(0,daysSince(i.date)):0; const li=document.createElement("li"); const exL=(!i.paid&&i.expires)?dayDiff(today(),i.expires):null; li.className="iou-row"+(i.paid?" paid":((ago>=14?" old":"")+(exL!==null&&exL<=3?" expsoon":"")));
     const top=document.createElement("button"); top.type="button"; top.className="iou-top"; top.setAttribute("aria-label","Edit IOU from "+i.who);
     const nm=String(i.who||"?").trim(), ini=nm.split(/\s+/).map(w=>w[0]||"").join("").slice(0,2).toUpperCase()||"?"; let h=0; for(const ch of nm.toLowerCase()) h=(h*31+ch.charCodeAt(0))%360;
     const av=document.createElement("span"); av.className="iou-av"; av.style.setProperty("--h",h); av.textContent=ini;
@@ -2862,6 +2898,7 @@ function renderIous(){
     const half=document.createElement("span"); half.className="iou-half"; half.textContent=i.paid?"✓ ½":"½ unit";
     top.append(av,wb,half); top.addEventListener("click",()=>openIou(i)); li.append(top);
     if(i.note){ const n=document.createElement("div"); n.className="iou-note"; n.textContent=i.note; li.append(n); }
+    if(exL!==null){ const x=document.createElement("span"); x.className="iou-exp"+(exL<0?" gone":exL<=3?" soon":""); x.textContent=exL<0?"⌛ Expired "+shortDate(i.expires):exL===0?"⏳ Expires today":"⏳ Expires "+shortDate(i.expires)+" · "+exL+(exL===1?" day":" days")+" left"; li.append(x); }
     const seg=document.createElement("div"); seg.className="iou-seg"+(i.paid?" is-paid":"");
     [["unpaid","Not paid yet"],["paid","Paid ✓"]].forEach(([k,l])=>{ const btn=document.createElement("button"); btn.type="button"; btn.className=k+((i.paid?"paid":"unpaid")===k?" on":""); btn.textContent=l;
       btn.setAttribute("aria-pressed",String((i.paid?"paid":"unpaid")===k));
@@ -2879,7 +2916,7 @@ async function setIouPaid(i,paid){ if(!!i.paid===paid) return;
   try{ await store.saveIous(ious.map(x=>x.id===i.id?n:x)); if(paid){ try{ tapSuccess(); }catch(e){} showDebtPaid(n.who); } else { try{ tap(); }catch(e){} } }
   catch(e){ setNote("Couldn't update the IOU. Try again.","warn"); } }
 function openIou(i){ iouEditing=i||null; $("iouTitle").textContent=i?"Edit IOU":"Add an IOU";
-  $("iouWho").value=i?.who||""; $("iouNote").value=i?.note||""; $("iouDate").value=i?.date||today(); $("iouDel").hidden=!i; $("iouErr").textContent="";
+  $("iouWho").value=i?.who||""; $("iouNote").value=i?.note||""; $("iouDate").value=i?.date||today(); $("iouExp").value=i?.expires||""; $("iouDel").hidden=!i; $("iouErr").textContent="";
   const pk=$("iouPicks"); pk.replaceChildren(); PARTNERS.forEach(nm=>{ const b=document.createElement("button"); b.type="button"; b.className="chipbtn"; b.textContent=nm; b.setAttribute("aria-pressed",String($("iouWho").value===nm));
     b.addEventListener("click",()=>{ $("iouWho").value=nm; pk.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",String(x===b))); }); pk.append(b); });
   $("iouScrim").hidden=false; }
@@ -2890,7 +2927,7 @@ $("iouScrim").addEventListener("click",e=>{ if(e.target===$("iouScrim")) $("iouS
 $("iouWho").addEventListener("input",()=>$("iouPicks").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",String(x.textContent===$("iouWho").value.trim()))));
 $("iouForm").addEventListener("submit",async e=>{ e.preventDefault();
   const who=$("iouWho").value.trim().replace(/\s+/g," "); if(!who){ $("iouErr").textContent="Enter who owes you."; return; }
-  const n={id:iouEditing?.id||("iou"+Date.now().toString(36)), who:who.charAt(0).toUpperCase()+who.slice(1), note:$("iouNote").value.trim(), date:$("iouDate").value||today(), paid:!!iouEditing?.paid, paidDate:iouEditing?.paidDate||""};
+  const n={id:iouEditing?.id||("iou"+Date.now().toString(36)), who:who.charAt(0).toUpperCase()+who.slice(1), note:$("iouNote").value.trim(), date:$("iouDate").value||today(), expires:$("iouExp").value||"", paid:!!iouEditing?.paid, paidDate:iouEditing?.paidDate||""};
   try{ await store.saveIous(ious.filter(x=>x.id!==n.id).concat(n)); $("iouScrim").hidden=true; tapSuccess(); }catch(err){ $("iouErr").textContent="Couldn't save. Try again."; } });
 $("iouDel").addEventListener("click",()=>{ const i=iouEditing; if(!i) return; askDelete({label:"the IOU from "+i.who}, async()=>{ try{ await store.saveIous(ious.filter(x=>x.id!==i.id)); $("iouScrim").hidden=true; }catch(e){ $("iouErr").textContent="Couldn't delete. Try again."; } }, ()=>{}); });
 
@@ -2965,6 +3002,16 @@ function buildLenderPicks(){ const box=$("fLenderPicks"); box.replaceChildren();
   b.dataset.l=nm; b.addEventListener("click",()=>{ $("fLender").value=$("fLender").value===nm?"":nm; syncLenderPicks(); }); box.append(b); }); syncLenderPicks(); }
 function syncLenderPicks(){ const v=$("fLender").value.trim().toLowerCase(); $("fLenderPicks").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.l.toLowerCase()===v))); }
 $("fLender").addEventListener("input",syncLenderPicks); buildLenderPicks();
+/* background picker */
+var BG_LIST=[["midnight", "Midnight", "radial-gradient(120% 60% at 50% -10%,#16193a 0%,transparent 60%),#05060d", "radial-gradient(120% 60% at 50% -10%,#e3e7ff 0%,transparent 60%),#f6f7fb"], ["ocean", "Ocean", "radial-gradient(120% 60% at 50% -10%,#0d4a6e 0%,transparent 65%),radial-gradient(80% 50% at 100% 100%,#063a3a 0%,transparent 70%),#03111b", "radial-gradient(120% 60% at 50% -10%,#c9eefa 0%,transparent 65%),#eef9fc"], ["forest", "Forest", "radial-gradient(120% 60% at 50% -10%,#14492e 0%,transparent 65%),#040f09", "radial-gradient(120% 60% at 50% -10%,#cdeedb 0%,transparent 65%),#eff8f2"], ["plum", "Plum", "radial-gradient(120% 60% at 50% -10%,#4b1460 0%,transparent 65%),radial-gradient(80% 50% at 0% 100%,#2a0a3a 0%,transparent 70%),#0f0416", "radial-gradient(120% 60% at 50% -10%,#efd6fa 0%,transparent 65%),#f8f0fb"], ["crimson", "Crimson", "radial-gradient(120% 60% at 50% -10%,#5c0d1d 0%,transparent 65%),#120306", "radial-gradient(120% 60% at 50% -10%,#ffd6dd 0%,transparent 65%),#fdf0f2"], ["sunset", "Sunset", "linear-gradient(180deg,#2c0f45 0%,#5a1638 45%,#1a0712 100%)", "linear-gradient(180deg,#ffe3d1 0%,#ffe0ea 50%,#fff6f1 100%)"], ["aurora", "Aurora", "radial-gradient(90% 50% at 10% 0%,#0f5f5a 0%,transparent 60%),radial-gradient(90% 50% at 90% 10%,#3d1a7a 0%,transparent 60%),radial-gradient(80% 50% at 50% 100%,#0a3d62 0%,transparent 70%),#050913", "radial-gradient(90% 50% at 10% 0%,#c8f5ea 0%,transparent 60%),radial-gradient(90% 50% at 90% 10%,#e2d6ff 0%,transparent 60%),#f5f8fc"], ["gold", "Gold", "radial-gradient(120% 60% at 50% -10%,#4a3608 0%,transparent 65%),#0d0a02", "radial-gradient(120% 60% at 50% -10%,#ffecb3 0%,transparent 65%),#fffaeb"], ["carbon", "Carbon", "repeating-linear-gradient(45deg,rgba(255,255,255,.025) 0 2px,transparent 2px 6px),linear-gradient(180deg,#1a1c20,#0b0c0e)", "repeating-linear-gradient(45deg,rgba(0,0,0,.03) 0 2px,transparent 2px 6px),#eceef1"], ["black", "Pure black", "#000", "#fff"]];
+function bgIsLight(){ const t=document.documentElement.getAttribute("data-theme"); if(t) return t==="light"; try{ return matchMedia("(prefers-color-scheme: light)").matches; }catch(e){ return false; } }
+function applyBg(){ let k=""; try{ k=localStorage.getItem("trippad.bg")||""; }catch(e){} const r=document.documentElement; if(k) r.setAttribute("data-bg",k); else r.removeAttribute("data-bg"); r.setAttribute("data-bgm",bgIsLight()?"light":"dark"); renderBgPick(); }
+function renderBgPick(){ const box=document.getElementById("bgPick"); if(!box) return; let cur=""; try{ cur=localStorage.getItem("trippad.bg")||""; }catch(e){} const light=bgIsLight(); box.replaceChildren();
+  const mk=(k,name,bg)=>{ const b=document.createElement("button"); b.type="button"; b.className="bgsw"+(k?"":" def"); b.setAttribute("aria-pressed",String(cur===k)); const i=document.createElement("i"); if(bg) i.style.background=bg; else i.textContent="🎨"; b.append(i,document.createTextNode(name));
+    b.addEventListener("click",()=>{ try{ if(k) localStorage.setItem("trippad.bg",k); else localStorage.removeItem("trippad.bg"); }catch(e){} try{ tap(); }catch(e){} applyBg(); }); box.append(b); };
+  mk("","Theme",""); (BG_LIST||[]).forEach(([k,n,d,l])=>mk(k,n,light?l:d)); }
+try{ matchMedia("(prefers-color-scheme: light)").addEventListener("change",applyBg); }catch(e){}
+applyBg();
 /* settings sheet */
 function openSettings(){ $("setScrim").hidden=false; $("setBtn").setAttribute("aria-expanded","true"); try{ tap(); }catch(e){} }
 function closeSettings(){ $("setScrim").hidden=true; $("setBtn").setAttribute("aria-expanded","false"); }
@@ -3073,6 +3120,7 @@ function renderToday(){ const list=$("tdList"); if(!list) return; const t=today(
   spiffs.filter(s=>s.expires===t && !spiffDeal(s)).forEach(s=>add("warm",span("td-time","Spiff"),"💰 Last day: "+money(num(s.amount))+" on "+s.stock,s.note||"",()=>openSpiff(s)));
   annivToday().forEach(({d,years})=>{ const ph=phoneDigits(d.phone), car=modelOf(d.vehicle)||"car", ex=ph?[lnk(smsHref(ph,annivMsg(firstName(d.customer),car,years)),"💬","Text")]:[];
     add("",span("td-time",years+" yr"),"🎂 "+(d.customer||"Customer")+" · "+(years>=3?"trade-cycle time":"anniversary"),d.vehicle||"",()=>openBook(d.customer||""),ex); });
+  ious.filter(i=>!i.paid&&i.expires&&dayDiff(t,i.expires)>=0&&dayDiff(t,i.expires)<=3).forEach(i=>{ const L=dayDiff(t,i.expires); add(L===0?"hot":"warm",span("td-time","IOU"),"🤝 "+i.who+"'s IOU "+(L===0?"expires today":"expires in "+L+" day"+(L===1?"":"s")),i.note||"",()=>openIou(i)); });
   const so=stipsOpen().length; if(so) add("",span("td-time","Stips"),"📎 "+so+" pending deal"+(so===1?"":"s")+" waiting on stips","",()=>{ filter="pending"; searchQ=""; $("searchBox").value=""; dayFilter=null; render(); $("log").scrollIntoView({behavior:"smooth",block:"start"}); });
   const tmc=(plan||[]).filter(p=>p.date===tm).length;
   if(!n){ const li=document.createElement("li"); li.className="td-empty"; li.textContent="Nothing on the board yet. Tap + Appt to plan your day."+(tmc?" ("+tmc+" set for tomorrow)":""); list.append(li); }
@@ -3386,7 +3434,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v51", tpChecked=0;
+var TP_BUILD="trip-pad-v52", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
