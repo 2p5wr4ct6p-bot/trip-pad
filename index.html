@@ -662,6 +662,11 @@ html.tp-hidden .tk-track{animation-play-state:paused}
 .spiffs{border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px;background:color-mix(in srgb,var(--good) 5%,var(--card))}
 .sp-head{display:flex;align-items:center;gap:8px}
 .sp-ttl{font-weight:800;font-size:14px}
+.sp-head{flex-wrap:wrap}
+.sp-count{font:800 11.5px var(--f-body);color:#7a5200;background:linear-gradient(135deg,#fff3a8,#ffcf3a);padding:3px 9px;border-radius:999px;box-shadow:0 0 0 1px rgba(255,190,0,.6),0 0 10px rgba(255,200,0,.35);white-space:nowrap}
+.sp-count.zero{background:var(--chip);color:var(--muted);box-shadow:none}
+.sp-head .sp-add{margin-left:auto}
+.sp-head .sp-sum{order:3;flex-basis:100%}
 .sp-sum{flex:1;font-size:12px;color:var(--muted);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sp-add{border:1px solid var(--good);background:color-mix(in srgb,var(--good) 12%,transparent);color:var(--good);border-radius:999px;padding:5px 12px;font-weight:800;font-size:12px;cursor:pointer}
 .sp-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
@@ -1314,7 +1319,7 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
       <div class="cgoal" id="cGoal" hidden><div class="cg-top"><span id="cgTxt"></span><b id="cgPct"></b></div><div class="cg-bar"><i id="cgFill"></i></div></div>
     </div>
     <div class="spiffs" id="spiffBox">
-      <div class="sp-head"><span class="sp-ttl">💰 Spiffs</span><span class="sp-sum" id="spiffSum"></span><button type="button" class="sp-add" id="spiffAdd">+ Add</button></div>
+      <div class="sp-head"><span class="sp-ttl">💰 Spiff tracker</span><span class="sp-count" id="spiffCount">0 eligible cars</span><span class="sp-sum" id="spiffSum"></span><button type="button" class="sp-add" id="spiffAdd">+ Add</button></div>
       <ul class="sp-list" id="spiffList"></ul>
       <button type="button" class="linkbtn sp-more" id="spiffMore" hidden></button>
     </div>
@@ -2562,7 +2567,8 @@ function renderSpiffs(){
   const recent=rows.filter(r=>r.st==="sold" && (r.d.date||"")>=mk+"-01").sort((a,b)=>(b.d.date||"").localeCompare(a.d.date||""));
   const past=rows.filter(r=>!active.includes(r)&&!recent.includes(r)).sort((a,b)=>((b.d&&b.d.date)||b.s.expires||"").localeCompare((a.d&&a.d.date)||a.s.expires||""));
   const avail=active.reduce((a,r)=>a+num(r.s.amount),0), earned=recent.reduce((a,r)=>a+num(r.s.amount),0);
-  $("spiffSum").textContent=[active.length?active.length+" live · "+money(avail):"", earned?"earned "+money(earned):""].filter(Boolean).join(" · ");
+  $("spiffCount").textContent=active.length+" eligible car"+(active.length===1?"":"s"); $("spiffCount").classList.toggle("zero",!active.length);
+  $("spiffSum").textContent=[active.length?money(avail)+" up for grabs":"", earned?"earned "+money(earned)+" this month":""].filter(Boolean).join(" · "); $("spiffSum").hidden=!$("spiffSum").textContent;
   const list=[...active,...recent,...(spiffShowPast?past:[])];
   if(!list.length){ const li=document.createElement("li"); li.className="sp-empty"; li.textContent="No live spiffs. Tap + Add when a manager puts money on a car."; box.append(li); }
   list.forEach(({s,d,st})=>{ const li=document.createElement("li"), b=document.createElement("button"); b.type="button";
@@ -3180,7 +3186,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v37", tpChecked=0;
+var TP_BUILD="trip-pad-v38", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
