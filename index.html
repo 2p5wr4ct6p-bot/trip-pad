@@ -667,6 +667,22 @@ html[data-skin="grid"]{background:#01030a}
 :root[data-skin="grid"] .chipbtn[aria-pressed="true"],:root[data-skin="grid"] .seg button[aria-pressed="true"]{box-shadow:0 0 10px rgba(0,234,255,.55)}
 :root[data-skin="grid"] .streak,:root[data-skin="grid"] .fire{background:rgba(255,155,26,.12);color:#ff9b1a;box-shadow:0 0 10px rgba(255,155,26,.35)}
 @media (prefers-reduced-motion:reduce){:root[data-skin="grid"] body::before,:root[data-skin="grid"] .board::after{animation:none}}
+
+/* ---- Grid theme: light cycles ---- */
+.lc{display:none}
+:root[data-skin="grid"] :is(.road .car,.rcar,.zoomcar) svg:not(.lc){display:none}
+:root[data-skin="grid"] :is(.road .car,.rcar,.zoomcar) .lc{display:block;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 0 4px currentColor) drop-shadow(0 0 10px currentColor)}
+:root[data-skin="grid"] .road{background:#000;box-shadow:inset 0 0 0 1px rgba(0,234,255,.3)}
+:root[data-skin="grid"] .road .lane{opacity:.18}
+:root[data-skin="grid"] .road .car{width:56px;height:26px}
+:root[data-skin="grid"] .road::before{content:"";position:absolute;left:0;top:calc(50% + 4px);height:3px;border-radius:2px;z-index:0;width:calc(14px + (100% - 92px) * var(--p));
+  background:linear-gradient(90deg,transparent,rgba(0,234,255,.5) 30%,#00eaff);box-shadow:0 0 8px #00eaff,0 0 16px rgba(0,234,255,.6);transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
+:root[data-skin="grid"] .rtrack{background:#000}
+:root[data-skin="grid"] .rtrack::after{content:"";position:absolute;left:0;top:calc(50% + 3px);height:2px;width:calc(10px + (100% - 70px) * var(--p));background:linear-gradient(90deg,transparent,currentColor);box-shadow:0 0 8px currentColor;transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
+:root[data-skin="grid"] .rlane.me .rtrack{color:#00eaff} :root[data-skin="grid"] .rlane.them .rtrack{color:#ff9b1a}
+:root[data-skin="grid"] .rlane.them .rcar{color:#ff9b1a}
+:root[data-skin="grid"] .zoomcar{color:#00eaff}
+:root[data-skin="grid"] .zoomcar i{height:3px;box-shadow:0 0 10px #00eaff;opacity:1}
 </style>
 <div class="splash wait" id="splash" aria-hidden="true"><span class="sp-streak s1"></span><span class="sp-streak s2"></span><div class="sp-in"><b><span>You got</span><span>this!</span></b><span class="sp-bar"></span></div></div>
 <script>
@@ -741,7 +757,7 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
       <div class="pay"><div class="lbl">Commission</div><div class="amt" id="comm">$0</div><div class="pace" id="paceText"></div><div class="paypace" id="payPace"></div><div id="streakWrap"></div></div>
     </div>
     <div class="road" id="road" aria-hidden="true"><div class="lane"></div><div class="flag"></div><span class="roadlbl" id="roadLbl"></span>
-      <div class="car" id="roadCar"><svg viewBox="0 0 64 30"><path d="M4 21v-4.5c0-1.6 1-2.8 2.6-3.1l7.4-1.4 7.6-6.4C23 4.4 24.6 4 26.3 4h13.9c2 0 3.8.9 5 2.5l4.3 5.6 8.2 1.4c2.4.4 4.3 2.5 4.3 5V21c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2z" fill="currentColor"/><path d="M24 12.5l4.6-5c.6-.6 1.4-1 2.3-1H40c1 0 1.9.5 2.5 1.2l3.6 4.8z" fill="var(--card)" opacity=".85"/><circle cx="17" cy="23" r="5.6" fill="var(--ink)"/><circle cx="17" cy="23" r="2.3" fill="var(--chip)"/><circle cx="49" cy="23" r="5.6" fill="var(--ink)"/><circle cx="49" cy="23" r="2.3" fill="var(--chip)"/></svg></div>
+      <div class="car" id="roadCar"><svg viewBox="0 0 64 30"><path d="M4 21v-4.5c0-1.6 1-2.8 2.6-3.1l7.4-1.4 7.6-6.4C23 4.4 24.6 4 26.3 4h13.9c2 0 3.8.9 5 2.5l4.3 5.6 8.2 1.4c2.4.4 4.3 2.5 4.3 5V21c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2z" fill="currentColor"/><path d="M24 12.5l4.6-5c.6-.6 1.4-1 2.3-1H40c1 0 1.9.5 2.5 1.2l3.6 4.8z" fill="var(--card)" opacity=".85"/><circle cx="17" cy="23" r="5.6" fill="var(--ink)"/><circle cx="17" cy="23" r="2.3" fill="var(--chip)"/><circle cx="49" cy="23" r="5.6" fill="var(--ink)"/><circle cx="49" cy="23" r="2.3" fill="var(--chip)"/></svg><svg class="lc" viewBox="0 0 64 30" aria-hidden="true"><path d="M3 21.5Q3 12 12 10.5L28 9.2Q33 5.6 40 6.6L51 8.6Q61.5 10.8 62 21.5Z" fill="#021019" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M29 9.6Q34 7 40 7.8L47 9.2Q40 10.6 31 11Z" fill="currentColor" opacity=".35"/><path d="M7 16.5H57" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="14" cy="21" r="7.2" fill="#000" stroke="currentColor" stroke-width="2.4"/><circle cx="14" cy="21" r="3.2" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".8"/><circle cx="51" cy="21" r="7.2" fill="#000" stroke="currentColor" stroke-width="2.4"/><circle cx="51" cy="21" r="3.2" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".8"/></svg></div>
     </div>
     <div class="paycard idle" id="payCard">
       <div class="pc-top"><span class="pc-lbl" id="pcLbl">Paycheck pace</span><span class="pc-amt" id="pcAmt">$0</span></div>
@@ -1678,6 +1694,7 @@ async function deliverShot(blob,name){
 
 
 /* ===== round 5 ===== */
+const LIGHTCYCLE='<svg class="lc" viewBox="0 0 64 30" aria-hidden="true"><path d="M3 21.5Q3 12 12 10.5L28 9.2Q33 5.6 40 6.6L51 8.6Q61.5 10.8 62 21.5Z" fill="#021019" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M29 9.6Q34 7 40 7.8L47 9.2Q40 10.6 31 11Z" fill="currentColor" opacity=".35"/><path d="M7 16.5H57" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="14" cy="21" r="7.2" fill="#000" stroke="currentColor" stroke-width="2.4"/><circle cx="14" cy="21" r="3.2" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".8"/><circle cx="51" cy="21" r="7.2" fill="#000" stroke="currentColor" stroke-width="2.4"/><circle cx="51" cy="21" r="3.2" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".8"/></svg>';
 const ZOOM_CAR='<svg viewBox="0 0 64 30"><path d="M4 21v-4.5c0-1.6 1-2.8 2.6-3.1l7.4-1.4 7.6-6.4C23 4.4 24.6 4 26.3 4h13.9c2 0 3.8.9 5 2.5l4.3 5.6 8.2 1.4c2.4.4 4.3 2.5 4.3 5V21c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2z" fill="currentColor"/><path d="M24 12.5l4.6-5c.6-.6 1.4-1 2.3-1H40c1 0 1.9.5 2.5 1.2l3.6 4.8z" fill="var(--card)" opacity=".85"/><circle cx="17" cy="23" r="5.6" fill="var(--ink)"/><circle cx="17" cy="23" r="2.3" fill="var(--chip)"/><circle cx="49" cy="23" r="5.6" fill="var(--ink)"/><circle cx="49" cy="23" r="2.3" fill="var(--chip)"/></svg>';
 /* --- fx helpers --- */
 function fxCanvas(){ const c=document.createElement("canvas"); c.className="confetti"; document.body.append(c); const dpr=Math.min(2,window.devicePixelRatio||1); c.width=innerWidth*dpr; c.height=innerHeight*dpr; return {c,x:c.getContext("2d"),dpr,W:c.width,H:c.height}; }
@@ -1694,7 +1711,7 @@ function fireworks(power){ if(reduceMotion()) return; const {c,x,dpr,W,H}=fxCanv
   (function f(now){ const t=now-t0; x.globalCompositeOperation="source-over"; x.clearRect(0,0,W,H); x.globalCompositeOperation="lighter";
     P.forEach(p=>{ if(p.life<=0) return; p.vy+=0.05*dpr; p.vx*=.985; p.vy*=.985; p.x+=p.vx; p.y+=p.vy; p.life-=0.012; x.globalAlpha=Math.max(0,p.life); x.fillStyle=p.col; x.beginPath(); x.arc(p.x,p.y,2.3*dpr,0,6.283); x.fill(); });
     if(t<dur) requestAnimationFrame(f); else c.remove(); })(t0); }
-function carZoom(){ if(reduceMotion()) return; const z=document.createElement("div"); z.className="zoomcar"; z.innerHTML="<i></i><i></i><i></i>"+ZOOM_CAR; document.body.append(z); setTimeout(()=>z.remove(),1400); }
+function carZoom(){ if(reduceMotion()) return; const z=document.createElement("div"); z.className="zoomcar"; z.innerHTML="<i></i><i></i><i></i>"+ZOOM_CAR+LIGHTCYCLE; document.body.append(z); setTimeout(()=>z.remove(),1400); }
 let lastParty="", spiffPartyUntil=0;
 function dealParty(){ if(Date.now()<spiffPartyUntil) return; const opts=["money","car","fireworks","confetti"].filter(k=>k!==lastParty), k=opts[Math.floor(Math.random()*opts.length)]; lastParty=k;
   if(k==="money") moneyRain(1); else if(k==="car") carZoom(); else if(k==="fireworks") fireworks(.6); else confetti(1.1); }
