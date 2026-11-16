@@ -156,6 +156,22 @@ textarea{min-height:64px;resize:vertical}
 .ring .fill{animation:ringbreathe 4.5s ease-in-out infinite}
 @keyframes ringbreathe{0%,100%{filter:drop-shadow(0 0 0 transparent)}50%{filter:drop-shadow(0 0 4px color-mix(in srgb,var(--accent) 45%,transparent))}}
 @media (prefers-reduced-motion:reduce){.ring .fill{animation:none}}
+/* Apple Watch style activity ring */
+.ringwrap::before{display:none!important}
+.ringwrap{--rc:var(--accent);--r1:color-mix(in srgb,var(--rc) 78%,#000);--r2:color-mix(in srgb,var(--rc) 70%,#fff)}
+.ring circle{stroke-width:14}
+.ring .track{stroke:color-mix(in srgb,var(--rc) 20%,transparent)}
+.ring .fill{animation:none!important;filter:none}
+.ringwrap.hit .ring{filter:none}
+.ring .fill{transition:none!important}
+.ring circle.rtip{stroke:none;filter:drop-shadow(0 0 1.4px rgba(0,0,0,.6));transition:opacity .2s}
+.ringwrap.hit{--rc:var(--good)}
+:root[data-skin="night"] .ringwrap{--rc:#ff3fa4}
+:root[data-skin="princess"] .ringwrap{--rc:#ff4fa3}
+:root[data-skin="galaxy"] .ringwrap{--rc:#a78bfa}
+:root[data-skin="gr"] .ringwrap{--rc:#ff1e2d}
+:root[data-skin="matrix"] .ringwrap{--rc:#00ff66}
+:root[data-skin="gold"] .ringwrap,:root[data-skin="rush"] .ringwrap{--rc:#f5c542}
 /* unit ring aura */
 .ringwrap{--rp:0}
 .ringwrap::before{content:"";position:absolute;inset:-12px;border-radius:50%;z-index:-1;pointer-events:none;
@@ -1509,8 +1525,8 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
     <div class="units">
       <div class="ringwrap" id="ringWrap">
         <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
-          <defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--accent)"/><stop offset="1" style="stop-color:var(--good)"/><animateTransform id="ringSpin" attributeName="gradientTransform" type="rotate" from="0 .5 .5" to="360 .5 .5" dur="9s" repeatCount="indefinite"/></linearGradient></defs>
-          <circle class="track" cx="60" cy="60" r="53"/><circle class="fill" id="ringFill" cx="60" cy="60" r="53"/>
+          <defs><linearGradient id="ringGrad" gradientUnits="userSpaceOnUse" x1="14" y1="106" x2="106" y2="14"><stop offset="0" style="stop-color:var(--r1)"/><stop offset="1" style="stop-color:var(--r2)"/></linearGradient></defs>
+          <circle class="track" cx="60" cy="60" r="53"/><circle class="fill" id="ringFill" cx="60" cy="60" r="53"/><circle class="rtip" id="ringTip" cx="113" cy="60" r="7" fill="url(#ringGrad)" style="opacity:0"/>
         </svg>
         <div class="big" id="units"><span class="unum" id="unitsNum">0</span><small>units</small></div>
       </div>
@@ -1843,6 +1859,12 @@ async function init(){
   store=localStore(); render();
   setNote("Saved on this device. Use Backup to move deals to another device.");
 }
+var ringCur=null;
+function setRing(pct){ const f=document.getElementById("ringFill"), tp=document.getElementById("ringTip"); if(!f) return; const from=ringCur==null?0:ringCur, to=pct; ringCur=to;
+  const put=v=>{ f.style.strokeDashoffset=String(333.0*(1-v/100)); if(tp){ const a=v*3.6*Math.PI/180; tp.setAttribute("cx",(60+53*Math.cos(a)).toFixed(2)); tp.setAttribute("cy",(60+53*Math.sin(a)).toFixed(2)); tp.style.opacity=v>1.5?"1":"0"; } };
+  cancelAnimationFrame(setRing.raf); let rm=false; try{ rm=matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){}
+  if(rm||Math.abs(from-to)<.01){ put(to); return; } const t0=performance.now(), D=1100;
+  (function st(now){ const k=Math.min(1,(now-t0)/D), e=1-Math.pow(1-k,3); put(from+(to-from)*e); if(k<1) setRing.raf=requestAnimationFrame(st); })(t0); }
 function setNote(t,k){const n=$("syncNote"); n.textContent=t; n.className="note"+(k?" "+k:"");}
 
 /* ---------- units / commission animation ---------- */
@@ -2195,7 +2217,7 @@ function render(){
   $("prodCount").textContent=live.reduce((s,d)=>s+(d.products||[]).length,0);
   $("pendCount").textContent=month.filter(d=>d.status==="pending").length;
   const pct=goal?Math.min(100,units/goal*100):0;
-  $("ringFill").style.strokeDashoffset=String(333.0*(1-pct/100));
+  setRing(pct);
   $("ringWrap").classList.toggle("hit", !!goal && units>=goal); $("ringWrap").style.setProperty("--rp", String(goal?Math.min(1,units/goal).toFixed(3):0));
   $("board").style.setProperty("--gh", String(Math.round(goal?Math.min(1,units/goal)*140:210)));
   $("road").style.setProperty("--p", String(pct/100)); $("road").classList.toggle("done", !!goal && units>=goal);
@@ -3442,7 +3464,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v53", tpChecked=0;
+var TP_BUILD="trip-pad-v54", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
