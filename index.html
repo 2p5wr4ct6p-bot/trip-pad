@@ -1438,7 +1438,6 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
     </div>
   </section>
 
-  <section class="quests" aria-label="Daily quests"><div class="qh"><h3>⚔️ Daily quests</h3><span id="qCount"></span></div><div id="qList"></div><div class="qchest" id="qChest"></div></section>
 
   
 
@@ -3108,7 +3107,7 @@ const dayDeals=day=>deals.filter(d=>d.date===day&&d.status!=="unwound");
 function questDay(day){ const ds=dayDeals(day), qs=questsFor(day).map(q=>({...q,done:!!q.test(ds)})), n=qs.filter(q=>q.done).length; return {qs,n,xp:qs.reduce((a,q)=>a+(q.done?q.xp:0),0)+(n===3?50:0)}; }
 function questXP(){ return [...new Set(deals.map(d=>d.date).filter(Boolean))].reduce((a,day)=>a+questDay(day).xp,0); }
 let questSeen=null;
-function renderQuests(){ const day=today(), qd=questDay(day), box=$("qList"); box.replaceChildren();
+function renderQuests(){ const box=$("qList"); if(!box) return; const day=today(), qd=questDay(day); box.replaceChildren();
   qd.qs.forEach(q=>{ const r=document.createElement("div"); r.className="qrow"+(q.done?" done":""); r.innerHTML='<span class="qc"></span><span class="qt"></span><span class="qx"></span>';
     r.querySelector(".qc").textContent=q.done?"✓":""; r.querySelector(".qt").textContent=q.t; r.querySelector(".qx").textContent="+"+q.xp+" XP"; box.append(r); });
   $("qCount").textContent=qd.n+" / 3 · new quests at midnight"; const ch=$("qChest"); ch.className="qchest"+(qd.n===3?" open":""); ch.textContent=qd.n===3?"🎁 Daily chest opened: +50 bonus XP":"🎁 Finish all 3 for a bonus chest (+50 XP)";
@@ -3270,7 +3269,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v44", tpChecked=0;
+var TP_BUILD="trip-pad-v45", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
