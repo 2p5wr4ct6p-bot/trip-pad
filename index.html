@@ -566,6 +566,14 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
 .tag.proc-sophia{background:linear-gradient(135deg,#ffd1e8,#ff9ccf);color:#a0125c;box-shadow:0 0 0 1px rgba(255,79,163,.45)}
 :root[data-theme="dark"] .tag.proc-sophia,:root:not([data-theme="light"]) .tag.proc-sophia{background:color-mix(in srgb,#ff4fa3 22%,transparent);color:#ff8cc6;box-shadow:0 0 0 1px rgba(255,79,163,.5)}
 :root[data-theme="light"] .tag.proc-sophia{background:linear-gradient(135deg,#ffd1e8,#ff9ccf);color:#a0125c}
+/* E/O glowing clock */
+#fEo button[data-v="yes"]::before,.tag.eo::before{content:"⏰";display:inline-block;margin-right:5px;font-size:1.05em;line-height:1}
+#fEo button[data-v="yes"][aria-pressed="true"]::before,.tag.eo::before{animation:eoclock 1.6s ease-in-out infinite}
+#fEo button[data-v="yes"][aria-pressed="true"]{box-shadow:0 0 0 1.5px var(--warn),0 0 14px color-mix(in srgb,var(--warn) 45%,transparent)}
+.tag.eo.hot::before{animation-duration:.9s}
+@keyframes eoclock{0%,100%{filter:drop-shadow(0 0 2px rgba(255,190,40,.7));transform:rotate(0)}10%{transform:rotate(-12deg)}20%{transform:rotate(12deg)}30%{transform:rotate(0)}50%{filter:drop-shadow(0 0 7px rgba(255,190,40,1)) drop-shadow(0 0 12px rgba(255,120,40,.7))}}
+html.tp-hidden .tag.eo::before{animation-play-state:paused}
+@media (prefers-reduced-motion:reduce){#fEo button::before,.tag.eo::before{animation:none!important;filter:drop-shadow(0 0 5px rgba(255,190,40,.9))}}
 .tag.eo{background:color-mix(in srgb,var(--warn) 16%,var(--chip));color:var(--warn)}
 .tag.eo.hot{background:var(--bad);color:#fff}
 .stips .chipbtn[data-st="need"]{border-style:dashed;border-color:var(--warn);color:var(--warn);background:color-mix(in srgb,var(--warn) 8%,transparent)}
@@ -3471,7 +3479,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v57", tpChecked=0;
+var TP_BUILD="trip-pad-v58", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
