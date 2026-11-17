@@ -563,6 +563,9 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
 .td-tool span{font-size:11px;font-weight:700;color:var(--muted)}
 .alertbar.eo{background:color-mix(in srgb,var(--bad) 13%,var(--card));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--bad) 45%,transparent)}
 .alertbar.eo .dot{background:var(--bad)} .alertbar.eo .go{color:var(--bad)}
+.tag.veritas-ol{background:transparent!important;color:#d6237f;box-shadow:inset 0 0 0 1.5px #ff4fa3}
+:root:not([data-theme="light"]) .tag.veritas-ol{color:#ff8cc6;box-shadow:inset 0 0 0 1.5px #ff4fa3,0 0 8px rgba(255,79,163,.35)}
+:root[data-theme="light"] .tag.veritas-ol{color:#d6237f;box-shadow:inset 0 0 0 1.5px #ff4fa3}
 .tag.proc-sophia{background:linear-gradient(135deg,#ffd1e8,#ff9ccf);color:#a0125c;box-shadow:0 0 0 1px rgba(255,79,163,.45)}
 :root[data-theme="dark"] .tag.proc-sophia,:root:not([data-theme="light"]) .tag.proc-sophia{background:color-mix(in srgb,#ff4fa3 22%,transparent);color:#ff8cc6;box-shadow:0 0 0 1px rgba(255,79,163,.5)}
 :root[data-theme="light"] .tag.proc-sophia{background:linear-gradient(135deg,#ffd1e8,#ff9ccf);color:#a0125c}
@@ -2300,7 +2303,7 @@ function render(){
     tag(d.split?"50% credit":"100% credit", d.split?"split":"funded");
     if(d.split&&d.partner) tag("w/ "+d.partner,"split");
     if((d.products||[]).length) tag((d.products.length)+" product"+(d.products.length>1?"s":""));
-    if(d.veritas) tag("Veritas bonus","funded");
+    if(d.veritas) tag("Veritas bonus","veritas-ol");
     if(d.trade) tag("Trade");
     if(d.eo) tag("E/O "+(d.eo===today()?"today":md(d.eo)), d.eo===today()?"eo hot":"eo");
     { const sc=stipCount(d); if(sc.need) tag("Stips "+sc.got+"/"+sc.need, sc.got<sc.need?"follow":"paid"); }
@@ -3479,7 +3482,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v59", tpChecked=0;
+var TP_BUILD="trip-pad-v60", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
