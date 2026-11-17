@@ -1049,6 +1049,47 @@ html.tp-closed #gate,html.tp-closed #splash{visibility:hidden!important}
 .bkc{position:fixed;inset:0;z-index:220;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:30px 24px;text-align:center;color:#fff;overflow:hidden;
   background:radial-gradient(120% 70% at 50% 0%,#24124a 0%,#0b0a1f 55%,#04040b 100%)}
 .bkc.in{animation:bkcfade .6s ease-out both}
+/* Hero: comic-book close */
+.bkc.hbk{background:#ffcc00;color:#111;gap:16px}
+.bkc.hbk::before{content:"";position:absolute;inset:-50%;background:repeating-conic-gradient(from 0deg,#ff3b30 0 8deg,#ffcc00 8deg 16deg);opacity:.9;animation:hgspin 30s linear infinite}
+.bkc.hbk::after{content:"";position:absolute;inset:0;background:radial-gradient(circle,#111 1.3px,transparent 1.5px) 0 0/11px 11px;opacity:.16;pointer-events:none}
+.bkc.hbk > *{position:relative;z-index:1}
+.hbk .hb-cap{position:absolute;top:calc(env(safe-area-inset-top,0px) + 22px);left:16px;padding:7px 12px;background:#fff8d6;border:3px solid #111;box-shadow:4px 4px 0 #111;font:700 13px "Comic Neue","Comic Sans MS",var(--f-body);transform:rotate(-2deg)}
+.hbk .hb-book{position:relative;width:170px;height:230px;perspective:1100px;margin-top:56px}
+.hbk .hb-page{position:absolute;inset:0;background:#fffdf3;border:3px solid #111;box-shadow:8px 8px 0 #111;display:grid;grid-template-rows:1fr 1fr;grid-template-columns:1fr 1fr;gap:6px;padding:8px}
+.hbk .hb-page i{border:2.5px solid #111;display:grid;place-items:center;font:400 22px "Bangers",Impact,sans-serif;font-style:normal;letter-spacing:.04em;-webkit-text-stroke:1px #111}
+.hbk .hb-page i:nth-child(1){background:#6ec6ff;color:#fff}.hbk .hb-page i:nth-child(2){background:#ff5c8a;color:#fff200}.hbk .hb-page i:nth-child(3){grid-column:1/-1;background:#7dff9b;color:#e62429}
+.hbk .hb-cover{position:absolute;inset:0;transform-origin:left center;transform-style:preserve-3d;transform:rotateY(0deg)}
+.hbk .hb-cover .f,.hbk .hb-cover .b{position:absolute;inset:0;border:3px solid #111;-webkit-backface-visibility:hidden;backface-visibility:hidden}
+.hbk .hb-cover .f{background:#e62429;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;box-shadow:8px 8px 0 #111;overflow:hidden}
+.hbk .hb-cover .f::before{content:"";position:absolute;inset:0;background:radial-gradient(circle,rgba(0,0,0,.35) 1.2px,transparent 1.5px) 0 0/9px 9px}
+.hbk .hb-cover .f em{position:absolute;top:8px;left:8px;background:#fff200;border:2px solid #111;padding:1px 6px;font:400 13px "Bangers",Impact,sans-serif;font-style:normal;letter-spacing:.06em}
+.hbk .hb-cover .f b{position:relative;font:400 33px/0.9 "Bangers",Impact,sans-serif;color:#fff200;-webkit-text-stroke:2px #111;text-shadow:3px 3px 0 #111;letter-spacing:.04em;text-align:center}
+.hbk .hb-cover .f small{position:relative;background:#111;color:#fff;padding:3px 8px;font:700 11px var(--f-body);letter-spacing:.12em;text-transform:uppercase}
+.hbk .hb-cover .f span{position:relative;font-size:40px;filter:drop-shadow(3px 3px 0 #111)}
+.hbk .hb-cover .b{background:#fffdf3;transform:rotateY(180deg)}
+.hbk.anim .hb-cover{animation:hbshut 1s .3s cubic-bezier(.6,0,.35,1) both}
+@keyframes hbshut{0%{transform:rotateY(-165deg)}85%{transform:rotateY(4deg)}100%{transform:rotateY(0)}}
+.hbk.anim .hb-book{animation:hbshake .45s 1.25s both}
+@keyframes hbshake{0%,100%{transform:none}20%{transform:translate(-8px,4px) rotate(-2deg)}40%{transform:translate(7px,-5px) rotate(2deg)}60%{transform:translate(-5px,3px)}80%{transform:translate(3px,-2px)}}
+.hbk .hb-slam{position:absolute;right:-70px;top:-46px;width:150px;height:110px;display:grid;place-items:center;background:#fff200;clip-path:polygon(50% 0,60% 20%,84% 6%,78% 32%,100% 42%,80% 56%,94% 82%,66% 74%,56% 100%,44% 78%,18% 94%,24% 66%,0 58%,20% 44%,6% 18%,32% 26%);font:400 34px "Bangers",Impact,sans-serif;color:#e62429;-webkit-text-stroke:1.5px #111;letter-spacing:.04em;transform:rotate(12deg);opacity:1;z-index:3}
+.hbk.anim .hb-slam{animation:hbpow .5s 1.22s cubic-bezier(.2,1.7,.4,1) both}
+@keyframes hbpow{0%{opacity:0;transform:scale(0) rotate(-30deg)}100%{opacity:1;transform:rotate(12deg)}}
+.hbk .hb-end{position:absolute;left:50%;bottom:-26px;transform:translateX(-50%) rotate(-6deg);padding:4px 14px;background:#fff;border:3px solid #111;box-shadow:4px 4px 0 #111;font:400 30px "Bangers",Impact,sans-serif;letter-spacing:.08em;color:#111;white-space:nowrap;z-index:3}
+.hbk.anim .hb-end{animation:hbstamp .45s 1.75s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes hbstamp{0%{opacity:0;transform:translateX(-50%) scale(2.6) rotate(-6deg)}100%{opacity:1;transform:translateX(-50%) rotate(-6deg)}}
+.hbk .hb-bub{position:relative;margin-top:26px;max-width:280px;padding:12px 20px;background:#fff;border:3px solid #111;border-radius:50%/42%;box-shadow:5px 5px 0 #111;font:400 23px/1.05 "Bangers",Impact,sans-serif;letter-spacing:.04em;text-transform:uppercase}
+.hbk .hb-bub::after{content:"";position:absolute;left:34px;top:-22px;width:26px;height:26px;background:#fff;border-left:3px solid #111;border-top:3px solid #111;transform:skewX(-25deg) rotate(10deg);clip-path:polygon(0 0,100% 100%,0 100%)}
+.hbk.anim .hb-bub{animation:hbpop .45s 2.15s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes hbpop{0%{opacity:0;transform:scale(.3)}100%{opacity:1;transform:none}}
+.hbk .hb-nar{padding:7px 14px;background:#fff8d6;border:3px solid #111;box-shadow:4px 4px 0 #111;font:700 14px "Comic Neue","Comic Sans MS",var(--f-body);transform:rotate(1.5deg)}
+.hbk.anim .hb-nar{animation:spup .6s 2.55s cubic-bezier(.16,1,.3,1) both}
+.hbk .bkc-reopen{background:#fff200;color:#111;border:3px solid #111;border-radius:8px;box-shadow:5px 5px 0 #111;font:400 20px "Bangers",Impact,sans-serif;letter-spacing:.08em}
+.hbk.anim .bkc-reopen{animation:spup .6s 2.95s cubic-bezier(.16,1,.3,1) both}
+.hbk.anim::before{animation:hgspin 30s linear infinite,hbflash .5s 1.22s ease-out}
+@keyframes hbflash{0%{filter:brightness(2.2)}100%{filter:none}}
+@media (prefers-reduced-motion:reduce){.hbk *,.hbk::before{animation:none!important}}
+
 .bkc .bkc-stars{position:absolute;inset:0;pointer-events:none;background:
   radial-gradient(1.5px 1.5px at 12% 18%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 28% 72%,#fff 50%,transparent 51%),radial-gradient(1.6px 1.6px at 66% 22%,#fff 50%,transparent 51%),
   radial-gradient(1px 1px at 82% 58%,#fff 50%,transparent 51%),radial-gradient(1.3px 1.3px at 44% 40%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 90% 12%,#fff 50%,transparent 51%),
@@ -3904,6 +3945,14 @@ function confirmBox(o){ const s=document.createElement("div"); s.className="cbx-
 function showBookClosed(animate){ document.querySelectorAll(".bkc").forEach(x=>x.remove()); const n=new Date(), mName=n.toLocaleDateString("en-US",{month:"long",year:"numeric"});
   const nxt=new Date(n.getFullYear(),n.getMonth()+1,1).toLocaleDateString("en-US",{month:"long"});
   const o=document.createElement("div"); o.className="bkc "+(animate?"in anim":"static"); o.setAttribute("role","dialog"); o.setAttribute("aria-label","Month closed");
+  if(document.documentElement.getAttribute("data-skin")==="hero"){ o.className="bkc hbk "+(animate?"in anim":"static");
+    const iss=n.getMonth()+1;
+    o.innerHTML='<div class="hb-cap">Meanwhile, at Toyota Marin…</div><div class="hb-book"><div class="hb-page"><i>POW!</i><i>SOLD!</i><i>KA-CHING!</i></div><div class="hb-cover"><div class="f"><em>#'+iss+'</em><span>🦸</span><b>FUN TRIP PAD</b><small></small></div><div class="b"></div></div><div class="hb-slam">SLAM!</div><div class="hb-end">THE END!</div></div>'+
+      '<div class="hb-bub">Month done! Rest up for next month!</div><div class="hb-nar"></div><button type="button" class="bkc-reopen">📖 Reopen the comic</button>';
+    o.querySelector(".hb-cover small").textContent=mName; o.querySelector(".hb-nar").textContent="To be continued… in "+nxt+"!";
+    o.querySelector(".bkc-reopen").addEventListener("click",()=>confirmBox({icon:"🦸",title:"Hero, you should be resting",text:"Are you sure you want to reopen the Fun Trip Pad?",no:"Keep resting",yes:"Reopen",onYes:reopenBook}));
+    document.body.append(o); if(animate){ try{ tap(); }catch(e){} setTimeout(()=>{ try{ tapSuccess(); }catch(e){} try{ const ctx=audioCtx(); if(ctx&&soundPref!=="off"){ const t=ctx.currentTime, nb=ctx.createBuffer(1,ctx.sampleRate*.4,ctx.sampleRate), d=nb.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,3); const s=ctx.createBufferSource(), f=ctx.createBiquadFilter(), g=ctx.createGain(); s.buffer=nb; f.type="lowpass"; f.frequency.value=900; g.gain.value=1.1; s.connect(f).connect(g).connect(ctx.destination); s.start(t); const o2=ctx.createOscillator(), g2=ctx.createGain(); o2.frequency.setValueAtTime(110,t); o2.frequency.exponentialRampToValueAtTime(40,t+.25); g2.gain.setValueAtTime(.9,t); g2.gain.exponentialRampToValueAtTime(.0001,t+.3); o2.connect(g2).connect(ctx.destination); o2.start(t); o2.stop(t+.32); } }catch(e){} },1220); }
+    return; }
   o.innerHTML='<div class="bkc-stars"></div><div class="moon">🌙</div><div class="zzz" aria-hidden="true"><span>Z</span><span>z</span><span>z</span></div>'+
     '<div class="book"><div class="pages"></div><div class="cover"><div class="front"><i>🏁</i><b>Fun Trip Pad</b><small></small></div><div class="inside"></div></div><span class="lock">🔒</span></div>'+
     '<div class="bkc-msg">Month done, rest up for next month</div><p class="bkc-sub"></p><button type="button" class="bkc-reopen">📖 Reopen the book</button>';
@@ -4367,7 +4416,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v97", tpChecked=0;
+var TP_BUILD="trip-pad-v98", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
