@@ -1,0 +1,28 @@
+const { chromium } = require('playwright'); const fs=require('fs');
+const F=3;
+(async()=>{ const OUT=process.argv[2]; fs.mkdirSync(OUT,{recursive:true});
+const b=await chromium.launch({args:['--autoplay-policy=no-user-gesture-required']});
+const c=await b.newContext({viewport:{width:1080,height:1920},deviceScaleFactor:1});
+await c.addInitScript(F=>{ const rp=performance.now.bind(performance), rd=Date.now, p0=rp(), d0=rd();
+  performance.now=()=>p0+(rp()-p0)/F; Date.now=()=>d0+(rd()-d0)/F;
+  const RD=Date; class WD extends RD{ constructor(...a){ if(a.length) super(...a); else super(Date.now()); } } WD.now=Date.now; WD.parse=RD.parse; WD.UTC=RD.UTC; window.Date=WD;
+  const st=window.setTimeout, si=window.setInterval; window.setTimeout=(f,ms,...a)=>st(f,(ms||0)*F,...a); window.setInterval=(f,ms,...a)=>si(f,(ms||0)*F,...a);
+  const raf=window.requestAnimationFrame.bind(window); window.requestAnimationFrame=cb=>raf(()=>cb(performance.now()));
+},F);
+const p=await c.newPage();
+p.on('pageerror',e=>console.log('PE',e.message));
+const cdp=await c.newCDPSession(p); await cdp.send('Animation.enable'); await cdp.send('Animation.setPlaybackRate',{playbackRate:1/F});
+await p.goto('http://localhost:8770/trailer/stage.html');
+const fcdp=[]; for(const fr of p.frames()){ }
+await p.waitForTimeout(3500*F);
+const frames=[];
+cdp.on('Page.screencastFrame',async f=>{ frames.push({ts:f.metadata.timestamp,data:f.data}); try{ await cdp.send('Page.screencastFrameAck',{sessionId:f.sessionId}); }catch(e){} });
+await cdp.send('Page.startScreencast',{format:'jpeg',quality:85,maxWidth:1080,maxHeight:1920,everyNthFrame:1});
+await p.waitForTimeout(300); const t0=await p.evaluate(()=>{ window.__start(); return Date.now.call(null) ; });
+const t0real=Date.now();
+await p.waitForFunction(()=>window.__done,null,{timeout:600000,polling:500});
+await cdp.send('Page.stopScreencast'); await b.close();
+const list=[]; frames.forEach((f,i)=>{ const n=OUT+'/f'+String(i).padStart(5,'0')+'.jpg'; fs.writeFileSync(n,Buffer.from(f.data,'base64')); list.push([n,(f.ts*1000-t0real)/F]); });
+let txt=''; for(let i=0;i<list.length;i++){ const d=i<list.length-1?(list[i+1][1]-list[i][1])/1000:0.033; txt+=`file '${list[i][0]}'\nduration ${Math.max(0.001,d).toFixed(4)}\n`; } txt+=`file '${list[list.length-1][0]}'\n`;
+fs.writeFileSync(OUT+'/list.txt',txt); console.log('frames',list.length,'first',(list[0][1]/1000).toFixed(2),'last',(list[list.length-1][1]/1000).toFixed(2));
+})();

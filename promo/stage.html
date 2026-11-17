@@ -1,0 +1,114 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="/trailer/fonts/fonts.css" rel="stylesheet">
+<style>
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#05060f;font-family:Sora,system-ui,sans-serif;color:#fff}
+.bg{position:absolute;inset:0;overflow:hidden}
+.bg i{position:absolute;width:1400px;height:1400px;border-radius:50%;opacity:.5;animation:blob 9s ease-in-out infinite alternate;background:radial-gradient(closest-side,var(--c),transparent)!important}
+.bg i:nth-child(1){--c:#ff2d8f;left:-420px;top:-300px}
+.bg i:nth-child(2){--c:#2f6bff;right:-460px;bottom:-200px;animation-delay:-3s}
+.bg i:nth-child(3){--c:#8b5cf6;left:100px;top:600px;width:900px;height:900px;opacity:.35;animation-delay:-6s}
+@keyframes blob{to{transform:translate(120px,90px) scale(1.15)}}
+.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:60px 60px;mask:linear-gradient(180deg,transparent,#000 30%,#000 70%,transparent)}
+.cap{position:absolute;left:0;right:0;top:86px;height:270px;text-align:center}
+.cap .k{font:600 30px Sora;letter-spacing:.32em;text-transform:uppercase;color:#ff8cc6;opacity:0}
+.cap .h{margin-top:14px;font:800 84px/1.02 Sora;letter-spacing:-.03em;opacity:0;padding:0 50px;background:linear-gradient(180deg,#fff,#c9d6ff);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 6px 26px rgba(120,140,255,.45))}
+.cap.on .k{animation:kin .5s ease both}
+.cap.on .h{animation:hin .6s cubic-bezier(.2,1.3,.4,1) .08s both}
+.cap.off .k,.cap.off .h{animation:hout .3s ease both}
+@keyframes kin{from{opacity:0;letter-spacing:.7em}to{opacity:1}}
+@keyframes hin{from{opacity:0;transform:translateY(40px) scale(.94);filter:blur(10px)}to{opacity:1;transform:none}}
+@keyframes hout{to{opacity:0;transform:translateY(-20px);filter:blur(6px)}}
+.phone{position:absolute;left:50%;top:400px;width:390px;height:844px;transform-origin:top center;transform:translateX(-50%) scale(1.72);border-radius:48px;overflow:hidden;box-shadow:0 0 0 9px #0d0f1c,0 0 0 11px #2b2f48,0 40px 120px rgba(0,0,0,.7),0 0 120px rgba(255,60,160,.25);opacity:0;background:#000}
+.phone.in{animation:pin 1s cubic-bezier(.2,1.2,.3,1) both}
+@keyframes pin{from{opacity:0;transform:translateX(-50%) translateY(260px) scale(1.5) rotateX(25deg)}to{opacity:1;transform:translateX(-50%) scale(1.72)}}
+.phone.out{animation:pout .5s ease both}
+@keyframes pout{to{opacity:0;transform:translateX(-50%) translateY(120px) scale(1.6)}}
+iframe{width:390px;height:844px;border:0;display:block}
+.card{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;opacity:0;pointer-events:none;background:radial-gradient(60% 40% at 50% 45%,rgba(255,45,143,.25),transparent 70%),#05060f}
+.card.show{opacity:1}
+.c-small{font:600 30px Sora;letter-spacing:.35em;text-transform:uppercase;color:#9aa6cc;opacity:0}
+.c-logo{margin-top:20px;font:700 210px/0.9 "Archivo Narrow",sans-serif;letter-spacing:-.02em;opacity:0;background:linear-gradient(90deg,#ff4fae,#9b5bff 50%,#2f6bff);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 40px rgba(255,79,174,.5))}
+.c-logo em{font-style:normal;color:#ff4fae;-webkit-text-fill-color:#ff4fae}
+.c-tag{margin-top:40px;font:600 50px Sora;letter-spacing:-.01em;opacity:0}
+.c-flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+.go .c-small{animation:kin .7s ease both}
+.go2 .c-logo{animation:slam .55s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes slam{from{opacity:0;transform:scale(2.4);filter:blur(20px)}to{opacity:1;transform:none}}
+.go3 .c-tag{animation:hin .7s cubic-bezier(.2,1.3,.4,1) both}
+.flash{animation:fl .5s ease-out both}
+@keyframes fl{0%{opacity:.9}100%{opacity:0}}
+.soon{margin-top:70px;font:800 120px/1 Sora;letter-spacing:.06em;opacity:0;color:#fff;text-shadow:0 0 40px rgba(255,79,174,.8),0 0 90px rgba(47,107,255,.6)}
+.go4 .soon{animation:slam .6s cubic-bezier(.2,1.5,.4,1) both}
+.beta{display:inline-block;margin-top:44px;padding:12px 30px;border-radius:14px;background:linear-gradient(135deg,#ffd54a,#ff9100);color:#2a1600;font:800 36px Sora;letter-spacing:.3em;transform:rotate(-4deg);opacity:0}
+.go5 .beta{animation:slam .5s cubic-bezier(.2,1.5,.4,1) both}
+.credit{position:absolute;bottom:70px;left:0;right:0;text-align:center;font:400 22px Sora;color:#7d86a8;opacity:0}
+.go5 .credit,.go5 .by{animation:kin 1s ease .3s both}
+.by{margin-top:46px;font:600 28px Sora;letter-spacing:.25em;color:#c9d0ee;opacity:0;text-transform:uppercase}
+.bar{position:absolute;left:0;right:0;height:0;background:#000;z-index:5}
+</style></head><body>
+<div class="bg"><i></i><i></i><i></i></div><div class="grid"></div>
+<div class="cap" id="cap"><div class="k" id="ck"></div><div class="h" id="ch"></div></div>
+<div class="phone" id="phone"><iframe id="app"></iframe></div>
+<div class="card" id="intro"><div class="c-small">Lora Enterprises presents</div><div class="c-logo">Fun Trip Pad<em>.</em></div><div class="c-tag">Your sales month. Leveled up.</div><div class="c-flash" id="if"></div></div>
+<div class="card" id="outro"><div class="c-logo" style="font-size:190px">Fun Trip Pad<em>.</em></div><div class="soon">COMING SOON</div><div class="beta">BETA</div><div class="by">Built for the floor · Lora Enterprises</div><div class="credit">Music: “Wave Rider” by Shane Ivers – silvermansound.com (CC BY 4.0)</div><div class="c-flash" id="of"></div></div>
+<script>
+const pad=n=>String(n).padStart(2,"0"), now=new Date(), Y=now.getFullYear(), M=now.getMonth()+1, D=now.getDate();
+const ds=(m,d)=>Y+"-"+pad(m)+"-"+pad(d);
+const cars=["RAV4 XLE","Camry SE","Tacoma TRD","Highlander","Corolla Cross","Tundra","4Runner","Grand Highlander","Prius Prime","Sienna"];
+const names=["Maria Lopez","Kevin Tran","Ashley Brooks","David Kim","Priya Patel","Marcus Hill","Emily Chen","Jordan Reyes","Sam Ortiz","Nina Park","Chris Allen","Taylor Green"];
+const srcs=["Internet","Showroom","Phone","Showroom","Internet","Campaign"];
+let deals=[], id=0;
+const add=(date,i,extra)=>deals.push(Object.assign({id:"t"+(id++),dealNo:String(41200+id*7),date,customer:names[i%names.length],vehicle:cars[i%cars.length],stock:"T"+(5100+i*13),type:i%3?"New":"Used",source:srcs[i%srcs.length],status:"funded",commission:[325,410,280,515,360,450,300,625][i%8],front:1200+i*150,back:800+i*90,products:i%2?["VSA","Tint"]:["VSA"],lender:["TFS","Chase","Ally","BofA"][i%4],processor:["Sophia","Nikki","Vicky"][i%3],created:Date.now()-1e6+i,fundedDate:date},extra||{}));
+for(let m=1;m<M;m++){ const n=13+((m*5)%6); for(let k=0;k<n;k++) add(ds(m,1+((k*3)%27)),m*3+k); }
+[2,3,5,6,8,9,11,12,14].filter(d=>d<D).forEach((d,k)=>add(ds(M,d),k));
+add(ds(M,D),20,{status:"pending"}); add(ds(M,D),21);
+add(ds(M,4),5,{split:true,partner:"Luis"}); add(ds(M,10),7,{split:true,partner:"Luis"});
+const spiffs=[{id:"s1",stock:"T5182",amount:200,expires:ds(M,Math.min(28,D+3)),note:"Black RAV4 Hybrid"},{id:"s2",stock:"T5240",amount:150,expires:ds(M,Math.min(28,D+8)),note:"Camry Nightshade"},{id:"s3",stock:"T5307",amount:300,expires:ds(M,Math.min(28,D+1)),note:"Aged Tundra"}];
+const ious=[{id:"i1",who:"Marcus",date:ds(M,Math.max(1,D-6)),expires:ds(M,Math.min(28,D+10))},{id:"i2",who:"Danielle",date:ds(M,Math.max(1,D-15))}];
+localStorage.clear();
+Object.entries({"trippad.theme":"night","trippad.deals":JSON.stringify(deals),"trippad.spiffs":JSON.stringify(spiffs),"trippad.ious":JSON.stringify(ious),"trippad.goal":"15","trippad.sound":"off"}).forEach(([k,v])=>localStorage.setItem(k,v));
+const $=id=>document.getElementById(id), app=()=>$("app").contentWindow, adoc=()=>$("app").contentDocument;
+function cap(k,h){ const c=$("cap"); c.className="cap off"; setTimeout(()=>{ $("ck").textContent=k; $("ch").innerHTML=h; c.className="cap"; void c.offsetWidth; c.className="cap on"; },k?300:0); }
+function capOff(){ $("cap").className="cap off"; }
+function q(s){ return adoc().querySelector(s); }
+function click(s){ const e=q(s); if(e) e.click(); }
+function scrollTo2(sel,off=120,dur=900){ const w=app(), el=q(sel); if(!el) return; const tgt=el.getBoundingClientRect().top+w.scrollY-off, st=w.scrollY, t0=performance.now(); (function f(n){ const k=Math.min(1,(n-t0)/dur), e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2; w.scrollTo(0,st+(tgt-st)*e); if(k<1) requestAnimationFrame(f); })(t0); }
+function type(sel,txt,dur){ const el=q(sel); if(!el) return; el.focus({preventScroll:true}); let i=0; const st=Math.max(25,dur/txt.length); const t=setInterval(()=>{ i++; el.value=txt.slice(0,i); el.dispatchEvent(new Event("input",{bubbles:true})); if(i>=txt.length) clearInterval(t); },st); }
+const T=[];
+const at=(s,f)=>T.push([s,f]);
+/* intro */
+at(0,()=>{ $("intro").classList.add("show","go"); });
+at(1.25,()=>{ $("intro").classList.add("go2"); $("if").classList.add("flash"); });
+at(2.6,()=>{ $("intro").classList.add("go3"); });
+at(4.6,()=>{ $("intro").style.transition="opacity .45s"; $("intro").classList.remove("show"); $("phone").classList.add("in"); cap("Step inside","One tap to clock in."); });
+at(6.9,()=>{ click("#gateBtn"); });
+at(9.6,()=>{ cap("Live dashboard","Watch your month come alive."); });
+at(14.2,()=>{ cap("Fast","Log a deal in seconds."); click("#add"); });
+at(15.0,()=>{ type("#fDeal","41377",400); });
+at(15.5,()=>{ type("#fCust","Jessica Moore",600); });
+at(16.2,()=>{ type("#fVeh","RAV4 Hybrid XSE",650); });
+at(16.9,()=>{ const b=q('#fSource [data-v="Showroom"]'); b&&b.click(); });
+at(17.3,()=>{ type("#fComm","475",350); });
+at(18.2,()=>{ const b=q("#save"); b&&b.scrollIntoView({block:"center"}); });
+at(18.7,()=>{ click("#save"); });
+at(19.6,()=>{ adoc().querySelectorAll(".scratch-scrim").forEach(e=>e.remove()); });
+at(20.6,()=>{ cap("Momentum","Get the hot hand. 🔥"); adoc().querySelectorAll(".scratch-scrim").forEach(e=>e.remove()); });
+at(25.4,()=>{ cap("Money on the table","Spiffs &amp; IOUs, tracked."); adoc().querySelectorAll(".scratch-scrim,.achv,.micdrop,.dp,.thanks-pop").forEach(e=>e.remove()); scrollTo2("#spiffBox",90,1100); });
+at(28.2,()=>{ scrollTo2("#iouBox",120,900); });
+at(31.0,()=>{ cap("Make it yours","Themes for every mood."); scrollTo2("#greetText",60,600); });
+["hero","matrix","galaxy","princess","gr","synth","nextgen","cupertino","night"].forEach((th,k)=>at(31.7+k*0.62,()=>{ try{ app().setThemeNow(th); }catch(e){} }));
+at(37.6,()=>{ cap("Year in review","Your year, Wrapped."); try{ app().showWrapped(Y); }catch(e){} });
+at(39.0,()=>{ const s=q('.wtap span[data-d="1"]'); s&&s.click(); });
+at(40.4,()=>{ const s=q('.wtap span[data-d="1"]'); s&&s.click(); });
+at(41.8,()=>{ const s=q('.wtap span[data-d="1"]'); s&&s.click(); });
+at(43.2,()=>{ const x=q(".wstory .wx"); x&&x.click(); cap("Collect them all","Every deal is a card."); try{ app().openCards(); }catch(e){} });
+at(45.0,()=>{ const c=q(".tcs .tc"); c&&c.click(); });
+at(47.6,()=>{ capOff(); $("phone").classList.remove("in"); $("phone").classList.add("out"); });
+at(48.1,()=>{ $("outro").classList.add("show"); $("outro").classList.add("go2"); $("of").classList.add("flash"); });
+at(49.0,()=>{ $("outro").classList.add("go4"); });
+at(50.3,()=>{ $("outro").classList.add("go5"); });
+at(55.0,()=>{ window.__done=true; });
+window.__start=()=>{ window.__t0=Date.now(); const p0=performance.now(); T.forEach(([s,f])=>setTimeout(()=>{ try{ f(); }catch(e){ console.log("step err",s,e.message); } },s*1000)); };
+$("app").addEventListener("load",()=>{ const l=adoc().createElement("link"); l.rel="stylesheet"; l.href="/trailer/fonts/fonts.css"; adoc().head.append(l); l.onload=()=>{ ["400","700","800","900","500","600"].forEach(w=>["Sora","Archivo Narrow","Public Sans","JetBrains Mono","Orbitron","Bangers","Press Start 2P","Share Tech Mono","Caveat","Barlow Condensed","Comic Neue"].forEach(f=>{ try{ adoc().fonts.load(w+" 20px \""+f+"\""); adoc().fonts.load("italic "+w+" 20px \""+f+"\""); }catch(e){} })); }; try{ app().showScratch=()=>{}; const oc=app().cheer; app().cheer=function(t){ if(/NEW RECORD/.test(String(t))) return; return oc.apply(this,arguments); }; }catch(e){} });
+$("app").src="/trip-pad/index.html";
+</script></body></html>
