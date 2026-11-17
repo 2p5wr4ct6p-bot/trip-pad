@@ -563,6 +563,9 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
 .td-tool span{font-size:11px;font-weight:700;color:var(--muted)}
 .alertbar.eo{background:color-mix(in srgb,var(--bad) 13%,var(--card));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--bad) 45%,transparent)}
 .alertbar.eo .dot{background:var(--bad)} .alertbar.eo .go{color:var(--bad)}
+.tag.proc-sophia{background:linear-gradient(135deg,#ffd1e8,#ff9ccf);color:#a0125c;box-shadow:0 0 0 1px rgba(255,79,163,.45)}
+:root[data-theme="dark"] .tag.proc-sophia,:root:not([data-theme="light"]) .tag.proc-sophia{background:color-mix(in srgb,#ff4fa3 22%,transparent);color:#ff8cc6;box-shadow:0 0 0 1px rgba(255,79,163,.5)}
+:root[data-theme="light"] .tag.proc-sophia{background:linear-gradient(135deg,#ffd1e8,#ff9ccf);color:#a0125c}
 .tag.eo{background:color-mix(in srgb,var(--warn) 16%,var(--chip));color:var(--warn)}
 .tag.eo.hot{background:var(--bad);color:#fff}
 .stips .chipbtn[data-st="need"]{border-style:dashed;border-color:var(--warn);color:var(--warn);background:color-mix(in srgb,var(--warn) 8%,transparent)}
@@ -1697,7 +1700,7 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
       <div class="f full notesf"><div class="noteshead"><label class="f" for="fNotes">Notes</label><button type="button" class="micbtn" id="micBtn">🎙️ Voice note</button></div><textarea id="fNotes"></textarea><p class="michint" id="micHint" hidden></p></div>
       <div class="f full"><span class="f">Customer follow-ups</span><div class="prods" id="fFu"></div><div class="futexts" id="fuTexts"></div></div>
       <div class="f full"><span class="f">Doc processor</span>
-        <div class="seg" id="fProc"><button type="button" data-v="Nikki">Nikki</button><button type="button" data-v="Vicky">Vicky</button></div></div>
+        <div class="seg" id="fProc"><button type="button" data-v="Nikki">Nikki</button><button type="button" data-v="Vicky">Vicky</button><button type="button" data-v="Sophia">Sophia</button></div></div>
       <div class="f full"><span class="f">Paid on paycheck</span>
         <div class="seg" id="fPaid"><button type="button" data-v="no">Not yet</button><button type="button" data-v="yes">Paid ✓</button></div></div>
     </div>
@@ -2294,7 +2297,7 @@ function render(){
     if(d.eo) tag("E/O "+(d.eo===today()?"today":md(d.eo)), d.eo===today()?"eo hot":"eo");
     { const sc=stipCount(d); if(sc.need) tag("Stips "+sc.got+"/"+sc.need, sc.got<sc.need?"follow":"paid"); }
     { const sp=spiffOfDeal(d); if(sp) tag("💰 Spiff "+money(num(sp.amount)),"spiff"); }
-    if(d.processor) tag("Docs: "+d.processor);
+    if(d.processor) tag("Docs: "+d.processor, d.processor==="Sophia"?"proc-sophia":"");
     if(d.paid) tag("Paid ✓","paid");
     { const due=fuDue(d); if(due.length) tag(due[0].label+" due","fu"); else if(d.fu&&d.fu.thanks&&d.fu.check3&&surveyDone(d.fu)) tag("Follow-ups ✓","paid"); }
     if(d.status==="pending"){ const age=daysSince(d.date); if(age>FOLLOW_DAYS) tag("Follow up · "+age+"d","follow"); }
@@ -3468,7 +3471,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v56", tpChecked=0;
+var TP_BUILD="trip-pad-v57", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
