@@ -1798,6 +1798,53 @@ html.tp-hidden :is(.ious,.iou-row,.iou-half,.iou-count)::after,html.tp-hidden .i
 @keyframes netstrobe{0%,14%,28%,100%{box-shadow:0 0 0 rgba(34,211,238,0);filter:none}
  7%,21%{box-shadow:0 0 0 1.5px #22d3ee,0 0 14px 2px rgba(34,211,238,.85);filter:brightness(1.6)}}
 @media (prefers-reduced-motion:reduce){.tag.src-net{animation:none}}
+/* ===== round 17: quick month + year picker ===== */
+.month{position:relative}
+#monthLabel{cursor:pointer;border-radius:10px;padding:4px 6px;transition:background .15s}
+#monthLabel::after{content:"▾";font-size:.7em;margin-left:5px;opacity:.55;display:inline-block;transition:transform .2s}
+#monthLabel:hover,#monthLabel[aria-expanded="true"]{background:var(--chip)}
+#monthLabel[aria-expanded="true"]::after{transform:rotate(180deg)}
+.mpick{position:absolute;top:calc(100% + 8px);right:0;z-index:30;width:min(300px,calc(100vw - 24px));background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:18px;padding:12px;
+  box-shadow:0 18px 50px rgba(10,20,40,.28);display:flex;flex-direction:column;gap:10px;transform-origin:85% 0;animation:mpIn .22s cubic-bezier(.2,1.2,.4,1) both}
+@keyframes mpIn{from{opacity:0;transform:translateY(-6px) scale(.94)}}
+.mp-yr{display:flex;align-items:center;justify-content:space-between}
+.mp-yr b{font-family:var(--f-num);font-size:20px;font-variant-numeric:tabular-nums}
+.mp-yr button,.mp-foot button{border:1px solid var(--line);background:var(--chip);color:var(--ink);border-radius:10px;min-width:40px;height:36px;font-size:18px;font-weight:700;cursor:pointer}
+.mp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.mp-grid button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:12px;padding:8px 4px 6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:700;font-size:14px}
+.mp-grid button small{font-size:10.5px;font-weight:600;color:var(--muted);font-family:var(--f-num)}
+.mp-grid button.has{background:color-mix(in srgb,var(--good) 10%,var(--bg));border-color:color-mix(in srgb,var(--good) 40%,var(--line))}
+.mp-grid button.has small{color:var(--good)}
+.mp-grid button.now{box-shadow:inset 0 0 0 2px var(--accent)}
+.mp-grid button[aria-current="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.mp-grid button[aria-current="true"] small{color:inherit;opacity:.85}
+.mp-grid button.future{opacity:.55}
+.mp-foot{display:flex;gap:8px}
+.mp-foot button{flex:1;font-size:14px}
+@media (prefers-reduced-motion:reduce){.mpick{animation:none}}
+/* Log a deal: ALL CAPS + slow color swirl inside the pill */
+.fab{overflow:hidden;isolation:isolate;text-transform:uppercase;letter-spacing:.05em}
+.fab::before{content:"";position:absolute;left:50%;top:50%;width:260%;aspect-ratio:1;translate:-50% -50%;z-index:-1;pointer-events:none;border-radius:50%;background:var(--fabswirl,conic-gradient(from 0deg,var(--accent),color-mix(in srgb,var(--accent) 72%,#00c2ff),var(--accent),color-mix(in srgb,var(--accent) 70%,#a855f7),var(--accent)));animation:fabswirl 14s linear infinite;filter:blur(9px)}
+@keyframes fabswirl{to{rotate:360deg}}
+:root[data-skin="night"]:not([data-accent="red"]) .fab{--fabswirl:conic-gradient(from 0deg,#3d6bff,#b14dff,#6a5cff,#b14dff,#3d6bff)}
+:root[data-skin="gold"] .fab{--fabswirl:conic-gradient(from 0deg,#b8860b,#f5c542,#ffe9a0,#f5c542,#b8860b)}
+:root[data-skin="diamond"] .fab{--fabswirl:conic-gradient(from 0deg,#38bdf8,#a78bfa,#f472b6,#a78bfa,#38bdf8)}
+:root[data-skin="princess"] .fab{--fabswirl:conic-gradient(from 0deg,#ff4fa3,#c084fc,#ff7cc0,#c084fc,#ff4fa3)}
+:root[data-skin="synth"] .fab{--fabswirl:conic-gradient(from 0deg,#ff3ea5,#ffb347,#ff6f7d,#ffb347,#ff3ea5)}
+:root[data-skin="galaxy"] .fab{--fabswirl:conic-gradient(from 0deg,#8b5cf6,#22d3ee,#6d7cf8,#22d3ee,#8b5cf6)}
+:root[data-skin="sunset"] .fab{--fabswirl:conic-gradient(from 0deg,#ff7a3d,#ff5e7e,#ff9a5c,#ff5e7e,#ff7a3d)}
+:root[data-skin="rush"] .fab{--fabswirl:conic-gradient(from 0deg,#aa0000,#7a0000,#c21a1a,#7a0000,#aa0000)}
+:root[data-skin="xmas"] .fab{--fabswirl:conic-gradient(from 0deg,#e53935,#c62828,#ef5350,#c62828,#e53935)}
+:root[data-skin="spooky"] .fab{--fabswirl:conic-gradient(from 0deg,#ff7a1a,#b06dff,#ff9a4d,#b06dff,#ff7a1a)}
+:root[data-skin="nextgen"] .fab{--fabswirl:conic-gradient(from 0deg,#ffffff,#dfe8ff,#f2f6ff,#cfdcff,#ffffff)}
+:root[data-skin="cupertino"] .fab{--fabswirl:conic-gradient(from 0deg,#0071e3,#2b8cff,#0062c4,#2b8cff,#0071e3)}
+:root[data-skin="grid"] .fab{--fabswirl:conic-gradient(from 0deg,#00121a,#00303f,#00121a,#002633,#00121a)}
+:root[data-skin="hero"] .fab{--fabswirl:conic-gradient(from 0deg,#ffcc00,#ffb300,#ffd84d,#ffb300,#ffcc00)}
+:root[data-skin="gr"] .fab{--fabswirl:conic-gradient(from 0deg,#eb0a1e,#c00015,#ff3347,#c00015,#eb0a1e)}
+:root[data-skin="matrix"] .fab{--fabswirl:conic-gradient(from 0deg,#000,#032912,#000,#021a0c,#000)}
+:root[data-skin="notebook"] .fab{--fabswirl:conic-gradient(from 0deg,#2f5bd3,#4a74e6,#244ab3,#4a74e6,#2f5bd3)}
+html.tp-hidden .fab::before{animation-play-state:paused}
+@media (prefers-reduced-motion:reduce){.fab::before{animation:none}}
 /* ===== round 16: IOU payback check on splits, drag-to-browse deal cards ===== */
 .iou-xref{margin-top:8px;border-radius:14px;padding:10px 12px;background:color-mix(in srgb,#16a34a 10%,var(--chip));box-shadow:inset 0 0 0 1.5px color-mix(in srgb,#16a34a 45%,transparent);display:flex;flex-direction:column;gap:8px}
 .iou-xref .ix-top{font-size:13px;line-height:1.35;color:var(--ink)}
@@ -2366,6 +2413,7 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
       <button class="icon" id="prev" type="button" aria-label="Previous month">‹</button>
       <span id="monthLabel"></span>
       <button class="icon" id="next" type="button" aria-label="Next month">›</button>
+      <div class="mpick" id="mPick" hidden role="dialog" aria-label="Pick a month and year"><div class="mp-yr"><button type="button" id="mpPrevY" aria-label="Previous year">‹</button><b id="mpYear"></b><button type="button" id="mpNextY" aria-label="Next year">›</button></div><div class="mp-grid" id="mpGrid"></div><div class="mp-foot"><button type="button" id="mpToday">This month</button></div></div>
       <button class="icon setbtn" id="setBtn" type="button" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
     </div>
   </div>
@@ -4101,6 +4149,27 @@ $("fPhone").addEventListener("input",updateFuTexts); $("fCust").addEventListener
 
 
 
+
+
+/* ===== round 17: tap the month to jump to any month or year ===== */
+var mpYear=new Date().getFullYear();
+function renderMp(){ $("mpYear").textContent=mpYear; const g=$("mpGrid"); g.replaceChildren(); const now=new Date(), nk=monthKey(now), vk=monthKey(view);
+  for(let m=0;m<12;m++){ const k=mpYear+"-"+String(m+1).padStart(2,"0"), u=unitsIn(k), b=document.createElement("button"); b.type="button";
+    b.className=(u?"has":"")+(k===nk?" now":"")+(k>nk?" future":""); if(k===vk) b.setAttribute("aria-current","true");
+    const nm=document.createElement("b"); nm.textContent=new Date(mpYear,m,1).toLocaleString("en-US",{month:"short"}); const sm=document.createElement("small"); sm.textContent=u?u+" unit"+(u===1?"":"s"):"—";
+    b.append(nm,sm); b.setAttribute("aria-label",new Date(mpYear,m,1).toLocaleString("en-US",{month:"long",year:"numeric"})+", "+u+" units");
+    b.addEventListener("click",()=>{ view=new Date(mpYear,m,1); dayFilter=null; listEnter=true; closeMp(); render(); try{ tap(); }catch(e){} }); g.append(b); } }
+function openMp(){ mpYear=view.getFullYear(); renderMp(); $("mPick").hidden=false; $("monthLabel").setAttribute("aria-expanded","true"); try{ tap(); }catch(e){} }
+function closeMp(){ $("mPick").hidden=true; $("monthLabel").setAttribute("aria-expanded","false"); }
+(function(){ const L=$("monthLabel"); L.setAttribute("role","button"); L.tabIndex=0; L.setAttribute("aria-haspopup","dialog"); L.setAttribute("aria-expanded","false"); L.title="Jump to a month";
+  L.addEventListener("click",e=>{ e.stopPropagation(); $("mPick").hidden?openMp():closeMp(); });
+  L.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); $("mPick").hidden?openMp():closeMp(); } });
+  $("mpPrevY").addEventListener("click",e=>{ e.stopPropagation(); mpYear--; renderMp(); try{ tap(); }catch(_){} });
+  $("mpNextY").addEventListener("click",e=>{ e.stopPropagation(); mpYear++; renderMp(); try{ tap(); }catch(_){} });
+  $("mpToday").addEventListener("click",()=>{ const n=new Date(); view=new Date(n.getFullYear(),n.getMonth(),1); dayFilter=null; listEnter=true; closeMp(); render(); try{ tap(); }catch(e){} });
+  $("mPick").addEventListener("click",e=>e.stopPropagation());
+  document.addEventListener("click",()=>{ if(!$("mPick").hidden) closeMp(); });
+  document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&!$("mPick").hidden){ closeMp(); try{ L.focus(); }catch(_){} } }); })();
 
 /* ===== round 16: IOU cross-check when you split a deal ===== */
 var iouRepay=false;
