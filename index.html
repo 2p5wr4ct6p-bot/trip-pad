@@ -626,6 +626,75 @@ html.tp-hidden .tag.eo::before{animation-play-state:paused}
 .setsheet .soundlbl{display:none}
 .setsheet .totop{margin:0;align-self:stretch}
 .setsheet .setnote{margin:0;font-size:12px;color:var(--muted)}
+/* internet closing ring */
+.netring{position:absolute;right:-26px;bottom:-10px;width:62px;height:62px;padding:0;border:0;border-radius:50%;cursor:pointer;background:var(--card);box-shadow:0 0 0 3px var(--card),0 6px 16px rgba(0,0,0,.25);z-index:2}
+.netring svg{position:absolute;inset:4px;width:54px;height:54px;transform:rotate(-90deg);overflow:visible}
+.netring circle{fill:none;stroke-width:7}
+.netring .nt{stroke:color-mix(in srgb,#22d3ee 20%,transparent)}
+.netring .nf{stroke:url(#netGrad);stroke-linecap:round;stroke-dasharray:150.8;stroke-dashoffset:150.8;transition:stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1)}
+.netring .nv{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.netring .nv b{font:800 13px var(--f-num);color:var(--ink)}
+.netring .nv small{margin-top:2px;font:800 8px var(--f-body);letter-spacing:.12em;color:#22d3ee}
+.netring.empty .nv b{color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.netring .nf{transition:none}}
+/* ===== close the book ===== */
+html.tp-closed #gate,html.tp-closed #splash{visibility:hidden!important}
+.closebook{display:flex;align-items:center;gap:12px;width:100%;margin:0 0 14px;padding:14px 16px;border-radius:16px;cursor:pointer;text-align:left;color:var(--ink);font:inherit;
+  border:1px solid color-mix(in srgb,#a78bfa 55%,transparent);background:linear-gradient(120deg,color-mix(in srgb,#6d28d9 22%,var(--card)),color-mix(in srgb,#1e3a8a 18%,var(--card)));box-shadow:0 0 18px color-mix(in srgb,#a78bfa 25%,transparent)}
+.closebook[hidden]{display:none}
+.cbk-ico{font-size:28px;animation:cbkbob 2.6s ease-in-out infinite}
+.cbk-txt{flex:1;display:flex;flex-direction:column;gap:2px}
+.cbk-txt b{font-size:15px} .cbk-txt small{font-size:12.5px;color:var(--muted);font-weight:600}
+.cbk-go{font-size:22px;color:#a78bfa}
+@keyframes cbkbob{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg) translateY(-2px)}}
+.cbx-scrim{position:fixed;inset:0;z-index:230;display:grid;place-items:center;padding:24px;background:rgba(6,8,18,.5);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);animation:setfade .25s ease-out both}
+.cbx{width:100%;max-width:360px;background:var(--card);color:var(--ink);border-radius:22px;padding:22px 20px 18px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.5);border:1px solid var(--line);animation:setpop .35s cubic-bezier(.2,1.3,.35,1) both}
+.cbx .cbx-ico{font-size:42px;line-height:1}
+.cbx h3{margin:10px 0 6px;font:800 20px/1.2 var(--f-display)}
+.cbx p{margin:0 0 18px;color:var(--muted);font-size:14px;line-height:1.45}
+.cbx .row2{display:flex;gap:10px} .cbx .btn{flex:1}
+.bkc{position:fixed;inset:0;z-index:220;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:30px 24px;text-align:center;color:#fff;overflow:hidden;
+  background:radial-gradient(120% 70% at 50% 0%,#24124a 0%,#0b0a1f 55%,#04040b 100%)}
+.bkc.in{animation:bkcfade .6s ease-out both}
+.bkc .bkc-stars{position:absolute;inset:0;pointer-events:none;background:
+  radial-gradient(1.5px 1.5px at 12% 18%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 28% 72%,#fff 50%,transparent 51%),radial-gradient(1.6px 1.6px at 66% 22%,#fff 50%,transparent 51%),
+  radial-gradient(1px 1px at 82% 58%,#fff 50%,transparent 51%),radial-gradient(1.3px 1.3px at 44% 40%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 90% 12%,#fff 50%,transparent 51%),
+  radial-gradient(1.2px 1.2px at 8% 84%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 58% 88%,#fff 50%,transparent 51%);animation:bkctw 3.5s ease-in-out infinite alternate}
+.bkc .moon{position:absolute;top:calc(env(safe-area-inset-top,0px) + 40px);right:34px;font-size:46px;filter:drop-shadow(0 0 18px rgba(255,236,150,.6))}
+.book{position:relative;width:170px;height:220px;perspective:1100px;transform-style:preserve-3d}
+.book .pages{position:absolute;inset:6px 4px 6px 10px;border-radius:3px 10px 10px 3px;background:repeating-linear-gradient(180deg,#f7f2e6 0 3px,#e9e1cf 3px 4px);box-shadow:0 18px 40px rgba(0,0,0,.55),inset 6px 0 10px rgba(0,0,0,.18)}
+.book .pages::before{content:"";position:absolute;left:18px;right:18px;top:26px;height:70px;background:repeating-linear-gradient(180deg,rgba(60,60,90,.25) 0 1.5px,transparent 1.5px 10px)}
+.book .cover{position:absolute;inset:0;transform-origin:left center;transform-style:preserve-3d;transform:rotateY(0)}
+.bkc.anim .book .cover{animation:bookshut 1.5s .35s cubic-bezier(.55,.05,.3,1) both}
+.book .cover > div{position:absolute;inset:0;border-radius:4px 14px 14px 4px;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.book .front{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:18px;
+  background:linear-gradient(135deg,#7c3aed,#4338ca 55%,#1e1b4b);box-shadow:inset 10px 0 0 rgba(0,0,0,.25),inset -2px 0 0 rgba(255,255,255,.15),0 18px 40px rgba(0,0,0,.55)}
+.book .front::after{content:"";position:absolute;inset:10px 10px 10px 18px;border:1.5px solid rgba(255,215,120,.6);border-radius:3px 9px 9px 3px}
+.book .front b{font:800 22px/1.05 var(--f-display);color:#ffe08a;text-shadow:0 2px 0 rgba(0,0,0,.35)}
+.book .front small{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#e9e3ff;opacity:.85}
+.book .front i{font-style:normal;font-size:26px}
+.book .inside{transform:rotateY(180deg);background:linear-gradient(90deg,#efe7d4,#fbf7ee)}
+.bkc .lock{position:absolute;right:-14px;bottom:-14px;font-size:34px;opacity:0;transform:scale(.3)}
+.bkc.anim .lock{animation:bklock .5s 1.85s cubic-bezier(.2,1.6,.4,1) both}
+.bkc.static .lock{opacity:1;transform:none}
+.bkc-msg{font:italic 800 clamp(30px,9vw,42px)/1.05 "Barlow Condensed","Arial Narrow",Impact,sans-serif;text-transform:uppercase;transform:skewX(-5deg);
+  background:linear-gradient(90deg,#c4b5fd,#fff,#fde68a,#fff,#c4b5fd);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;animation:achvshimmer 3s linear infinite}
+.bkc.anim .bkc-msg{animation:achvshimmer 3s linear infinite,spup .7s 2.1s cubic-bezier(.16,1,.3,1) both}
+.bkc-sub{margin:-10px 0 0;font-size:14px;color:#cfc8ff;opacity:.85}
+.bkc.anim .bkc-sub{animation:spup .7s 2.4s cubic-bezier(.16,1,.3,1) both}
+.bkc .zzz{position:absolute;left:50%;top:38%;font:800 22px var(--f-display);color:#c4b5fd;opacity:0;pointer-events:none}
+.bkc .zzz span{position:absolute;animation:zfloat 3.6s ease-in infinite}
+.bkc .zzz span:nth-child(2){animation-delay:1.2s;font-size:18px;left:14px}
+.bkc .zzz span:nth-child(3){animation-delay:2.4s;font-size:14px;left:26px}
+.bkc.anim .zzz,.bkc.static .zzz{opacity:1}
+.bkc-reopen{margin-top:6px;padding:12px 22px;border-radius:999px;border:1px solid rgba(196,181,253,.5);background:rgba(255,255,255,.06);color:#e9e3ff;font:700 14px var(--f-body);cursor:pointer}
+.bkc.anim .bkc-reopen{animation:spup .6s 2.9s cubic-bezier(.16,1,.3,1) both}
+@keyframes bookshut{0%{transform:rotateY(-168deg)}100%{transform:rotateY(0)}}
+@keyframes bklock{to{opacity:1;transform:none}}
+@keyframes bkcfade{from{opacity:0}to{opacity:1}}
+@keyframes bkctw{from{opacity:.5}to{opacity:1}}
+@keyframes zfloat{0%{opacity:0;transform:translate(0,0) scale(.6)}20%{opacity:1}100%{opacity:0;transform:translate(40px,-90px) scale(1.2)}}
+@media (prefers-reduced-motion:reduce){.bkc *{animation:none!important}.bkc .lock{opacity:1;transform:none}}
 /* background picker */
 html[data-bg="midnight"][data-bgm="dark"] body{background:radial-gradient(120% 60% at 50% -10%,#16193a 0%,transparent 60%),#05060d!important;background-attachment:fixed!important}
 html[data-bg="midnight"][data-bgm="light"] body{background:radial-gradient(120% 60% at 50% -10%,#e3e7ff 0%,transparent 60%),#f6f7fb!important;background-attachment:fixed!important}
@@ -1112,6 +1181,15 @@ html.tp-hidden :is(.ious,.iou-row,.iou-half,.iou-count)::after,html.tp-hidden .i
 :root[data-skin="grid"] .sky{filter:hue-rotate(150deg) saturate(1.6) drop-shadow(0 0 6px rgba(0,234,255,.8))}
 :root[data-skin="grid"] .rank{background:#020a14;border-color:rgba(0,234,255,.55);box-shadow:0 0 10px rgba(0,234,255,.3);font-family:"Orbitron",var(--f-body);letter-spacing:.05em;--rk1:#00eaff;--rk2:#0096c7}
 @media (prefers-reduced-motion:reduce){:root[data-skin="grid"] .greet b em.gname{animation:none}}
+/* hero greeting: comic caption */
+:root[data-skin="hero"] .greet{position:relative;display:inline-flex;flex-direction:column;align-items:flex-start;gap:8px;margin:6px 0 14px;padding:12px 16px 12px;max-width:calc(100% - 10px);
+  background:radial-gradient(rgba(230,36,41,.14) 1.4px,transparent 1.7px) 0 0/9px 9px,#fff36b;border:3px solid #111;box-shadow:6px 6px 0 #111;transform:rotate(-1.2deg)}
+:root[data-skin="hero"] .greet .greetrow{align-items:center;gap:10px}
+:root[data-skin="hero"] .greet b{font:400 19px/1 "Bangers","Impact",sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#111}
+:root[data-skin="hero"] .greet b em.gname{display:block;margin-top:4px;font:400 clamp(30px,9.5vw,40px)/.95 "Bangers","Impact",sans-serif;letter-spacing:.04em;color:#e62429;-webkit-text-stroke:1.5px #111;text-shadow:3px 3px 0 #111;transform:skewX(-6deg);transform-origin:left}
+:root[data-skin="hero"] .greet #greetTime{display:inline-block;padding:5px 10px 4px;background:#fff;border:2.5px solid #111;box-shadow:3px 3px 0 #1f5fd6;font:400 14px/1 "Bangers","Impact",sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#111;transform:rotate(1.5deg)}
+:root[data-skin="hero"] .greet .sky{filter:drop-shadow(2px 2px 0 #111)}
+:root[data-skin="hero"] .greet::after{content:"POW!";position:absolute;right:-14px;top:-16px;padding:4px 8px 3px;background:#e62429;color:#fff200;border:2.5px solid #111;font:400 14px/1 "Bangers","Impact",sans-serif;letter-spacing:.05em;transform:rotate(12deg);box-shadow:2px 2px 0 #111;-webkit-text-stroke:.5px #111}
 
 /* ===== round 6 ===== */
 .snapbtn{width:100%;margin:2px 0 4px;border:1.5px dashed var(--accent);background:var(--accent-soft);color:var(--accent);border-radius:12px;padding:12px;font-weight:800;font-size:15px;cursor:pointer}
@@ -1462,6 +1540,7 @@ html.tp-hidden *{animation-play-state:paused!important}
 <div class="splash wait" id="splash" aria-hidden="true"><span class="cm cm-rays"></span><span class="cm cm-dots"></span><span class="cm cm-lines"></span><span class="cm cm-cap">Meanwhile, at Toyota Marin…</span><span class="cm cm-zip">ZOOM!</span><span class="cm cm-pow"><i>POW!</i></span><span class="sp-streak s1"></span><span class="sp-streak s2"></span><div class="sp-in"><b><span>You got</span><span>this!</span></b><span class="sp-bar"></span></div></div>
 <script>
 try{ if("scrollRestoration" in history) history.scrollRestoration="manual"; }catch(e){}
+try{ const _n=new Date(), _k=_n.getFullYear()+"-"+String(_n.getMonth()+1).padStart(2,"0"); if(localStorage.getItem("trippad.closed")===_k) document.documentElement.classList.add("tp-closed"); }catch(e){}
 try{ const _b=localStorage.getItem("trippad.bg"); if(_b){ const r=document.documentElement; r.setAttribute("data-bg",_b); r.setAttribute("data-bgm",(r.getAttribute("data-theme")||(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark"))==="light"?"light":"dark"); } }catch(e){}
 (function(){ const top=()=>{ try{ window.scrollTo(0,0); document.documentElement.scrollTop=0; document.body&&(document.body.scrollTop=0); }catch(e){} };
   top(); document.addEventListener("DOMContentLoaded",top); addEventListener("load",top); addEventListener("pageshow",top); addEventListener("tp-enter",top); })();
@@ -1537,6 +1616,7 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
   <div class="ranktip" id="rankTip" hidden></div>
   <button type="button" class="wrapban" id="wrapBanner" hidden>🎁 <span id="wrapBanTxt"></span><b>Open ›</b></button>
 
+  <button type="button" class="closebook" id="closeBookBtn" hidden><span class="cbk-ico" aria-hidden="true">📕</span><span class="cbk-txt"><b>Last day of the month</b><small>Wrap it up: close the book</small></span><span class="cbk-go" aria-hidden="true">›</span></button>
   <section class="board" id="board" aria-label="Month totals">
     <div class="mend" id="monthEnd" hidden><span></span><b></b></div>
     <div class="units">
@@ -1546,6 +1626,7 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
           <circle class="track" cx="60" cy="60" r="53"/><circle class="fill" id="ringFill" cx="60" cy="60" r="53"/><circle class="rtip" id="ringTip" cx="113" cy="60" r="7" fill="url(#ringGrad)" style="opacity:0"/>
         </svg>
         <div class="big" id="units"><span class="unum" id="unitsNum">0</span><small>units</small></div>
+        <button type="button" class="netring" id="netRing" aria-label="Internet closing percentage"><svg viewBox="0 0 60 60" aria-hidden="true"><defs><linearGradient id="netGrad" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#0891b2"/><stop offset="1" stop-color="#67e8f9"/></linearGradient></defs><circle class="nt" cx="30" cy="30" r="24"/><circle class="nf" id="netFill" cx="30" cy="30" r="24"/></svg><span class="nv"><b id="netPct">—</b><small>NET</small></span></button>
       </div>
       <div class="pay"><div class="lbl">Commission</div><div class="amt" id="comm">$0</div><div class="pace" id="paceText"></div><div class="paypace" id="payPace"></div><div id="streakWrap"></div></div>
     </div>
@@ -3059,6 +3140,38 @@ function renderBgPick(){ const box=document.getElementById("bgPick"); if(!box) r
   mk("","Theme",""); (BG_LIST||[]).forEach(([k,n,d,l])=>mk(k,n,light?l:d)); }
 try{ matchMedia("(prefers-color-scheme: light)").addEventListener("change",applyBg); }catch(e){}
 applyBg();
+function renderNetRing(){ const el=document.getElementById("netRing"); if(!el) return; const mk=monthKey(new Date()); let ups=0;
+  Object.keys(upsData||{}).forEach(k=>{ if(k.startsWith(mk)) ups+=((upsData[k]||{}).Internet|0); });
+  const sold=deals.filter(d=>(d.date||"").startsWith(mk)&&d.status!=="unwound"&&d.source==="Internet").length;
+  const pct=ups?Math.min(100,Math.round(sold/ups*100)):0; el.classList.toggle("empty",!ups);
+  document.getElementById("netPct").textContent=ups?pct+"%":"—"; document.getElementById("netFill").style.strokeDashoffset=String(150.8*(1-pct/100));
+  el.setAttribute("aria-label", ups?("Internet closing "+pct+"%: "+sold+" sold from "+ups+" internet ups this month"):"Internet closing: log internet ups in Today to see it"); el.title=el.getAttribute("aria-label"); }
+document.getElementById("netRing").addEventListener("click",()=>{ const el=document.getElementById("netRing"); try{ cheer("INTERNET",el.getAttribute("aria-label")); }catch(e){} document.getElementById("todaySec").scrollIntoView({behavior:"smooth",block:"center"}); });
+/* ===== close the book ===== */
+function monthKeyNow(){ const n=new Date(); return n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0"); }
+function isLastDay(){ const n=new Date(), t=new Date(n.getFullYear(),n.getMonth(),n.getDate()+1); return t.getMonth()!==n.getMonth(); }
+function bookClosed(){ try{ return localStorage.getItem("trippad.closed")===monthKeyNow(); }catch(e){ return false; } }
+function syncCloseBtn(){ const b=document.getElementById("closeBookBtn"); if(b) b.hidden=!(isLastDay()&&!bookClosed()); }
+function confirmBox(o){ const s=document.createElement("div"); s.className="cbx-scrim"; s.setAttribute("role","dialog"); s.setAttribute("aria-modal","true");
+  s.innerHTML='<div class="cbx"><div class="cbx-ico"></div><h3></h3><p></p><div class="row2"><button type="button" class="btn cbx-no"></button><button type="button" class="btn primary cbx-yes"></button></div></div>';
+  s.querySelector(".cbx-ico").textContent=o.icon||""; s.querySelector("h3").textContent=o.title; s.querySelector("p").textContent=o.text||""; s.querySelector(".cbx-no").textContent=o.no||"No"; s.querySelector(".cbx-yes").textContent=o.yes||"Yes";
+  const done=()=>s.remove(); s.querySelector(".cbx-no").addEventListener("click",done); s.addEventListener("click",e=>{ if(e.target===s) done(); });
+  s.querySelector(".cbx-yes").addEventListener("click",()=>{ done(); o.onYes&&o.onYes(); }); document.body.append(s); setTimeout(()=>s.querySelector(".cbx-no").focus(),50); }
+function showBookClosed(animate){ document.querySelectorAll(".bkc").forEach(x=>x.remove()); const n=new Date(), mName=n.toLocaleDateString("en-US",{month:"long",year:"numeric"});
+  const nxt=new Date(n.getFullYear(),n.getMonth()+1,1).toLocaleDateString("en-US",{month:"long"});
+  const o=document.createElement("div"); o.className="bkc "+(animate?"in anim":"static"); o.setAttribute("role","dialog"); o.setAttribute("aria-label","Month closed");
+  o.innerHTML='<div class="bkc-stars"></div><div class="moon">🌙</div><div class="zzz" aria-hidden="true"><span>Z</span><span>z</span><span>z</span></div>'+
+    '<div class="book"><div class="pages"></div><div class="cover"><div class="front"><i>🏁</i><b>Fun Trip Pad</b><small></small></div><div class="inside"></div></div><span class="lock">🔒</span></div>'+
+    '<div class="bkc-msg">Month done, rest up for next month</div><p class="bkc-sub"></p><button type="button" class="bkc-reopen">📖 Reopen the book</button>';
+  o.querySelector(".front small").textContent=mName; o.querySelector(".bkc-sub").textContent="The book is closed. See you in "+nxt+".";
+  o.querySelector(".bkc-reopen").addEventListener("click",()=>confirmBox({icon:"😴",title:"You should be resting",text:"Are you sure you want to reopen the Fun Trip Pad?",no:"Keep resting",yes:"Reopen",onYes:reopenBook}));
+  document.body.append(o); if(animate){ try{ tapSuccess(); }catch(e){} setTimeout(()=>{ try{ playB64("enter",ENTER_SFX); }catch(e){} },350); } }
+function closeBook(){ try{ localStorage.setItem("trippad.closed",monthKeyNow()); }catch(e){} document.documentElement.classList.add("tp-closed"); syncCloseBtn(); window.scrollTo(0,0); showBookClosed(true); }
+function reopenBook(){ try{ localStorage.removeItem("trippad.closed"); }catch(e){} document.documentElement.classList.remove("tp-closed"); const o=document.querySelector(".bkc"); if(o){ o.style.transition="opacity .5s"; o.style.opacity="0"; setTimeout(()=>o.remove(),500); } syncCloseBtn(); }
+document.getElementById("closeBookBtn").addEventListener("click",()=>confirmBox({icon:"📕",title:"Are you sure you wish to close the month?",text:"Once you do this, you will not be able to reopen the Fun Trip Pad until next month.",no:"Not yet",yes:"Close the book",onYes:closeBook}));
+try{ const st=localStorage.getItem("trippad.closed"); if(st&&st!==monthKeyNow()){ localStorage.removeItem("trippad.closed"); document.documentElement.classList.remove("tp-closed"); } }catch(e){}
+if(bookClosed()) showBookClosed(false);
+syncCloseBtn(); setInterval(syncCloseBtn,60000);
 /* settings sheet */
 function openSettings(){ $("setScrim").hidden=false; $("setBtn").setAttribute("aria-expanded","true"); try{ tap(); }catch(e){} }
 function closeSettings(){ $("setScrim").hidden=true; $("setBtn").setAttribute("aria-expanded","false"); }
@@ -3172,7 +3285,7 @@ function renderToday(){ const list=$("tdList"); if(!list) return; const t=today(
   const tmc=(plan||[]).filter(p=>p.date===tm).length;
   if(!n){ const li=document.createElement("li"); li.className="td-empty"; li.textContent="Nothing on the board yet. Tap + Appt to plan your day."+(tmc?" ("+tmc+" set for tomorrow)":""); list.append(li); }
   else if(tmc){ const li=document.createElement("li"); li.className="td-empty"; li.textContent=tmc+" more set for tomorrow."; list.append(li); }
-  renderUps(); renderEoBar(); }
+  renderUps(); renderEoBar(); try{ renderNetRing(); }catch(e){} }
 async function savePlan(list){ const cut=new Date(); cut.setDate(cut.getDate()-30); const ck=ymd(cut); list=list.filter(p=>(p.date||"")>=ck);
   if(store&&store.saveDoc) await store.saveDoc("plan",{list}); }
 function openPlan(p){ planEditing=p||null; $("planTitle").textContent=p?"Edit":"Add to today"; setSeg("plKind",p?.kind||"appt"); $("plWho").value=p?.who||""; $("plDate").value=p?.date||today(); $("plTime").value=p?.time||""; $("plPhone").value=p?.phone||""; $("plNote").value=p?.note||""; $("plErr").textContent=""; $("plDel").hidden=!p; $("planScrim").hidden=false; setTimeout(()=>$("plWho").focus({preventScroll:true}),50); }
@@ -3482,7 +3595,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v60", tpChecked=0;
+var TP_BUILD="trip-pad-v61", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
