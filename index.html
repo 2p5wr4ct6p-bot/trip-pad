@@ -1800,6 +1800,13 @@ html:not(.tp-in) .fabqr{visibility:hidden}
  50%{box-shadow:0 0 0 2px #ff3d9a,0 0 22px 3px rgba(255,61,154,.55),0 -10px 40px rgba(255,61,154,.25)}
  75%{box-shadow:0 0 0 2px #00c2ff,0 0 22px 3px rgba(0,194,255,.55),0 -10px 40px rgba(0,194,255,.25)}}
 @media (prefers-reduced-motion:reduce){#scrim:not([hidden]) > .sheet,#qrScrim:not([hidden]) > .sheet{box-shadow:0 0 0 2px #3b6dff,0 0 22px 3px rgba(59,109,255,.5)}}
+/* deal form flies back into the Log a deal button when it closes */
+#scrim.closing:not([hidden]) > .sheet{transform-origin:50% 50%;animation:fwHome .44s cubic-bezier(.5,0,.75,.35) forwards!important}
+#scrim.closing:not([hidden]){animation:fwScrimOut .44s ease forwards}
+@keyframes fwHome{0%{transform:none;opacity:1}
+ 55%{opacity:1;border-radius:28px}
+ 100%{transform:translate(var(--fx,0px),var(--fy,120px)) scale(var(--fsx,.3),var(--fsy,.1));opacity:0;border-radius:999px}}
+.fab.catch{scale:1.14;transition:scale .1s ease-out}
 /* ===== round 12: QR code tool ===== */
 .td-tools{grid-template-columns:repeat(3,minmax(0,1fr))!important}
 @media (min-width:640px){.td-tools{grid-template-columns:repeat(6,minmax(0,1fr))!important}}
@@ -3155,7 +3162,7 @@ function openForm(d){
   $("del").hidden=!d; $("confirm").hidden=true; $("formErr").hidden=true;
   clearTimeout(closeForm.t); $("scrim").classList.remove("closing"); $("scrim").hidden=false; setTimeout(()=>$("fDeal").focus({preventScroll:true}),50);
 }
-function closeForm(){ const sc=$("scrim"); editing=null; try{ stopMic(); }catch(e){} if(sc.hidden) return; clearTimeout(closeForm.t); if(reduceMotion()){ sc.hidden=true; sc.classList.remove("closing"); return; } sc.classList.add("closing"); closeForm.t=setTimeout(()=>{ sc.hidden=true; sc.classList.remove("closing"); },280); }
+function closeForm(){ const sc=$("scrim"); editing=null; try{ stopMic(); }catch(e){} if(sc.hidden) return; clearTimeout(closeForm.t); if(reduceMotion()){ sc.hidden=true; sc.classList.remove("closing"); return; } try{ const sh=sc.querySelector(".sheet"), a=$("add"), r=sh.getBoundingClientRect(), f=a.getBoundingClientRect(); if(r.width&&f.width){ sh.style.setProperty("--fx",((f.left+f.width/2)-(r.left+r.width/2))+"px"); sh.style.setProperty("--fy",((f.top+f.height/2)-(r.top+r.height/2))+"px"); sh.style.setProperty("--fsx",Math.max(.05,f.width/r.width)); sh.style.setProperty("--fsy",Math.max(.02,f.height/r.height)); } }catch(e){} sc.classList.add("closing"); closeForm.t=setTimeout(()=>{ sc.hidden=true; sc.classList.remove("closing"); const a=$("add"); if(a){ a.classList.add("catch"); setTimeout(()=>a.classList.remove("catch"),110); } },430); }
 $("add").addEventListener("click",()=>openForm(null));
 $("cancel").addEventListener("click",closeForm);
 $("scrim").addEventListener("click",e=>{if(e.target===$("scrim"))closeForm();});
@@ -4738,7 +4745,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v110", tpChecked=0;
+var TP_BUILD="trip-pad-v111", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
