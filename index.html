@@ -627,17 +627,23 @@ html.tp-hidden .tag.eo::before{animation-play-state:paused}
 .setsheet .soundlbl{display:none}
 .setsheet .totop{margin:0;align-self:stretch}
 .setsheet .setnote{margin:0;font-size:12px;color:var(--muted)}
-/* internet closing ring */
-.netring{position:absolute;right:-26px;bottom:-10px;width:62px;height:62px;padding:0;border:0;border-radius:50%;cursor:pointer;background:var(--card);box-shadow:0 0 0 3px var(--card),0 6px 16px rgba(0,0,0,.25);z-index:2}
-.netring svg{position:absolute;inset:4px;width:54px;height:54px;transform:rotate(-90deg);overflow:visible}
-.netring circle{fill:none;stroke-width:7}
-.netring .nt{stroke:color-mix(in srgb,#22d3ee 20%,transparent)}
-.netring .nf{stroke:url(#netGrad);stroke-linecap:round;stroke-dasharray:150.8;stroke-dashoffset:150.8;transition:stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1)}
-.netring .nv{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
-.netring .nv b{font:800 13px var(--f-num);color:var(--ink)}
-.netring .nv small{margin-top:2px;font:800 8px var(--f-body);letter-spacing:.12em;color:#22d3ee}
-.netring.empty .nv b{color:var(--muted)}
-@media (prefers-reduced-motion:reduce){.netring .nf{transition:none}}
+/* internet ring, same size as units ring */
+.units{flex-wrap:wrap;justify-content:center;gap:16px clamp(10px,4vw,20px)}
+.units .ringwrap,.units .netwrap{width:min(136px,36vw);height:min(136px,36vw)}
+:root[data-theme="light"] .netwrap .nbig small{color:#0e7490}
+@media (max-width:360px){.netwrap .nbig .unum{font-size:28px}.netwrap .nbig small{font-size:9px}.ringwrap #units{font-size:38px}}
+.units .pay{flex:1 1 100%;text-align:center}
+.netwrap{position:relative;flex:none;padding:0;border:0;background:none;cursor:pointer;color:var(--ink)}
+.netwrap .ring{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);overflow:visible}
+.netwrap .ring circle{fill:none;stroke-width:14}
+.netwrap .ring .track{stroke:color-mix(in srgb,#22d3ee 20%,transparent)}
+.netwrap .ring .fill{stroke:url(#netGrad);stroke-linecap:round;stroke-dasharray:333.0;stroke-dashoffset:333.0;animation:none!important;transition:none!important}
+.netwrap .ring circle.rtip{stroke:none;filter:drop-shadow(0 0 1.4px rgba(0,0,0,.6));transition:opacity .2s}
+.netwrap .nbig{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.netwrap .nbig .unum{font:800 34px var(--f-num);letter-spacing:-.02em}
+.netwrap .nbig small{margin:6px 0 0;font-size:10.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#22d3ee}
+.netwrap .nbig em{margin-top:3px;font-style:normal;font-size:11px;font-weight:700;color:var(--muted)}
+.netwrap.empty .nbig .unum{color:var(--muted)}
 /* ===== close the book ===== */
 html.tp-closed #gate,html.tp-closed #splash{visibility:hidden!important}
 .closebook{display:flex;align-items:center;gap:12px;width:100%;margin:0 0 14px;padding:14px 16px;border-radius:16px;cursor:pointer;text-align:left;color:var(--ink);font:inherit;
@@ -1627,8 +1633,14 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
           <circle class="track" cx="60" cy="60" r="53"/><circle class="fill" id="ringFill" cx="60" cy="60" r="53"/><circle class="rtip" id="ringTip" cx="113" cy="60" r="7" fill="url(#ringGrad)" style="opacity:0"/>
         </svg>
         <div class="big" id="units"><span class="unum" id="unitsNum">0</span><small>units</small></div>
-        <button type="button" class="netring" id="netRing" aria-label="Internet closing percentage"><svg viewBox="0 0 60 60" aria-hidden="true"><defs><linearGradient id="netGrad" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#0891b2"/><stop offset="1" stop-color="#67e8f9"/></linearGradient></defs><circle class="nt" cx="30" cy="30" r="24"/><circle class="nf" id="netFill" cx="30" cy="30" r="24"/></svg><span class="nv"><b id="netPct">—</b><small>NET</small></span></button>
       </div>
+      <button type="button" class="netwrap" id="netRing" aria-label="Internet closing percentage">
+        <svg class="ring nring" viewBox="0 0 120 120" aria-hidden="true">
+          <defs><linearGradient id="netGrad" gradientUnits="userSpaceOnUse" x1="14" y1="106" x2="106" y2="14"><stop offset="0" stop-color="#0e7490"/><stop offset="1" stop-color="#67e8f9"/></linearGradient></defs>
+          <circle class="track" cx="60" cy="60" r="53"/><circle class="fill" id="netFill" cx="60" cy="60" r="53"/><circle class="rtip" id="netTip" cx="113" cy="60" r="7" fill="url(#netGrad)" style="opacity:0"/>
+        </svg>
+        <div class="big nbig"><span class="unum" id="netPct">—</span><small>Internet close</small><em id="netSub"></em></div>
+      </button>
       <div class="pay"><div class="lbl">Commission</div><div class="amt" id="comm">$0</div><div class="pace" id="paceText"></div><div class="paypace" id="payPace"></div><div id="streakWrap"></div></div>
     </div>
     <div class="road" id="road" aria-hidden="true"><div class="lane"></div><div class="flag"></div><span class="roadlbl" id="roadLbl"></span>
@@ -3145,8 +3157,15 @@ function renderNetRing(){ const el=document.getElementById("netRing"); if(!el) r
   Object.keys(upsData||{}).forEach(k=>{ if(k.startsWith(mk)) ups+=((upsData[k]||{}).Internet|0); });
   const sold=deals.filter(d=>(d.date||"").startsWith(mk)&&d.status!=="unwound"&&d.source==="Internet").length;
   const pct=ups?Math.min(100,Math.round(sold/ups*100)):0; el.classList.toggle("empty",!ups);
-  document.getElementById("netPct").textContent=ups?pct+"%":"—"; document.getElementById("netFill").style.strokeDashoffset=String(150.8*(1-pct/100));
-  el.setAttribute("aria-label", ups?("Internet closing "+pct+"%: "+sold+" sold from "+ups+" internet ups this month"):"Internet closing: log internet ups in Today to see it"); el.title=el.getAttribute("aria-label"); }
+  document.getElementById("netPct").textContent=ups?pct+"%":"—"; document.getElementById("netSub").textContent=ups?sold+" of "+ups+" leads":"log internet ups";
+  animRing("netFill","netTip",pct,"net");
+  el.setAttribute("aria-label", ups?("Internet closing "+pct+"% this month: "+sold+" sold from "+ups+" internet ups"):"Internet closing: log internet ups in Today to see it"); el.title=el.getAttribute("aria-label"); }
+var ringState={};
+function animRing(fillId,tipId,pct,key){ const f=document.getElementById(fillId), tp=document.getElementById(tipId); if(!f) return; const from=ringState[key]==null?0:ringState[key], to=pct; ringState[key]=to;
+  const put=v=>{ f.style.strokeDashoffset=String(333.0*(1-v/100)); if(tp){ const a=v*3.6*Math.PI/180; tp.setAttribute("cx",(60+53*Math.cos(a)).toFixed(2)); tp.setAttribute("cy",(60+53*Math.sin(a)).toFixed(2)); tp.style.opacity=v>1.5?"1":"0"; } };
+  cancelAnimationFrame(animRing["raf"+key]); let rm=false; try{ rm=matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){}
+  if(rm||Math.abs(from-to)<.01){ put(to); return; } const t0=performance.now(), D=1100;
+  (function st(now){ const k=Math.min(1,(now-t0)/D), e=1-Math.pow(1-k,3); put(from+(to-from)*e); if(k<1) animRing["raf"+key]=requestAnimationFrame(st); })(t0); }
 document.getElementById("netRing").addEventListener("click",()=>{ const el=document.getElementById("netRing"); try{ cheer("INTERNET",el.getAttribute("aria-label")); }catch(e){} document.getElementById("todaySec").scrollIntoView({behavior:"smooth",block:"center"}); });
 /* ===== close the book ===== */
 function monthKeyNow(){ const n=new Date(); return n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0"); }
@@ -3596,7 +3615,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v62", tpChecked=0;
+var TP_BUILD="trip-pad-v63", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
