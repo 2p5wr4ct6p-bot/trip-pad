@@ -1015,6 +1015,21 @@ html.tp-hidden .sp-ttl.sp-neon,html.tp-hidden .sp-ttl.sp-neon i{animation-play-s
 html:not(.tp-in) .wrap,html:not(.tp-in) .fab{visibility:hidden}
 .gate{position:fixed;inset:0;z-index:110;display:grid;place-items:center;padding:24px;overflow:hidden;color:#fff;background:#07091a;transition:opacity .5s ease,transform .5s cubic-bezier(.5,0,.2,1)}
 .gate.go{opacity:0;transform:scale(1.08);pointer-events:none}
+/* enter → splash warp transition */
+.tp-warp{position:fixed;inset:0;z-index:120;pointer-events:none;overflow:hidden;
+  background:radial-gradient(circle at var(--wx) var(--wy),#fff 0,color-mix(in srgb,var(--accent,#7c3aed) 85%,#fff) 6%,var(--accent,#7c3aed) 22%,color-mix(in srgb,var(--accent,#7c3aed) 55%,#ec4899) 48%,#0b0820 100%);
+  clip-path:circle(0px at var(--wx) var(--wy));animation:warpopen .62s cubic-bezier(.7,0,.3,1) forwards}
+.tp-warp::before{content:"";position:absolute;left:var(--wx);top:var(--wy);width:300vmax;height:300vmax;margin:-150vmax 0 0 -150vmax;
+  background:repeating-conic-gradient(from 0deg,rgba(255,255,255,.55) 0 .6deg,transparent .6deg 6deg);
+  -webkit-mask:radial-gradient(circle,transparent 4%,#000 18%,transparent 60%);mask:radial-gradient(circle,transparent 4%,#000 18%,transparent 60%);
+  animation:warplines .9s cubic-bezier(.4,0,.2,1) forwards}
+.tp-warp::after{content:"";position:absolute;left:var(--wx);top:var(--wy);width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;background:#fff;box-shadow:0 0 60px 30px #fff;animation:warpflash .7s ease-out forwards}
+.tp-warp.out{animation:warpout .5s ease-out forwards}
+.gate.warping{transition:transform .62s cubic-bezier(.7,0,.3,1),filter .62s,opacity .62s;transform:scale(1.18);filter:blur(6px);opacity:.6;pointer-events:none}
+@keyframes warpopen{to{clip-path:circle(150vmax at var(--wx) var(--wy))}}
+@keyframes warplines{0%{transform:scale(.3) rotate(0);opacity:0}30%{opacity:1}100%{transform:scale(1.6) rotate(25deg);opacity:.25}}
+@keyframes warpflash{0%{transform:scale(.2);opacity:1}60%{transform:scale(6);opacity:.9}100%{transform:scale(14);opacity:0}}
+@keyframes warpout{0%{opacity:1;clip-path:circle(150vmax at var(--wx) var(--wy))}100%{opacity:0;transform:scale(1.15);clip-path:circle(150vmax at var(--wx) var(--wy))}}
 .gate-bg i{position:absolute;width:70vmax;height:70vmax;border-radius:50%;filter:blur(60px);opacity:.55;animation:gateblob 12s ease-in-out infinite alternate}
 .gate-bg i:nth-child(1){background:#2f6bff;top:-30vmax;left:-25vmax}
 .gate-bg i:nth-child(2){background:#ff1f8e;bottom:-35vmax;right:-30vmax;animation-delay:-4s}
@@ -1688,8 +1703,13 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
       ctx.decodeAudioData(arr.buffer, buf=>{ const src=ctx.createBufferSource(); src.buffer=buf; src.connect(ctx.destination); src.start(); }, ()=>{}); } } }catch(e){}
     try{ if(window.tapSuccess) tapSuccess(); }catch(e){}
     if(sp) sp.classList.remove("wait"), sp.classList.add("hold");
-    g.classList.add("go");
-    setTimeout(()=>{ g.remove(); document.documentElement.classList.add("tp-in"); if(sp){ sp.classList.remove("hold"); if(window.startSplash) startSplash(); } window.dispatchEvent(new Event("tp-enter")); },520);
+    const finish=()=>{ g.remove(); document.documentElement.classList.add("tp-in"); if(sp){ sp.classList.remove("hold"); if(window.startSplash) startSplash(); } window.dispatchEvent(new Event("tp-enter")); };
+    let rm=false; try{ rm=matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){}
+    if(rm){ g.classList.add("go"); setTimeout(finish,520); return; }
+    const r=btn.getBoundingClientRect(), w=document.createElement("div"); w.className="tp-warp";
+    w.style.setProperty("--wx",(r.left+r.width/2)+"px"); w.style.setProperty("--wy",(r.top+r.height/2)+"px"); document.body.append(w);
+    g.classList.add("warping");
+    setTimeout(()=>{ finish(); w.classList.add("out"); setTimeout(()=>w.remove(),520); },640);
   });
 })();
 </script>
@@ -3712,7 +3732,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v73", tpChecked=0;
+var TP_BUILD="trip-pad-v74", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
