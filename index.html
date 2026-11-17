@@ -1766,6 +1766,30 @@ html.tp-hidden :is(.ious,.iou-row,.iou-half,.iou-count)::after,html.tp-hidden .i
 @keyframes netstrobe{0%,14%,28%,100%{box-shadow:0 0 0 rgba(34,211,238,0);filter:none}
  7%,21%{box-shadow:0 0 0 1.5px #22d3ee,0 0 14px 2px rgba(34,211,238,.85);filter:brightness(1.6)}}
 @media (prefers-reduced-motion:reduce){.tag.src-net{animation:none}}
+/* ===== round 13: QR button beside Log a deal, press + click, form window animation ===== */
+.fab{left:calc(50% - var(--fabShift,33px))}
+.fabqr{position:fixed;z-index:5;bottom:calc(18px + env(safe-area-inset-bottom,0px));left:calc(50% - var(--fabShift,33px) + var(--fabW,170px) / 2 + 10px);
+  width:var(--fabH,54px);height:var(--fabH,54px);padding:0;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--accent);
+  display:grid;place-items:center;cursor:pointer;box-shadow:0 6px 20px rgba(20,40,100,.22);-webkit-tap-highlight-color:transparent}
+.fabqr svg{width:48%;height:48%;display:block}
+:root[data-skin="hero"] .fabqr{background:#ffcc00;color:#111;border:3px solid #111;box-shadow:5px 5px 0 #111}
+:root[data-skin="grid"] .fabqr,:root[data-skin="matrix"] .fabqr{background:#000;color:currentColor;border:1.5px solid currentColor}
+:root[data-skin="grid"] .fabqr{color:#00eaff;box-shadow:0 0 16px rgba(0,234,255,.5)}
+:root[data-skin="matrix"] .fabqr{color:#00ff66;box-shadow:0 0 16px rgba(0,255,102,.45)}
+html.recap-open .fabqr{display:none!important}
+html:not(.tp-in) .fabqr{visibility:hidden}
+.fab,.fabqr{-webkit-tap-highlight-color:transparent;transition:scale .22s cubic-bezier(.3,.7,.35,1.6)}
+.fab.pressing,.fabqr.pressing{scale:.86;transition:scale .08s ease-out}
+/* deal form opens like a window and closes smoothly */
+#scrim:not([hidden]),#qrScrim:not([hidden]){animation:fwScrimIn .3s ease both}
+#scrim:not([hidden]) > .sheet,#qrScrim:not([hidden]) > .sheet{transform-origin:50% 100%;animation:fwIn .46s cubic-bezier(.18,1.15,.32,1) both}
+#scrim.closing{animation:fwScrimOut .28s ease forwards}
+#scrim.closing > .sheet{animation:fwOut .28s cubic-bezier(.5,0,.75,.3) forwards}
+@keyframes fwScrimIn{from{background:rgba(10,14,22,0);-webkit-backdrop-filter:none;backdrop-filter:none}}
+@keyframes fwScrimOut{to{background:rgba(10,14,22,0)}}
+@keyframes fwIn{0%{opacity:0;transform:translateY(46px) scale(.84)}60%{opacity:1}100%{opacity:1;transform:none}}
+@keyframes fwOut{to{opacity:0;transform:translateY(70px) scale(.9)}}
+@media (prefers-reduced-motion:reduce){#scrim,#qrScrim,#scrim > .sheet,#qrScrim > .sheet{animation:none!important}.fab,.fabqr{transition:none}}
 /* ===== round 12: QR code tool ===== */
 .td-tools{grid-template-columns:repeat(3,minmax(0,1fr))!important}
 @media (min-width:640px){.td-tools{grid-template-columns:repeat(6,minmax(0,1fr))!important}}
@@ -2400,6 +2424,7 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
 
 <div class="undo" id="undoToast" hidden role="status" aria-live="polite"><span id="undoText"></span><button type="button" id="undoBtn">Undo</button></div>
 <button class="fab" id="add" type="button">+ Log a deal</button>
+<button class="fabqr" id="qrFab" type="button" aria-label="QR code maker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.2"/><rect x="14" y="3" width="7" height="7" rx="1.2"/><rect x="3" y="14" width="7" height="7" rx="1.2"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/><rect x="5.6" y="5.6" width="1.8" height="1.8" fill="currentColor" stroke="none"/><rect x="16.6" y="5.6" width="1.8" height="1.8" fill="currentColor" stroke="none"/><rect x="5.6" y="16.6" width="1.8" height="1.8" fill="currentColor" stroke="none"/></svg></button>
 
 <div class="scrim" id="scrim" hidden>
   <form class="sheet" id="form" novalidate>
@@ -3118,9 +3143,9 @@ function openForm(d){
   $("fNotes").value=d?.notes||"";
   setStips(d?.stips||{}); setSeg("fEo",d?.eo?"yes":"no"); $("fEoDate").value=d?.eo||""; $("eoWrap").hidden=!d?.eo; stopMic();
   $("del").hidden=!d; $("confirm").hidden=true; $("formErr").hidden=true;
-  $("scrim").hidden=false; setTimeout(()=>$("fDeal").focus({preventScroll:true}),50);
+  clearTimeout(closeForm.t); $("scrim").classList.remove("closing"); $("scrim").hidden=false; setTimeout(()=>$("fDeal").focus({preventScroll:true}),50);
 }
-function closeForm(){$("scrim").hidden=true; editing=null; try{ stopMic(); }catch(e){}}
+function closeForm(){ const sc=$("scrim"); editing=null; try{ stopMic(); }catch(e){} if(sc.hidden) return; clearTimeout(closeForm.t); if(reduceMotion()){ sc.hidden=true; sc.classList.remove("closing"); return; } sc.classList.add("closing"); closeForm.t=setTimeout(()=>{ sc.hidden=true; sc.classList.remove("closing"); },280); }
 $("add").addEventListener("click",()=>openForm(null));
 $("cancel").addEventListener("click",closeForm);
 $("scrim").addEventListener("click",e=>{if(e.target===$("scrim"))closeForm();});
@@ -3871,6 +3896,23 @@ function updateFuTexts(){ const box=$("fuTexts"); if(!box) return; box.replaceCh
 $("fPhone").addEventListener("input",updateFuTexts); $("fCust").addEventListener("input",updateFuTexts); $("fVeh").addEventListener("input",updateFuTexts);
 
 
+
+
+/* ===== round 13: press-and-click on Log a deal + QR, QR button sizing ===== */
+function uiClick(){ try{ if(typeof soundPref!=="undefined"&&soundPref==="off") return; const ctx=audioCtx(); if(!ctx) return; const t=ctx.currentTime;
+  const o=ctx.createOscillator(), f=ctx.createBiquadFilter(), g=ctx.createGain(); o.type="square"; o.frequency.setValueAtTime(2400,t); o.frequency.exponentialRampToValueAtTime(950,t+.03);
+  f.type="bandpass"; f.frequency.value=2600; f.Q.value=1.1; g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.16,t+.002); g.gain.exponentialRampToValueAtTime(.0001,t+.05);
+  o.connect(f).connect(g).connect(ctx.destination); o.start(t); o.stop(t+.06);
+  const len=Math.floor(ctx.sampleRate*.018), buf=ctx.createBuffer(1,len,ctx.sampleRate), d=buf.getChannelData(0); for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,4);
+  const n=ctx.createBufferSource(), ng=ctx.createGain(); ng.gain.value=.3; n.buffer=buf; n.connect(ng).connect(ctx.destination); n.start(t); }catch(e){} }
+function pressable(el){ if(!el) return; const off=()=>el.classList.remove("pressing");
+  el.addEventListener("pointerdown",e=>{ if(e.button>0) return; el.classList.add("pressing"); uiClick(); try{ tap(); }catch(_){} });
+  ["pointerup","pointerleave","pointercancel","blur"].forEach(k=>el.addEventListener(k,off));
+  el.addEventListener("keydown",e=>{ if((e.key==="Enter"||e.key===" ")&&!e.repeat){ el.classList.add("pressing"); uiClick(); setTimeout(off,140); } }); }
+pressable($("add")); pressable($("qrFab"));
+$("qrFab").addEventListener("click",()=>openQr(""));
+function sizeFabs(){ try{ const a=$("add"), r=document.documentElement; if(!a||!a.offsetWidth) return; const h=a.offsetHeight; r.style.setProperty("--fabW",a.offsetWidth+"px"); r.style.setProperty("--fabH",h+"px"); r.style.setProperty("--fabShift",((h+10)/2)+"px"); }catch(e){} }
+sizeFabs(); addEventListener("resize",sizeFabs); addEventListener("tp-enter",()=>setTimeout(sizeFabs,60)); try{ new ResizeObserver(sizeFabs).observe($("add")); }catch(e){} try{ document.fonts&&document.fonts.ready.then(sizeFabs); }catch(e){}
 
 /* ===== round 12: QR code maker (stock # or VIN) ===== */
 var qrVal="";
@@ -4686,7 +4728,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v108", tpChecked=0;
+var TP_BUILD="trip-pad-v109", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
