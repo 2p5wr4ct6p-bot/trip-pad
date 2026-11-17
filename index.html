@@ -645,6 +645,16 @@ html.tp-hidden .tag.eo::before{animation-play-state:paused}
 .netwrap .nbig small{margin:6px 0 0;font-size:10.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#22d3ee}
 .netwrap .nbig em{margin-top:3px;font-style:normal;font-size:11px;font-weight:700;color:var(--muted)}
 .netwrap.empty .nbig .unum{color:var(--muted)}
+/* ring animation: glint sweep + entrance */
+.ring circle.glint,.netwrap .ring circle.glint{fill:none;stroke:#fff;stroke-opacity:.6;stroke-width:9;stroke-linecap:round;stroke-dasharray:16 317;animation:glint 3.4s linear infinite;filter:blur(1.2px)}
+.netwrap:nth-of-type(2) .ring circle.glint{animation-delay:-1.1s}.phwrap .ring circle.glint{animation-delay:-2.2s}
+@keyframes glint{from{stroke-dashoffset:333}to{stroke-dashoffset:0}}
+.units .ringwrap.rin,.units .netwrap.rin{animation:ringin .8s cubic-bezier(.2,1.3,.4,1) both}
+.units .netwrap.rin{animation-delay:.12s}.units .phwrap.rin{animation-delay:.24s}
+@keyframes ringin{0%{opacity:0;transform:scale(.7) rotate(-25deg)}100%{opacity:1;transform:none}}
+.ringwrap.hit .ring circle.glint{animation-duration:1.8s;stroke-opacity:.8}
+html.tp-hidden .ring circle.glint{animation-play-state:paused}
+@media (prefers-reduced-motion:reduce){.ring circle.glint{display:none}.units .rin{animation:none!important}}
 /* three rings across */
 .units .ringwrap,.units .netwrap{width:min(136px,calc((100vw - 104px) / 3));height:min(136px,calc((100vw - 104px) / 3))}
 .units{gap:14px clamp(8px,2.6vw,18px)}
@@ -901,6 +911,13 @@ html.tp-hidden .tk-track{animation-play-state:paused}
 .sp-head{display:flex;align-items:center;gap:8px}
 .sp-ttl{font-weight:800;font-size:14px}
 .sp-head{flex-wrap:wrap}
+/* SPIFF TRACKER outline + glow */
+.sp-ttl.sp-nike:not(.iou-ttl){color:transparent;-webkit-text-fill-color:transparent;-webkit-text-stroke:1.3px #ffd54a;letter-spacing:.02em;text-shadow:none;
+  filter:drop-shadow(0 0 3px rgba(255,213,74,.6)) drop-shadow(0 0 8px rgba(255,190,40,.35));animation:sptglow 3s ease-in-out infinite}
+:root[data-theme="light"] .sp-ttl.sp-nike:not(.iou-ttl){-webkit-text-stroke:1.3px #c58a00}
+@keyframes sptglow{0%,100%{filter:drop-shadow(0 0 2px rgba(255,213,74,.5)) drop-shadow(0 0 6px rgba(255,190,40,.25))}50%{filter:drop-shadow(0 0 4px rgba(255,213,74,.9)) drop-shadow(0 0 12px rgba(255,190,40,.55))}}
+html.tp-hidden .sp-ttl.sp-nike{animation-play-state:paused}
+@media (prefers-reduced-motion:reduce){.sp-ttl.sp-nike{animation:none}}
 .sp-ttl.sp-nike{white-space:nowrap;font:italic 800 clamp(20px,6.2vw,25px)/1 "Barlow Condensed","Arial Narrow",Impact,sans-serif;letter-spacing:-.005em;text-transform:uppercase;transform:skewX(-6deg);display:inline-block;padding-right:4px}
 .sp-count{font:800 11.5px var(--f-body);color:#7a5200;background:linear-gradient(135deg,#fff3a8,#ffcf3a);padding:3px 9px;border-radius:999px;box-shadow:0 0 0 1px rgba(255,190,0,.6),0 0 10px rgba(255,200,0,.35);white-space:nowrap}
 .sp-count.zero{background:var(--chip);color:var(--muted);box-shadow:none}
@@ -1640,21 +1657,21 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
       <div class="ringwrap" id="ringWrap">
         <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
           <defs><linearGradient id="ringGrad" gradientUnits="userSpaceOnUse" x1="14" y1="106" x2="106" y2="14"><stop offset="0" style="stop-color:var(--r1)"/><stop offset="1" style="stop-color:var(--r2)"/></linearGradient></defs>
-          <circle class="track" cx="60" cy="60" r="53"/><circle class="fill" id="ringFill" cx="60" cy="60" r="53"/><circle class="rtip" id="ringTip" cx="113" cy="60" r="7" fill="url(#ringGrad)" style="opacity:0"/>
+          <circle class="track" cx="60" cy="60" r="53"/><circle class="fill" id="ringFill" cx="60" cy="60" r="53"/><mask id="ringMask" maskUnits="userSpaceOnUse" x="-10" y="-10" width="140" height="140"><circle id="ringMaskC" cx="60" cy="60" r="53" fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round" stroke-dasharray="333" stroke-dashoffset="333" style="opacity:0"/></mask><circle class="glint" cx="60" cy="60" r="53" mask="url(#ringMask)"/><circle class="rtip" id="ringTip" cx="113" cy="60" r="7" fill="url(#ringGrad)" style="opacity:0"/>
         </svg>
         <div class="big" id="units"><span class="unum" id="unitsNum">0</span><small>units</small></div>
       </div>
       <button type="button" class="netwrap" id="netRing" aria-label="Internet closing percentage">
         <svg class="ring nring" viewBox="0 0 120 120" aria-hidden="true">
           <defs><linearGradient id="netGrad" gradientUnits="userSpaceOnUse" x1="14" y1="106" x2="106" y2="14"><stop offset="0" stop-color="#0e7490"/><stop offset="1" stop-color="#67e8f9"/></linearGradient></defs>
-          <circle class="track" cx="60" cy="60" r="53"/><circle class="fill" id="netFill" cx="60" cy="60" r="53"/><circle class="rtip" id="netTip" cx="113" cy="60" r="7" fill="url(#netGrad)" style="opacity:0"/>
+          <circle class="track" cx="60" cy="60" r="53"/><circle class="fill" id="netFill" cx="60" cy="60" r="53"/><mask id="netMask" maskUnits="userSpaceOnUse" x="-10" y="-10" width="140" height="140"><circle id="netMaskC" cx="60" cy="60" r="53" fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round" stroke-dasharray="333" stroke-dashoffset="333" style="opacity:0"/></mask><circle class="glint" cx="60" cy="60" r="53" mask="url(#netMask)"/><circle class="rtip" id="netTip" cx="113" cy="60" r="7" fill="url(#netGrad)" style="opacity:0"/>
         </svg>
         <div class="big nbig"><span class="unum" id="netPct">—</span><small>Internet</small><em id="netSub"></em></div>
       </button>
       <button type="button" class="netwrap phwrap" id="phoneRing" aria-label="Phone pop deals">
         <svg class="ring nring" viewBox="0 0 120 120" aria-hidden="true">
           <defs><linearGradient id="phGrad" gradientUnits="userSpaceOnUse" x1="14" y1="106" x2="106" y2="14"><stop offset="0" stop-color="#c2410c"/><stop offset="1" stop-color="#fdba74"/></linearGradient></defs>
-          <circle class="track" cx="60" cy="60" r="53"/><circle class="fill" id="phoneFill" cx="60" cy="60" r="53"/><circle class="rtip" id="phoneTip" cx="113" cy="60" r="7" fill="url(#phGrad)" style="opacity:0"/>
+          <circle class="track" cx="60" cy="60" r="53"/><circle class="fill" id="phoneFill" cx="60" cy="60" r="53"/><mask id="phoneMask" maskUnits="userSpaceOnUse" x="-10" y="-10" width="140" height="140"><circle id="phoneMaskC" cx="60" cy="60" r="53" fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round" stroke-dasharray="333" stroke-dashoffset="333" style="opacity:0"/></mask><circle class="glint" cx="60" cy="60" r="53" mask="url(#phoneMask)"/><circle class="rtip" id="phoneTip" cx="113" cy="60" r="7" fill="url(#phGrad)" style="opacity:0"/>
         </svg>
         <div class="big nbig"><span class="unum" id="phonePct">—</span><small>Phone pop</small><em id="phoneSub"></em></div>
       </button>
@@ -1984,7 +2001,7 @@ async function init(){
 }
 var ringCur=null;
 function setRing(pct){ const f=document.getElementById("ringFill"), tp=document.getElementById("ringTip"); if(!f) return; const from=ringCur==null?0:ringCur, to=pct; ringCur=to;
-  const put=v=>{ f.style.strokeDashoffset=String(333.0*(1-v/100)); if(tp){ const a=v*3.6*Math.PI/180; tp.setAttribute("cx",(60+53*Math.cos(a)).toFixed(2)); tp.setAttribute("cy",(60+53*Math.sin(a)).toFixed(2)); tp.style.opacity=v>1.5?"1":"0"; } };
+  const mc=document.getElementById(f.id.replace("Fill","MaskC")); const put=v=>{ f.style.strokeDashoffset=String(333.0*(1-v/100)); if(mc){ mc.style.strokeDashoffset=String(333.0*(1-v/100)); mc.style.opacity=v>1.5?"1":"0"; } if(tp){ const a=v*3.6*Math.PI/180; tp.setAttribute("cx",(60+53*Math.cos(a)).toFixed(2)); tp.setAttribute("cy",(60+53*Math.sin(a)).toFixed(2)); tp.style.opacity=v>1.5?"1":"0"; } };
   cancelAnimationFrame(setRing.raf); let rm=false; try{ rm=matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){}
   if(rm||Math.abs(from-to)<.01){ put(to); return; } const t0=performance.now(), D=1100;
   (function st(now){ const k=Math.min(1,(now-t0)/D), e=1-Math.pow(1-k,3); put(from+(to-from)*e); if(k<1) setRing.raf=requestAnimationFrame(st); })(t0); }
@@ -3171,13 +3188,17 @@ function renderSrcRing(src,pre,label){ const el=document.getElementById(pre+"Rin
   animRing(pre+"Fill",pre+"Tip",pct,pre); el.setAttribute("aria-label", total?(label+": "+sold+" of your "+total+" deals this month ("+pct+"%)"):label+": none logged this month yet"); el.title=el.getAttribute("aria-label"); }
 function renderNetRing(){ renderSrcRing("Internet","net","Internet deals"); renderSrcRing("Phone","phone","Phone pop deals"); }
 var ringState={};
-function animRing(fillId,tipId,pct,key){ const f=document.getElementById(fillId), tp=document.getElementById(tipId); if(!f) return; const from=ringState[key]==null?0:ringState[key], to=pct; ringState[key]=to;
-  const put=v=>{ f.style.strokeDashoffset=String(333.0*(1-v/100)); if(tp){ const a=v*3.6*Math.PI/180; tp.setAttribute("cx",(60+53*Math.cos(a)).toFixed(2)); tp.setAttribute("cy",(60+53*Math.sin(a)).toFixed(2)); tp.style.opacity=v>1.5?"1":"0"; } };
+function animRing(fillId,tipId,pct,key){ (animRing.ids=animRing.ids||{})[key]=[fillId,tipId]; const f=document.getElementById(fillId), tp=document.getElementById(tipId); if(!f) return; const from=ringState[key]==null?0:ringState[key], to=pct; ringState[key]=to;
+  const mc=document.getElementById(f.id.replace("Fill","MaskC")); const put=v=>{ f.style.strokeDashoffset=String(333.0*(1-v/100)); if(mc){ mc.style.strokeDashoffset=String(333.0*(1-v/100)); mc.style.opacity=v>1.5?"1":"0"; } if(tp){ const a=v*3.6*Math.PI/180; tp.setAttribute("cx",(60+53*Math.cos(a)).toFixed(2)); tp.setAttribute("cy",(60+53*Math.sin(a)).toFixed(2)); tp.style.opacity=v>1.5?"1":"0"; } };
   cancelAnimationFrame(animRing["raf"+key]); let rm=false; try{ rm=matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){}
   if(rm||Math.abs(from-to)<.01){ put(to); return; } const t0=performance.now(), D=1100;
   (function st(now){ const k=Math.min(1,(now-t0)/D), e=1-Math.pow(1-k,3); put(from+(to-from)*e); if(k<1) animRing["raf"+key]=requestAnimationFrame(st); })(t0); }
 document.getElementById("phoneRing").addEventListener("click",()=>{ try{ cheer("PHONE POP",document.getElementById("phoneRing").getAttribute("aria-label")); }catch(e){} });
 document.getElementById("netRing").addEventListener("click",()=>{ const el=document.getElementById("netRing"); try{ cheer("INTERNET",el.getAttribute("aria-label")); }catch(e){} });
+function replayRings(){ document.querySelectorAll(".units .ringwrap,.units .netwrap").forEach(e=>{ e.classList.remove("rin"); void e.offsetWidth; e.classList.add("rin"); });
+  const mv=ringCur||0; ringCur=0; setRing(mv);
+  Object.keys(ringState).forEach(k=>{ const v=ringState[k]||0, ids=animRing.ids&&animRing.ids[k]; if(!ids) return; ringState[k]=0; animRing(ids[0],ids[1],v,k); }); }
+afterEnter(()=>{ const w=()=>{ if(document.getElementById("splash")) return setTimeout(w,150); setTimeout(replayRings,80); }; w(); });
 /* ===== close the book ===== */
 function monthKeyNow(){ const n=new Date(); return n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0"); }
 function isLastDay(){ const n=new Date(), t=new Date(n.getFullYear(),n.getMonth(),n.getDate()+1); return t.getMonth()!==n.getMonth(); }
@@ -3626,7 +3647,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v67", tpChecked=0;
+var TP_BUILD="trip-pad-v68", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
