@@ -717,6 +717,7 @@ html.tp-hidden .tag.eo::before{animation-play-state:paused}
 :root[data-theme="light"] .netwrap .nbig small{color:#0e7490}
 @media (max-width:360px){.netwrap .nbig .unum{font-size:28px}.netwrap .nbig small{font-size:9px}.ringwrap #units{font-size:38px}}
 .units .pay{flex:1 1 100%;text-align:center}
+.units .pay .pace,.units .pay .paypace{margin-left:auto;margin-right:auto;max-width:300px;text-align:center}
 .netwrap{position:relative;flex:none;padding:0;border:0;background:none;cursor:pointer;color:var(--ink)}
 .netwrap .ring{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);overflow:visible}
 .netwrap .ring circle{fill:none;stroke-width:14}
@@ -4221,7 +4222,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v89", tpChecked=0;
+var TP_BUILD="trip-pad-v90", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
