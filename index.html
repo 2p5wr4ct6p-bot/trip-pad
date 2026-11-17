@@ -649,6 +649,18 @@ html.tp-hidden .tag.eo::before{animation-play-state:paused}
 .netwrap .nbig small{margin:6px 0 0;font-size:10.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#22d3ee}
 .netwrap .nbig em{margin-top:3px;font-style:normal;font-size:11px;font-weight:700;color:var(--muted)}
 .netwrap.empty .nbig .unum{color:var(--muted)}
+.wed{position:relative;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.wed .wrings{font-size:64px;animation:wedring 1.6s cubic-bezier(.2,1.5,.4,1) both,mrbeat 1.8s 1.6s ease-in-out infinite}
+.wed .wcouple{font:italic 700 clamp(30px,9vw,44px)/1.1 "Snell Roundhand","Brush Script MT","Segoe Script",cursive,Georgia,serif;color:#7a1f4b}
+.wed .wvow{font-size:15px;color:#5a2a44;font-weight:600}
+.wed .wvow b{color:#c2185b}
+.wedhearts{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.wedhearts i{position:absolute;bottom:-40px;font-style:normal;font-size:22px;animation:wedfloat 6s linear infinite;opacity:.85}
+@keyframes wedfloat{0%{transform:translateY(0) rotate(0);opacity:0}10%{opacity:.9}100%{transform:translateY(-110vh) rotate(25deg);opacity:0}}
+@keyframes wedring{0%{opacity:0;transform:scale(.2) rotate(-40deg)}100%{opacity:1;transform:none}}
+.wstory.wedding .wk,.wstory.wedding .wsm{color:#7a1f4b}
+.wstory.wedding .wbars i{background:rgba(122,31,75,.25)} .wstory.wedding .wbars i b{background:#c2185b}
+.wstory.wedding .wx{color:#7a1f4b;background:rgba(255,255,255,.6)}
 /* deal marriage */
 .marry{background:linear-gradient(150deg,color-mix(in srgb,#ff4fa3 12%,var(--card)),var(--card) 65%);border:1px solid color-mix(in srgb,#ff4fa3 30%,var(--line));border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:12px}
 .marry h3{margin:0;font-size:15px}
@@ -3698,6 +3710,19 @@ function wrappedData(y){ const ds=deals.filter(d=>(d.date||"").startsWith(String
   const net=ds.filter(d=>d.source==="Internet").length/ds.length, streak=recordsCalc().streak.v;
   const pers=u>=150?["The Closer","Units on units. The lot is your arena."]:ppd>=2?["The Product Pro","Nobody leaves without the good stuff."]:net>=.4?["The Internet Ace","Leads come in hot and you close them."]:streak>=5?["The Streak Machine","You don't take days off from winning."]:["The Steady Hand","Consistent, reliable, always delivering."];
   return {y,u,c,bm,car,topP,vsa,ppd,lend,src,big,pers,n:ds.length}; }
+/* wrapped wedding card + bridal chorus (Wagner, 1850, public domain) */
+var wedAudio=null;
+function playWedding(){ stopWedding(); if(typeof soundPref!=="undefined"&&soundPref==="off") return; const ctx=audioCtx&&audioCtx(); if(!ctx) return;
+  const N={G4:392,A4:440,B4:493.88,C5:523.25,D5:587.33,E5:659.25,F5:698.46,G5:783.99};
+  const beat=.62, seq=[["G4",1],["C5",.75],["C5",.25],["C5",2],["G4",1],["D5",.75],["B4",.25],["C5",2],["G4",1],["C5",.75],["F5",.25],["F5",1],["E5",.75],["D5",.25],["C5",.75],["B4",.25],["C5",.75],["D5",.25],["C5",2]];
+  const out=ctx.createGain(); out.gain.value=.0001; out.connect(ctx.destination); const t0=ctx.currentTime+.08; out.gain.exponentialRampToValueAtTime(.32,t0+.3);
+  let t=t0; const nodes=[];
+  seq.forEach(([n,d])=>{ const f=N[n], dur=d*beat; [[1,.55,"sine"],[2,.18,"sine"],[.5,.22,"triangle"],[3,.06,"sine"]].forEach(([m,v,ty])=>{ const o=ctx.createOscillator(), g=ctx.createGain(); o.type=ty; o.frequency.value=f*m;
+      g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(v,t+.04); g.gain.setValueAtTime(v,t+dur*.8); g.gain.exponentialRampToValueAtTime(.0001,t+dur+.12); o.connect(g); g.connect(out); o.start(t); o.stop(t+dur+.15); nodes.push(o); });
+    t+=dur; });
+  wedAudio={out,nodes,ctx}; }
+function stopWedding(){ if(!wedAudio) return; const {out,nodes,ctx}=wedAudio; wedAudio=null; try{ out.gain.cancelScheduledValues(ctx.currentTime); out.gain.setValueAtTime(out.gain.value,ctx.currentTime); out.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+.35); }catch(e){} setTimeout(()=>nodes.forEach(o=>{ try{o.stop();}catch(e){} }),400); }
+function wrapSpouse(y){ const by={}; deals.filter(d=>(d.date||"").startsWith(String(y))&&d.split&&d.partner&&d.status!=="unwound").forEach(d=>{ const k=String(d.partner).trim().toLowerCase(); if(!k) return; const o=by[k]=by[k]||{name:String(d.partner).trim().replace(/^./,c=>c.toUpperCase()),n:0,c:0}; o.n++; o.c+=num(d.commission); }); return Object.values(by).sort((a,b)=>b.n-a.n)[0]||null; }
 function showWrapped(y){ const w=wrappedData(y); if(!w){ setNote("No deals in "+y+" yet for a Wrapped.","warn"); return; }
   const mn=k=>new Date(+k.slice(0,4),+k.slice(5,7)-1,1).toLocaleString("en-US",{month:"long"});
   const cards=[
@@ -3707,16 +3732,18 @@ function showWrapped(y){ const w=wrappedData(y); if(!w){ setNote("No deals in "+
     ["linear-gradient(160deg,#2f6bff,#0b1f66)",'<div class="wk">Your top car</div><div class="wbig" style="font-size:clamp(44px,15vw,76px)">'+(w.car?w.car[0]:"—")+'</div><div class="wmid">'+(w.car?"× "+w.car[1]:"Add the vehicle on deals to see this")+'</div>'],
     ["linear-gradient(160deg,#9b5bff,#ff4fae)",'<div class="wk">Products</div><div class="wbig">'+w.vsa+'%</div><div class="wmid">of deals had a VSA</div><div class="wsm">'+(w.topP?"Your most-sold product: <b>"+w.topP[0]+"</b> × "+w.topP[1]+".":"")+' Average '+(Math.round(w.ppd*10)/10)+' products per deal.</div>'],
     ["linear-gradient(160deg,#0ea5a4,#164e63)",'<div class="wk">Where it came from</div><div class="wmid">'+(w.src?"Top source: "+w.src[0]+" ("+w.src[1]+")":"Pick a deal source to see this")+'</div><div class="wmid">'+(w.lend?"Top lender: "+w.lend[0]+" ("+w.lend[1]+")":"")+'</div><div class="wsm">Biggest single deal: <b>'+money(num(w.big.commission))+'</b>'+(w.big.dealNo?" on #"+w.big.dealNo:"")+'.</div>'],
+    ...(()=>{ const sp=wrapSpouse(y); if(!sp) return []; const hearts='<div class="wedhearts">'+Array.from({length:14},(_,k)=>'<i style="left:'+(4+k*7)%96+'%;animation-delay:'+(k*.45).toFixed(2)+'s;font-size:'+(16+(k%4)*6)+'px">'+["💗","🤍","💍","💐","💕"][k%5]+'</i>').join("")+'</div>';
+      return [["linear-gradient(160deg,#fff5f8,#ffd6e7 55%,#ffc2d9)",hearts+'<div class="wed"><div class="wk">Your '+y+' deal marriage</div><div class="wrings">💍</div><div class="wcouple">You &amp; '+String(sp.name).replace(/[<>&"]/g,'')+'</div><div class="wvow">Split <b>'+sp.n+'</b> deal'+(sp.n===1?"":"s")+' together and made <b>'+money(sp.c)+'</b>.</div><div class="wsm">Till month-end do us part 💐</div></div>',"wedding"]]; })(),
     ["linear-gradient(160deg,#111,#3a2a00)",'<div class="wk">Your salesperson personality</div><div class="wbig" style="font-size:clamp(40px,13vw,64px);color:#ffd54a">'+w.pers[0]+'</div><div class="wsm">'+w.pers[1]+'</div>'],
     ["linear-gradient(160deg,#ff4fae,#9b5bff 55%,#2f6bff)",'<div class="wk">'+y+' Wrapped · Fun Trip Pad</div><div class="wmid">'+(greetName?greetName+"&rsquo;s":"My")+' year</div><div class="wgrid"><div><small>Units</small><b>'+fmtU(w.u)+'</b></div><div><small>Commission</small><b>'+money(w.c)+'</b></div><div><small>Best month</small><b>'+(w.bm?mn(w.bm[0]):"—")+'</b></div><div><small>Top car</small><b>'+(w.car?w.car[0]:"—")+'</b></div><div><small>VSA</small><b>'+w.vsa+'%</b></div><div><small>I am</small><b>'+w.pers[0]+'</b></div></div><button type="button" class="wsave">📸 Save this card</button>']];
   const o=document.createElement("div"); o.className="wstory"; o.setAttribute("role","dialog"); o.setAttribute("aria-label",y+" Wrapped");
   o.innerHTML='<div class="wbars">'+cards.map(()=>'<i><b></b></i>').join("")+'</div><button type="button" class="wx" aria-label="Close">✕</button><div class="wtap"><span data-d="-1"></span><span data-d="1"></span></div><div class="wcard"></div>';
   document.body.append(o); let i=0, timer=0; const bars=[...o.querySelectorAll(".wbars i")];
-  const show=n=>{ i=Math.max(0,Math.min(cards.length-1,n)); clearTimeout(timer); o.style.background=cards[i][0]; const c=o.querySelector(".wcard"); c.remove(); const nc=document.createElement("div"); nc.className="wcard"; nc.innerHTML=cards[i][1]; o.append(nc);
+  const show=n=>{ i=Math.max(0,Math.min(cards.length-1,n)); clearTimeout(timer); o.style.background=cards[i][0]; o.classList.toggle("wedding",cards[i][2]==="wedding"); if(cards[i][2]==="wedding") playWedding(); else stopWedding(); const c=o.querySelector(".wcard"); c.remove(); const nc=document.createElement("div"); nc.className="wcard"; nc.innerHTML=cards[i][1]; o.append(nc);
     bars.forEach((b,k)=>{ b.className=k<i?"done":k===i?"cur":""; void b.offsetWidth; }); try{ tap(); }catch(e){}
     const sv=nc.querySelector(".wsave"); if(sv) sv.addEventListener("click",async ev=>{ ev.stopPropagation(); sv.textContent="Saving…"; try{ await loadH2C(); const cv=await html2canvas(o,{backgroundColor:null,scale:2,logging:false,ignoreElements:el=>el.classList&&(el.classList.contains("wx")||el.classList.contains("wsave")||el.classList.contains("wbars")||el.classList.contains("wtap"))}); const bl=await new Promise(r=>cv.toBlob(r,"image/png")); await deliverShot(bl,"trip-pad-wrapped-"+y+".png"); sv.textContent="Saved ✓"; }catch(err){ sv.textContent="Couldn't save. Screenshot instead."; } });
-    if(i<cards.length-1) timer=setTimeout(()=>show(i+1),5500); if(i===1) confetti(1.4); };
-  o.querySelector(".wx").addEventListener("click",()=>{ clearTimeout(timer); o.remove(); });
+    if(i<cards.length-1) timer=setTimeout(()=>show(i+1),cards[i][2]==="wedding"?9000:5500); if(i===1) confetti(1.4); };
+  o.querySelector(".wx").addEventListener("click",()=>{ clearTimeout(timer); stopWedding(); o.remove(); });
   o.querySelectorAll(".wtap span").forEach(s=>s.addEventListener("click",()=>show(i+ +s.dataset.d)));
   show(0); }
 /* --- lock screen card --- */
@@ -3787,7 +3814,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v75", tpChecked=0;
+var TP_BUILD="trip-pad-v76", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
