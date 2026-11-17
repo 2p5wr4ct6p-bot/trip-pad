@@ -704,6 +704,20 @@ html.tp-hidden .tag.eo::before{animation-play-state:paused}
 :root[data-skin="cupertino"] .splash .sp-streak{display:none}
 :root[data-skin="cupertino"] .tp-warp{background:radial-gradient(circle at var(--wx) var(--wy),#fff 0,#e8f1fc 30%,#fbfbfd 70%)}
 :root[data-skin="cupertino"] .tp-warp::before{display:none}
+.hero-go{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;overflow:hidden;background:#ffcc00;animation:hgin .35s cubic-bezier(.2,1.4,.4,1) both}
+.hero-go .hg-rays{position:absolute;inset:-50%;background:repeating-conic-gradient(from 0deg,#ff3b30 0 9deg,#ffcc00 9deg 18deg);opacity:.85;animation:hgspin 6s linear infinite}
+.hero-go .hg-dots{position:absolute;inset:0;background:radial-gradient(circle,#111 1.4px,transparent 1.6px) 0 0/12px 12px;opacity:.18}
+.hero-go .hg-burst{position:relative;width:min(78vw,340px);aspect-ratio:1;display:grid;place-items:center;background:#fff;clip-path:polygon(50% 0,61% 22%,85% 8%,78% 34%,100% 40%,80% 55%,95% 80%,68% 74%,58% 100%,46% 78%,22% 95%,25% 68%,0 62%,20% 46%,5% 22%,32% 28%);filter:drop-shadow(6px 6px 0 #111);animation:hgpow .6s cubic-bezier(.2,1.6,.4,1) .1s both}
+.hero-go .hg-burst b{font:400 clamp(64px,22vw,110px)/1 "Bangers","Impact",sans-serif;color:#e62429;-webkit-text-stroke:3px #111;text-shadow:5px 5px 0 #111;transform:rotate(-8deg);letter-spacing:.03em}
+.hero-go .hg-cap{position:absolute;top:calc(env(safe-area-inset-top) + 28px);left:18px;padding:8px 12px;background:#fff8d6;border:3px solid #111;box-shadow:4px 4px 0 #111;font:700 14px "Comic Neue","Comic Sans MS",var(--f-body);color:#111;transform:rotate(-2deg);animation:hgcap .4s ease .35s both}
+.hero-go .hg-t{position:absolute;bottom:calc(env(safe-area-inset-bottom) + 70px);font:400 34px "Bangers","Impact",sans-serif;letter-spacing:.12em;color:#fff;-webkit-text-stroke:2px #111;text-shadow:4px 4px 0 #111;animation:hgcap .4s ease .55s both}
+.hero-go.flash::after{content:"";position:absolute;inset:0;background:#fff;animation:hgflash .4s ease both}
+@keyframes hgin{from{opacity:0;transform:scale(1.15)}to{opacity:1;transform:none}}
+@keyframes hgspin{to{transform:rotate(360deg)}}
+@keyframes hgpow{0%{transform:scale(0) rotate(-40deg)}100%{transform:none}}
+@keyframes hgcap{from{opacity:0;transform:translateY(14px) rotate(-2deg)}to{opacity:1;transform:rotate(-2deg)}}
+@keyframes hgflash{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.hero-go *{animation:none!important}}
 .castle-go{position:fixed;inset:0;z-index:240;display:grid;place-items:center;background:radial-gradient(circle at 50% 45%,#fff0f8,#ffc4e1 55%,#f48fc2);animation:setfade .35s ease-out both;overflow:hidden}
 .castle-go .cg-in{text-align:center;color:#8a1456}
 .castle-go .cg-c{font-size:84px;animation:wedring 1s cubic-bezier(.2,1.5,.4,1) both;filter:drop-shadow(0 8px 18px rgba(200,40,120,.35))}
@@ -824,6 +838,15 @@ html.md-shake .wrap{animation:ushake .5s cubic-bezier(.36,.07,.19,.97) both}
 /* hot hand */
 .onfire{display:none;margin-top:6px;align-self:flex-start;font:900 13px var(--f-body);letter-spacing:.08em;color:#fff!important;-webkit-text-fill-color:#fff!important;text-shadow:0 1px 2px rgba(120,20,0,.6);padding:5px 12px;border-radius:999px;background:linear-gradient(90deg,#ff3d00,#ff9100,#ffd600);box-shadow:0 0 16px rgba(255,120,0,.7);animation:firebadge 1s ease-in-out infinite}
 html.hot-hand .onfire{display:inline-flex}
+.onfirewrap{position:relative;display:inline-block;align-self:flex-start}
+.greet:has(.onfirewrap.open),.greet:has(.onfirewrap:hover){position:relative;z-index:80}
+header:has(.onfirewrap.open),header:has(.onfirewrap:hover),.top:has(.onfirewrap.open),.top:has(.onfirewrap:hover){position:relative;z-index:80}
+button.onfire{border:0;cursor:help;-webkit-tap-highlight-color:transparent}
+.ftip{position:absolute;left:0;top:calc(100% + 10px);z-index:60;width:min(270px,78vw);padding:12px 14px;border-radius:14px;background:rgba(28,14,6,.98);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid rgba(255,145,0,.55);box-shadow:0 12px 30px rgba(0,0,0,.45),0 0 18px rgba(255,120,0,.35);color:#ffe9d6;font:500 13px/1.45 var(--f-body);letter-spacing:0;text-transform:none;text-align:left;opacity:0;transform:translateY(-6px) scale(.97);transform-origin:20px 0;pointer-events:none;transition:opacity .18s,transform .22s cubic-bezier(.2,1.3,.4,1)}
+.ftip::before{content:"";position:absolute;left:22px;top:-6px;width:10px;height:10px;transform:rotate(45deg);background:inherit;border-left:1px solid rgba(255,145,0,.55);border-top:1px solid rgba(255,145,0,.55)}
+.ftip b{display:block;font-weight:800;color:#ffb347;margin-bottom:3px;font-size:14px}
+.ftip small{display:block;margin-top:6px;color:#ffcf9e;opacity:.85}
+.onfirewrap:hover .ftip,.onfirewrap.open .ftip,.onfire:focus-visible + .ftip{opacity:1;transform:none;pointer-events:auto}
 @keyframes firebadge{0%,100%{transform:scale(1);box-shadow:0 0 12px rgba(255,120,0,.6)}50%{transform:scale(1.06);box-shadow:0 0 24px rgba(255,80,0,.9)}}
 html.hot-hand .board{box-shadow:0 0 0 2px #ff6d00,0 0 22px rgba(255,90,0,.55),0 0 50px rgba(255,140,0,.25)!important;animation:boardfire 1.4s ease-in-out infinite}
 @keyframes boardfire{0%,100%{box-shadow:0 0 0 2px #ff6d00,0 0 18px rgba(255,90,0,.5),0 0 40px rgba(255,140,0,.2)}50%{box-shadow:0 0 0 2px #ffab00,0 0 30px rgba(255,90,0,.75),0 0 70px rgba(255,160,0,.35)}}
@@ -2028,7 +2051,7 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
     </div>
   </div>
 
-  <div class="greet" aria-live="polite"><div class="greetrow"><b id="greetText">Hello</b><i class="sky" id="greetSky" aria-hidden="true"></i></div><span id="greetTime"></span><span class="onfire" id="onFire">🔥 ON FIRE</span></div>
+  <div class="greet" aria-live="polite"><div class="greetrow"><b id="greetText">Hello</b><i class="sky" id="greetSky" aria-hidden="true"></i></div><span id="greetTime"></span><span class="onfirewrap"><button type="button" class="onfire" id="onFire" aria-describedby="onFireTip" aria-expanded="false">🔥 ON FIRE</button><span class="ftip" id="onFireTip" role="tooltip"></span></span></div>
   <button type="button" class="rank" id="rankChip" aria-expanded="false"></button>
   <div class="ranktip" id="rankTip" hidden></div>
   <button type="button" class="wrapban" id="wrapBanner" hidden>🎁 <span id="wrapBanTxt"></span><b>Open ›</b></button>
@@ -2621,7 +2644,7 @@ function renderThemePicker(){
   [["auto","Auto"],["light","Light"],["dark","Dark"],["cupertino","Cupertino"],["night","Night Drive"],["oled","OLED"],["grid","Grid"],["princess","Princess 👑"],["hero","Hero 💥"],["gr","GR Racing"],["synth","Synthwave"],["matrix","Matrix"],["galaxy","Galaxy"],["sunset","Bay Sunset"],["rush","Gold Rush"],["notebook","Notebook"],["xmas","Christmas 🎄"],["spooky","Halloween 🎃"],["gold","Gold",10,"Legend"],["diamond","Diamond",15,"Hall of Fame"]].forEach(([k,l,need,rk])=>{
     const locked=need && lvNow<need && themePref!==k;
     mk(locked?"🔒 "+l+" · Lv "+need:l,themePref===k,()=>{ if(locked){ cheer("LOCKED 🔒","Reach "+rk+" (level "+need+") to unlock "+l); return; }
-      if(themePref==="matrix" && k!=="matrix"){ askDisconnect(k); return; } if(k==="matrix" && themePref!=="matrix"){ askPill(); return; } if(k==="grid" && themePref!=="grid"){ askEnterGrid(); return; } if(k==="princess"){ toCastle(); return; } themePref=k; try{localStorage.setItem("trippad.theme",k);}catch(e){} applyTheme(); renderThemePicker(); }); });
+      if(themePref==="matrix" && k!=="matrix"){ askDisconnect(k); return; } if(k==="matrix" && themePref!=="matrix"){ askPill(); return; } if(k==="grid" && themePref!=="grid"){ askEnterGrid(); return; } if(k==="princess"){ toCastle(); return; } if(k==="hero"){ toHero(); return; } themePref=k; try{localStorage.setItem("trippad.theme",k);}catch(e){} applyTheme(); renderThemePicker(); }); });
   mk("Toyota red",accentPref==="red",()=>{ accentPref=accentPref==="red"?"blue":"red"; try{localStorage.setItem("trippad.accent",accentPref);}catch(e){} applyTheme(); renderThemePicker(); });
 }
 applyTheme(); renderThemePicker();
@@ -3404,6 +3427,11 @@ function toCastle(){ themePref="princess"; try{ localStorage.setItem("trippad.th
   o.innerHTML='<div class="cg-sp">'+Array.from({length:22},(_,k)=>'<i style="left:'+((k*37)%100)+'%;top:'+((k*53)%100)+'%;animation-delay:'+(k*.07).toFixed(2)+'s">'+["✨","💖","⭐"][k%3]+'</i>').join("")+'</div><div class="cg-in"><div class="cg-c">🏰</div><div class="cg-t">Opening the castle gates…</div></div>';
   document.body.append(o); try{ tapSuccess(); }catch(e){} try{ playB64("yay",YAY_SFX); }catch(e){}
   setTimeout(()=>o.classList.add("flash"),1500); setTimeout(()=>{ try{ window.scrollTo(0,0); location.reload(); }catch(e){} },1900); }
+function toHero(){ themePref="hero"; try{ localStorage.setItem("trippad.theme","hero"); }catch(e){} try{ closeSettings(); }catch(e){}
+  const o=document.createElement("div"); o.className="hero-go"; o.setAttribute("role","status"); o.setAttribute("aria-label","Suiting up");
+  o.innerHTML='<div class="hg-rays"></div><div class="hg-dots"></div><div class="hg-burst"><b>POW!</b></div><div class="hg-cap">Meanwhile, at Toyota Marin…</div><div class="hg-t">SUITING UP…</div>';
+  document.body.append(o); try{ tapSuccess(); }catch(e){}
+  setTimeout(()=>o.classList.add("flash"),1500); setTimeout(()=>{ try{ window.scrollTo(0,0); location.reload(); }catch(e){} },1900); }
 /* full-screen matrix code rain transition */
 function mxRainOverlay(o){ o=o||{}; const dur=o.dur||2400, el=document.createElement("div"); el.className="mxr"+(o.out?" out-mode":""); el.setAttribute("role","status"); el.setAttribute("aria-label",o.label||"Matrix");
   el.innerHTML='<canvas></canvas><div class="mxr-t"></div>'; document.body.append(el);
@@ -3433,7 +3461,7 @@ function askPill(){ mxModal('<div class="mxm-t">This is your last chance.</div><
 function askDisconnect(k){ mxModal('<div class="mxm-ph" aria-hidden="true">☎️</div><div class="mxm-t">Operator</div><p>Would you like the phone operator to disconnect you?</p><div class="row2"><button type="button" class="btn mx-no">Stay plugged in</button><button type="button" class="btn primary mx-yes">Disconnect me</button></div>',
   (s,close)=>{ s.querySelector(".mx-no").addEventListener("click",close);
     s.querySelector(".mx-yes").addEventListener("click",()=>{ const m=s.querySelector(".mxm"); m.classList.add("hangup"); try{ const ctx=audioCtx(); if(ctx&&soundPref!=="off"){ const t=ctx.currentTime; [0,.45].forEach(d=>{ const o=ctx.createOscillator(), g=ctx.createGain(); o.type="sine"; o.frequency.value=425; g.gain.setValueAtTime(.0001,t+d); g.gain.exponentialRampToValueAtTime(.15,t+d+.02); g.gain.setValueAtTime(.15,t+d+.3); g.gain.exponentialRampToValueAtTime(.0001,t+d+.34); o.connect(g).connect(ctx.destination); o.start(t+d); o.stop(t+d+.4); }); } }catch(e){}
-      setTimeout(()=>{ close(); mxRainOverlay({out:true,text:"CALL DISCONNECTED",label:"Disconnecting from the Matrix",onMid:()=>{ if(k!=="princess"&&k!=="grid") setThemeNow(k); },onEnd:()=>{ if(k==="princess") toCastle(); else if(k==="grid") askEnterGrid(); }}); },900); }); }); }
+      setTimeout(()=>{ close(); mxRainOverlay({out:true,text:"CALL DISCONNECTED",label:"Disconnecting from the Matrix",onMid:()=>{ if(k!=="princess"&&k!=="grid"&&k!=="hero") setThemeNow(k); },onEnd:()=>{ if(k==="princess") toCastle(); else if(k==="hero") toHero(); else if(k==="grid") askEnterGrid(); }}); },900); }); }); }
 function askEnterGrid(){
   if(document.querySelector(".gridask")) return;
   const o=document.createElement("div"); o.className="gridask"; o.setAttribute("role","dialog"); o.setAttribute("aria-label","Enter the Grid");
@@ -3746,6 +3774,12 @@ function openDealOfMonth(){ const mk=monthKey(view), list=deals.filter(d=>(d.dat
   document.body.append(o); try{ tapSuccess(); }catch(e){} setTimeout(()=>{ try{ confetti(1.2,GOLD); }catch(e){} },300); }
 /* --- hot hand --- */
 function todayLive(){ const t=today(); return deals.filter(d=>d.date===t&&d.status!=="unwound").length; }
+function fireTip(){ const n=todayLive(), t=document.getElementById("onFireTip"); if(!t) return; t.innerHTML='<b>🔥 You\'re on fire!</b>You\'ve logged <strong>'+n+' deal'+(n===1?"":"s")+'</strong> today. Hit 3 deals in a single day and you\'ve got the hot hand, so the flames come out.<small>It lasts the rest of today and resets at midnight. Keep it going!</small>'; }
+(function(){ const w=document.querySelector(".onfirewrap"), b=document.getElementById("onFire"); if(!w||!b) return;
+  w.addEventListener("mouseenter",fireTip); b.addEventListener("focus",fireTip);
+  b.addEventListener("click",e=>{ e.stopPropagation(); fireTip(); const o=w.classList.toggle("open"); b.setAttribute("aria-expanded",o); clearTimeout(w._t); if(o) w._t=setTimeout(()=>{ w.classList.remove("open"); b.setAttribute("aria-expanded","false"); },6000); });
+  document.addEventListener("click",()=>{ w.classList.remove("open"); b.setAttribute("aria-expanded","false"); });
+  document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ w.classList.remove("open"); b.setAttribute("aria-expanded","false"); } }); })();
 function syncHotHand(){ const hot=todayLive()>=3; document.documentElement.classList.toggle("hot-hand",hot); if(hot&&!document.querySelector(".fire-edge")){ const f=document.createElement("div"); f.className="fire-edge"; f.setAttribute("aria-hidden","true"); document.body.append(f); } }
 function sizzle(){ try{ const ctx=audioCtx(); if(!ctx||soundPref==="off") return; const t=ctx.currentTime, n=ctx.createBufferSource(), b=ctx.createBuffer(1,ctx.sampleRate*1.1,ctx.sampleRate), d=b.getChannelData(0);
   for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*(Math.random()<.3?1:.3)*Math.pow(1-i/d.length,1.5); n.buffer=b; const hp=ctx.createBiquadFilter(); hp.type="highpass"; hp.frequency.value=3000; const g=ctx.createGain(); g.gain.value=.35; n.connect(hp).connect(g).connect(ctx.destination); n.start(t); }catch(e){} }
@@ -4229,7 +4263,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v92", tpChecked=0;
+var TP_BUILD="trip-pad-v93", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
