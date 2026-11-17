@@ -2195,6 +2195,7 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
       if(th==="matrix"){ const gs=document.getElementById("gateSub"); setTimeout(()=>{ gs.innerHTML='<span class="gate-typing">Wake up, Jonathan…</span>'; },10); } } }catch(e){}
   try{ document.getElementById("gateSub").textContent=new Date().toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"}); }catch(e){}
   const btn=document.getElementById("gateBtn"); setTimeout(()=>{ try{ btn.focus({preventScroll:true}); }catch(e){} },300);
+  document.addEventListener("keydown",function gk(e){ if(!document.getElementById("gate")){ document.removeEventListener("keydown",gk); return; } if((e.key==="Enter"||e.key===" "||e.key==="NumpadEnter")&&!e.repeat&&!e.metaKey&&!e.ctrlKey&&!e.altKey){ e.preventDefault(); btn.click(); } });
   window.HERO_MUSIC_SRC="hero-music.mp3";
   let done=false; let heroAud=null;
   try{ if(localStorage.getItem("trippad.theme")==="hero"){ const r=indexedDB.open("trippad",1); r.onupgradeneeded=()=>r.result.createObjectStore("files"); r.onsuccess=()=>{ try{ const q=r.result.transaction("files").objectStore("files").get("herosong"); q.onsuccess=()=>{ const v=q.result; if(v&&v.blob){ heroAud=new Audio(URL.createObjectURL(v.blob)); heroAud.preload="auto"; heroAud.setAttribute("playsinline",""); } }; }catch(e){} }; } }catch(e){}
@@ -4601,7 +4602,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v103", tpChecked=0;
+var TP_BUILD="trip-pad-v104", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
