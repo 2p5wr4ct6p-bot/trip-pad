@@ -896,6 +896,35 @@ html.tp-hidden .fire-edge,html.tp-hidden .onfire,html.tp-hidden .tc-f::after{ani
 @keyframes glint{from{stroke-dashoffset:333}to{stroke-dashoffset:0}}
 .units .ringwrap.rin,.units .netwrap.rin{animation:ringin .8s cubic-bezier(.2,1.3,.4,1) both}
 .units .netwrap.rin{animation-delay:.12s}.units .phwrap.rin{animation-delay:.24s}
+/* ring intro */
+.units .rcomet,.units .rshock,.units .rspark{position:absolute;inset:0;border-radius:50%;pointer-events:none;opacity:0}
+.units .rcomet{background:conic-gradient(from 0deg,transparent 0deg,transparent 200deg,color-mix(in srgb,var(--c2) 40%,transparent) 290deg,var(--c2) 350deg,#fff 360deg);
+  -webkit-mask:radial-gradient(circle closest-side,transparent calc(74% - .6px),#000 74%,#000 calc(100% - .6px),transparent 100%);mask:radial-gradient(circle closest-side,transparent calc(74% - .6px),#000 74%,#000 calc(100% - .6px),transparent 100%);filter:drop-shadow(0 0 6px var(--c2))}
+.units .rshock{border:2px solid var(--c2);box-shadow:0 0 18px var(--c2),inset 0 0 12px var(--c2)}
+.units .rspark i{position:absolute;inset:0;transform:rotate(var(--a))}
+.units .rspark i::before{content:"";position:absolute;left:50%;top:2px;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:#fff;box-shadow:0 0 8px var(--c2),0 0 3px #fff;opacity:0}
+.units.rintro .ringwrap,.units.rintro .netwrap{animation:rgate .95s cubic-bezier(.16,1.25,.3,1) both}
+.units.rintro .netwrap:not(.phwrap){animation-name:rgateL;animation-delay:.32s}
+.units.rintro .phwrap{animation-name:rgateR;animation-delay:.32s}
+@keyframes rgate{0%{opacity:0;transform:scale(.15) rotate(-200deg);filter:blur(10px) brightness(2.2)}60%{opacity:1;filter:blur(0) brightness(1.4)}100%{opacity:1;transform:none;filter:none}}
+@keyframes rgateL{0%{opacity:0;transform:translateX(85%) scale(.25) rotate(160deg);filter:blur(8px)}55%{opacity:1;filter:blur(0)}100%{opacity:1;transform:none;filter:none}}
+@keyframes rgateR{0%{opacity:0;transform:translateX(-85%) scale(.25) rotate(-160deg);filter:blur(8px)}55%{opacity:1;filter:blur(0)}100%{opacity:1;transform:none;filter:none}}
+.units.rintro .rcomet{animation:rcomet 1.15s cubic-bezier(.45,0,.2,1) .35s both}
+.units.rintro .netwrap .rcomet{animation-delay:.6s;animation-duration:.95s}
+@keyframes rcomet{0%{opacity:0;transform:rotate(-90deg)}15%{opacity:1}80%{opacity:1}100%{opacity:0;transform:rotate(990deg)}}
+.units.rintro .big{animation:rbig .7s cubic-bezier(.2,1.4,.4,1) 1.15s both}
+@keyframes rbig{0%{opacity:0;transform:scale(1.8);filter:blur(10px)}100%{opacity:1;transform:none;filter:none}}
+.units.rintro .pay{animation:rpay .6s ease 1.5s both}
+@keyframes rpay{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.units.rdone .rshock{animation:rshock .9s cubic-bezier(.1,.7,.3,1) both}
+.units.rdone .netwrap .rshock{animation-delay:.08s}
+@keyframes rshock{0%{opacity:.95;transform:scale(1)}100%{opacity:0;transform:scale(1.45)}}
+.units.rdone .rspark{opacity:1}
+.units.rdone .rspark i::before{animation:rspark .75s cubic-bezier(.1,.8,.3,1) var(--d) both}
+@keyframes rspark{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-18px) scale(.2)}}
+.units.rdone .cring{animation:rflash .8s ease-out both}
+@keyframes rflash{0%{filter:brightness(2.2) saturate(1.4) drop-shadow(0 0 10px var(--c2))}100%{filter:none}}
+@media (prefers-reduced-motion:reduce){.units.rintro *,.units.rdone *{animation:none!important}}
 @keyframes ringin{0%{opacity:0;transform:scale(.7) rotate(-25deg)}100%{opacity:1;transform:none}}
 .ringwrap.hit .ring circle.glint{animation-duration:1.8s;stroke-opacity:.8}
 html.tp-hidden .ring circle.glint{animation-play-state:paused}
@@ -2359,8 +2388,8 @@ var ringCur=null;
 function setRing(pct){ const f=document.getElementById("ringFill"), tp=document.getElementById("ringTip"); if(!f) return; const from=ringCur==null?0:ringCur, to=pct; ringCur=to;
   const mc=document.getElementById(f.id.replace("Fill","MaskC")); const put=v=>{ f.style.strokeDashoffset=String(333.0*(1-v/100)); if(mc){ mc.style.strokeDashoffset=String(333.0*(1-v/100)); mc.style.opacity=v>1.5?"1":"0"; } if(tp){ const a=v*3.6*Math.PI/180; tp.setAttribute("cx",(60+53*Math.cos(a)).toFixed(2)); tp.setAttribute("cy",(60+53*Math.sin(a)).toFixed(2)); tp.style.opacity=v>1.5?"1":"0"; const st=tp.previousElementSibling; if(st) st.style.opacity=v>1.5?"1":"0"; } const cr=f.closest(".ringwrap,.netwrap"); const cg=cr&&cr.querySelector(".cring"); if(cg) cg.style.setProperty("--p",(v/100).toFixed(4)); };
   cancelAnimationFrame(setRing.raf); let rm=false; try{ rm=matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){}
-  if(rm||Math.abs(from-to)<.01){ put(to); return; } const t0=performance.now(), D=1100;
-  (function st(now){ const k=Math.min(1,(now-t0)/D), e=1-Math.pow(1-k,3); put(from+(to-from)*e); if(k<1) setRing.raf=requestAnimationFrame(st); })(t0); }
+  if(rm||Math.abs(from-to)<.01){ put(to); return; } const t0=performance.now(), D=window.__ringD||1100;
+  (function st(now){ const k=Math.min(1,(now-t0)/D), e=window.__ringD?(k<1?1-Math.pow(2,-10*k)*Math.cos(k*Math.PI*1.15)*1:1):1-Math.pow(1-k,3); put(from+(to-from)*e); if(k<1) setRing.raf=requestAnimationFrame(st); })(t0); }
 function setNote(t,k){const n=$("syncNote"); n.textContent=t; n.className="note"+(k?" "+k:"");}
 
 /* ---------- units / commission animation ---------- */
@@ -3591,13 +3620,23 @@ var ringState={};
 function animRing(fillId,tipId,pct,key){ (animRing.ids=animRing.ids||{})[key]=[fillId,tipId]; const f=document.getElementById(fillId), tp=document.getElementById(tipId); if(!f) return; const from=ringState[key]==null?0:ringState[key], to=pct; ringState[key]=to;
   const mc=document.getElementById(f.id.replace("Fill","MaskC")); const put=v=>{ f.style.strokeDashoffset=String(333.0*(1-v/100)); if(mc){ mc.style.strokeDashoffset=String(333.0*(1-v/100)); mc.style.opacity=v>1.5?"1":"0"; } if(tp){ const a=v*3.6*Math.PI/180; tp.setAttribute("cx",(60+53*Math.cos(a)).toFixed(2)); tp.setAttribute("cy",(60+53*Math.sin(a)).toFixed(2)); tp.style.opacity=v>1.5?"1":"0"; const st=tp.previousElementSibling; if(st) st.style.opacity=v>1.5?"1":"0"; } const cr=f.closest(".ringwrap,.netwrap"); const cg=cr&&cr.querySelector(".cring"); if(cg) cg.style.setProperty("--p",(v/100).toFixed(4)); };
   cancelAnimationFrame(animRing["raf"+key]); let rm=false; try{ rm=matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){}
-  if(rm||Math.abs(from-to)<.01){ put(to); return; } const t0=performance.now(), D=1100;
-  (function st(now){ const k=Math.min(1,(now-t0)/D), e=1-Math.pow(1-k,3); put(from+(to-from)*e); if(k<1) animRing["raf"+key]=requestAnimationFrame(st); })(t0); }
+  if(rm||Math.abs(from-to)<.01){ put(to); return; } const t0=performance.now(), D=window.__ringD||1100;
+  (function st(now){ const k=Math.min(1,(now-t0)/D), e=window.__ringD?(k<1?1-Math.pow(2,-10*k)*Math.cos(k*Math.PI*1.15)*1:1):1-Math.pow(1-k,3); put(from+(to-from)*e); if(k<1) animRing["raf"+key]=requestAnimationFrame(st); })(t0); }
 document.getElementById("phoneRing").addEventListener("click",()=>{ try{ cheer("PHONE POP",document.getElementById("phoneRing").getAttribute("aria-label")); }catch(e){} });
 document.getElementById("netRing").addEventListener("click",()=>{ const el=document.getElementById("netRing"); try{ cheer("INTERNET",el.getAttribute("aria-label")); }catch(e){} });
-function replayRings(){ document.querySelectorAll(".units .ringwrap,.units .netwrap").forEach(e=>{ e.classList.remove("rin"); void e.offsetWidth; e.classList.add("rin"); });
-  const mv=ringCur||0; ringCur=0; setRing(mv);
-  Object.keys(ringState).forEach(k=>{ const v=ringState[k]||0, ids=animRing.ids&&animRing.ids[k]; if(!ids) return; ringState[k]=0; animRing(ids[0],ids[1],v,k); }); }
+function replayRings(){ const U=document.querySelector(".units"); let rm=false; try{ rm=matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){}
+  const wraps=[...document.querySelectorAll(".units .ringwrap,.units .netwrap")];
+  const mv=ringCur||0; const tgt={}; Object.keys(ringState).forEach(k=>tgt[k]=ringState[k]||0);
+  if(rm||!U){ wraps.forEach(e=>{ e.classList.remove("rin"); void e.offsetWidth; e.classList.add("rin"); }); ringCur=0; setRing(mv); Object.keys(tgt).forEach(k=>{ const ids=animRing.ids&&animRing.ids[k]; if(!ids) return; ringState[k]=0; animRing(ids[0],ids[1],tgt[k],k); }); return; }
+  wraps.forEach(e=>{ e.classList.remove("rin"); if(!e.querySelector(".rcomet")){ const c=document.createElement("div"); c.className="rcomet"; c.setAttribute("aria-hidden","true"); const sh=document.createElement("div"); sh.className="rshock"; sh.setAttribute("aria-hidden","true"); const sp=document.createElement("div"); sp.className="rspark"; sp.setAttribute("aria-hidden","true"); sp.innerHTML=Array.from({length:10},(_,k)=>'<i style="--a:'+(k*36)+'deg;--d:'+(k%3)*.05+'s"></i>').join(""); e.append(c,sh,sp); } });
+  /* empty everything first */
+  ringCur=0; setRing(0); Object.keys(tgt).forEach(k=>{ const ids=animRing.ids&&animRing.ids[k]; if(!ids) return; ringState[k]=0; animRing(ids[0],ids[1],0,k); });
+  U.classList.remove("rintro"); void U.offsetWidth; U.classList.add("rintro");
+  clearTimeout(replayRings.t1); clearTimeout(replayRings.t2); clearTimeout(replayRings.t3);
+  replayRings.t1=setTimeout(()=>{ window.__ringD=1700; setRing(mv); Object.keys(tgt).forEach(k=>{ const ids=animRing.ids&&animRing.ids[k]; if(!ids) return; animRing(ids[0],ids[1],tgt[k],k); }); window.__ringD=0;
+    try{ const ctx=audioCtx(); if(ctx&&soundPref!=="off"){ const t=ctx.currentTime, o=ctx.createOscillator(), g=ctx.createGain(); o.type="sine"; o.frequency.setValueAtTime(220,t); o.frequency.exponentialRampToValueAtTime(880,t+1.2); g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.045,t+.15); g.gain.exponentialRampToValueAtTime(.0001,t+1.35); o.connect(g).connect(ctx.destination); o.start(t); o.stop(t+1.4); } }catch(e){} },1250);
+  replayRings.t2=setTimeout(()=>{ U.classList.add("rdone"); try{ tap(); }catch(e){} },2850);
+  replayRings.t3=setTimeout(()=>{ U.classList.remove("rintro","rdone"); },4600); }
 afterEnter(()=>{ const w=()=>{ if(document.getElementById("splash")) return setTimeout(w,150); setTimeout(replayRings,80); }; w(); });
 /* deal marriage */
 function renderMarriage(){ const box=document.getElementById("marryBody"); if(!box) return; const mk=monthKey(new Date()), by={};
@@ -4180,7 +4219,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v87", tpChecked=0;
+var TP_BUILD="trip-pad-v88", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
