@@ -1734,6 +1734,26 @@ html.tp-hidden :is(.ious,.iou-row,.iou-half,.iou-count)::after,html.tp-hidden .i
 .owedbar span{flex:1}
 .owedbar em{font-style:normal;color:var(--accent);white-space:nowrap}
 .srcs,.lnds{border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:7px}
+/* ===== round 10: chargebacks, what-if, best days, paste-to-fill ===== */
+.tag.cb{background:color-mix(in srgb,var(--bad) 14%,var(--chip));color:var(--bad)}
+.whatif{margin-top:10px;padding-top:10px;border-top:1px dashed color-mix(in srgb,var(--good) 35%,var(--line));display:flex;flex-direction:column;gap:6px}
+.whatif .wi-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:13px;font-weight:600}
+.whatif .wi-top b{font-family:var(--f-num);font-variant-numeric:tabular-nums;font-size:18px;color:var(--good)}
+.whatif input[type=range]{width:100%;margin:2px 0;accent-color:var(--good);height:28px}
+.whatif .wi-sub{font-size:12px;color:var(--muted);line-height:1.35}
+.heat{border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:8px}
+.hgrid{display:grid;grid-template-columns:40px repeat(7,minmax(0,1fr));gap:4px}
+.hgrid .hh{font-size:10px;color:var(--muted);font-weight:700;text-align:center;text-transform:uppercase;letter-spacing:.05em}
+.hgrid .hr{font-size:10px;color:var(--muted);font-weight:700;display:flex;align-items:center;white-space:nowrap}
+.hgrid .hc{height:28px;border-radius:7px;background:var(--chip);display:flex;align-items:center;justify-content:center;font-family:var(--f-num);font-weight:700;font-size:11px;color:var(--ink);font-variant-numeric:tabular-nums}
+.hgrid .hc.hot{color:#fff}
+.hgrid .hc.best{box-shadow:inset 0 0 0 2px var(--good)}
+.hgrid .htot{font-size:11px;font-weight:700;text-align:center;color:var(--ink);font-family:var(--f-num)}
+.heat .hnote{font-size:12px;color:var(--muted);line-height:1.4}
+.heat .hnote b{color:var(--ink)}
+.pastebox{display:flex;flex-direction:column;gap:8px;margin:0 0 6px}
+.pastebox textarea{width:100%;min-height:96px;border-radius:12px;border:1px solid var(--line);background:var(--chip);color:var(--ink);padding:10px 12px;font:inherit;font-size:14px;resize:vertical}
+.pastebox .pb-row{display:flex;gap:8px;justify-content:flex-end}
 .sechd{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .srow{display:grid;grid-template-columns:78px minmax(0,1fr) 40px 64px;gap:8px;align-items:center;font-size:13px}
 .srow .sn{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -2197,6 +2217,7 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
       <div class="pc-bar" aria-hidden="true"><i class="pc-proj"></i><i class="pc-earned" id="pcEarned"></i></div>
       <div class="pc-foot"><span id="pcSo"></span><span class="pc-next" id="pcNext"></span></div>
       <div class="cgoal" id="cGoal" hidden><div class="cg-top"><span id="cgTxt"></span><b id="cgPct"></b></div><div class="cg-bar"><i id="cgFill"></i></div></div>
+      <div class="whatif" id="whatIf" hidden><div class="wi-top"><span id="wiLbl">If I sell 3 more</span><b id="wiAmt">$0</b></div><input type="range" id="wiRange" min="1" max="10" step="1" value="3" aria-label="Extra deals this month"><div class="wi-sub" id="wiSub"></div></div>
     </div>
     <div class="spiffs" id="spiffBox">
       <div class="sp-head"><span class="sp-marquee" aria-label="Spiff tracker"><span class="sp-ttl sp-nike sp-neon vegas">SPIFF TRACKER</span></span><span class="sp-count" id="spiffCount">0 eligible cars</span><span class="sp-sum" id="spiffSum"></span><button type="button" class="sp-add" id="spiffAdd">+ Add</button></div>
@@ -2231,6 +2252,7 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
     <div class="mix" aria-label="VSA and RX by vehicle type"><div class="mixgrid" id="mixGrid"></div></div>
     <div class="cotm" id="cotm" hidden><span class="cotm-ic" aria-hidden="true"><svg viewBox="0 0 64 30"><path d="M4 21v-4.5c0-1.6 1-2.8 2.6-3.1l7.4-1.4 7.6-6.4C23 4.4 24.6 4 26.3 4h13.9c2 0 3.8.9 5 2.5l4.3 5.6 8.2 1.4c2.4.4 4.3 2.5 4.3 5V21c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2z" fill="currentColor"/><path d="M24 12.5l4.6-5c.6-.6 1.4-1 2.3-1H40c1 0 1.9.5 2.5 1.2l3.6 4.8z" fill="var(--card)" opacity=".85"/><circle cx="17" cy="23" r="5.6" fill="var(--ink)"/><circle cx="17" cy="23" r="2.3" fill="var(--chip)"/><circle cx="49" cy="23" r="5.6" fill="var(--ink)"/><circle cx="49" cy="23" r="2.3" fill="var(--chip)"/></svg></span><div><small>Car of the month</small><b><span id="cotmName"></span><em id="cotmCount"></em></b></div></div>
     <div class="srcs" id="srcBox" hidden><div class="sechd">Deal sources · avg commission</div><div id="srcRows"></div></div>
+    <div class="heat" id="heatBox" hidden><div class="sechd">Best days · units, last 12 months</div><div class="hgrid" id="heatGrid"></div><div class="hnote" id="heatNote"></div></div>
     <div class="lnds" id="lndBox" hidden><div class="sechd">Lenders · avg days to fund</div><div id="lndRows"></div></div>
   </section>
 
@@ -2309,7 +2331,7 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
 <div class="scrim" id="scrim" hidden>
   <form class="sheet" id="form" novalidate>
     <h2 id="formTitle">Log a deal</h2>
-    <button type="button" class="snapbtn" id="snapBtn" hidden>📷 Snap the deal paper to fill this in</button><input type="file" id="snapFile" accept="image/*" capture="environment" hidden><p class="snapnote" id="snapNote" hidden></p>
+    <button type="button" class="snapbtn" id="snapBtn" hidden>📷 Snap the deal paper to fill this in</button><input type="file" id="snapFile" accept="image/*" capture="environment" hidden><p class="snapnote" id="snapNote" hidden></p><button type="button" class="snapbtn" id="pasteBtn">📋 Paste a deal recap to fill this in</button><div class="pastebox" id="pasteBox" hidden><textarea id="pasteText" placeholder="Paste the deal recap or buyer's order text here"></textarea><div class="pb-row"><button type="button" class="chipbtn" id="pasteCancel">Cancel</button><button type="button" class="btn primary" id="pasteGo">Fill in</button></div></div>
     <p class="formhint" id="quickHint" hidden>Quick log: today’s date and your usual type and doc processor are filled in.</p>
     <div class="grid">
       <label class="f">Deal #<input id="fDeal" class="num" inputmode="numeric" autocomplete="off" required></label>
@@ -2318,6 +2340,7 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
         <div class="seg" id="fSplit"><button type="button" data-v="no">100%</button><button type="button" data-v="yes">50% split</button></div></div>
       <div class="f full partnerbox" id="partnerWrap" hidden><span class="f">Split with</span><div class="prods" id="partnerPick"></div><input id="fPartner" autocomplete="off" autocapitalize="words" placeholder="Or type a name" aria-label="Split with"></div>
       <label class="f full">My commission<input id="fComm" class="num" inputmode="decimal" placeholder="0"></label>
+      <label class="f full">Chargeback <small style="font-weight:500;color:var(--muted)">(taken back later, like a cancelled product)</small><input id="fCb" class="num" inputmode="decimal" placeholder="0"></label>
       <p class="f full" style="margin:4px 0 0;border-top:1px solid var(--line);padding-top:12px">Optional details</p>
       <label class="f full">Customer<input id="fCust" autocomplete="off" autocapitalize="characters" style="text-transform:uppercase"></label>
       <button type="button" class="licbtn" id="licBtn" hidden>🪪 Scan license to fill the name</button><input type="file" id="licFile" accept="image/*" capture="environment" hidden>
@@ -2651,7 +2674,7 @@ function monthCtx(mk){
   return {mk,month,live,units,byDay,maxDay:Math.max(0,...Object.values(byDay)),
     vsa:live.filter(d=>(d.products||[]).includes("VSA")).length, cash:live.filter(d=>d.status==="cash").length,
     veritas:live.filter(d=>d.veritas).length, bestOther:others.length?Math.max(...others):0,
-    comm:live.reduce((s,d)=>s+num(d.commission),0)};
+    comm:live.reduce((s,d)=>s+netC(d),0)};
 }
 function renderBadges(mk){
   const c=monthCtx(mk), earned=new Set(BADGES.filter(b=>b.test(c)).map(b=>b.id));
@@ -2782,7 +2805,7 @@ document.addEventListener("visibilitychange",()=>{ if(!document.hidden) updateGr
 let pcShown=null, pcMonth=null, pcRaf=0;
 function renderPay(mk, live){
   const now=new Date(), nk=monthKey(now), card=$("payCard"), amtEl=$("pcAmt");
-  const comm=live.reduce((s,d)=>s+num(d.commission),0), avg=live.length?comm/live.length:0;
+  const comm=live.reduce((s,d)=>s+netC(d),0), avg=live.length?comm/live.length:0;
   let target=comm, ratio=1, label="Paycheck pace", so="", next="";
   card.classList.remove("idle","final");
   if(mk===nk){
@@ -2835,14 +2858,14 @@ function renderCal(mk, live){
 }
 function csvMonth(){
   const mk=monthKey(view), rows=deals.filter(d=>(d.date||"").startsWith(mk)).sort((a,b)=>(a.date||"").localeCompare(b.date||""));
-  const head=["Date processed","Deal #","Customer","Vehicle","Stock #","Type","Source","Status","Credit","Split with","Front gross","Back gross","Commission","Products","Veritas bonus","Trade-in","Lender","Phone","Doc processor","Paid","Notes"];
+  const head=["Date processed","Deal #","Customer","Vehicle","Stock #","Type","Source","Status","Credit","Split with","Front gross","Back gross","Commission (after chargebacks)","Products","Veritas bonus","Trade-in","Lender","Phone","Doc processor","Paid","Notes"];
   const esc=v=>{ const s=String(v==null?"":v); return /[",\n\r]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; };
   const lines=[head.map(esc).join(",")];
   rows.forEach(d=>{ const [y,m,dd]=(d.date||"--").split("-");
     lines.push([m+"/"+dd+"/"+y, d.dealNo, d.customer, d.vehicle, d.stock, d.type==="CPO"?"TCUV":d.type, d.source||"", d.status==="cash"?"Cash deal":d.status, d.split?"50%":"100%", d.partner,
-      num(d.front), num(d.back), num(d.commission), (d.products||[]).join("; "), d.veritas?"Yes":"No", d.trade?"Trade":"No trade", d.lender||"", d.phone||"", d.processor, d.paid?"Yes":"No", d.notes].map(esc).join(",")); });
+      num(d.front), num(d.back), netC(d), (d.products||[]).join("; "), d.veritas?"Yes":"No", d.trade?"Trade":"No trade", d.lender||"", d.phone||"", d.processor, d.paid?"Yes":"No", d.notes].map(esc).join(",")); });
   const live=rows.filter(d=>d.status!=="unwound");
-  lines.push(""); lines.push(["Totals","","","","","","",live.reduce((s,d)=>s+(d.split?.5:1),0)+" units","",live.reduce((s,d)=>s+num(d.front),0),live.reduce((s,d)=>s+num(d.back),0),live.reduce((s,d)=>s+num(d.commission),0)].map(esc).join(","));
+  lines.push(""); lines.push(["Totals","","","","","","",live.reduce((s,d)=>s+(d.split?.5:1),0)+" units","",live.reduce((s,d)=>s+num(d.front),0),live.reduce((s,d)=>s+num(d.back),0),live.reduce((s,d)=>s+netC(d),0)].map(esc).join(","));
   return {name:"trip-pad-"+mk+".csv", text:"﻿"+lines.join("\r\n")};
 }
 async function exportCsv(){
@@ -2879,7 +2902,7 @@ function render(){
   const month=deals.filter(d=>(d.date||"").startsWith(mk)).sort((a,b)=>(b.date||"").localeCompare(a.date||"")||(b.created||0)-(a.created||0));
   const live=month.filter(d=>d.status!=="unwound");
   const units=live.reduce((s,d)=>s+(d.split?0.5:1),0);
-  setTotals(units, live.reduce((s,d)=>s+num(d.commission),0), mk);
+  setTotals(units, live.reduce((s,d)=>s+netC(d),0), mk);
   $("front").textContent=money(live.reduce((s,d)=>s+num(d.front),0));
   $("back").textContent=money(live.reduce((s,d)=>s+num(d.back),0));
   $("prodCount").textContent=live.reduce((s,d)=>s+(d.products||[]).length,0);
@@ -2891,17 +2914,17 @@ function render(){
   $("road").style.setProperty("--p", String(pct/100)); $("road").classList.toggle("done", !!goal && units>=goal);
   $("roadLbl").textContent=goal?(units>=goal?"Finish line!":units+" / "+goal):"";
   { const now=new Date(), pp=$("payPace"); pp.textContent="";
-    if(mk===monthKey(now)){ const comm=live.reduce((s,d)=>s+num(d.commission),0); if(comm>0){ const dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate(); pp.textContent="≈ "+money(comm/now.getDate()*dim)+" paycheck pace"; } }
+    if(mk===monthKey(now)){ const comm=live.reduce((s,d)=>s+netC(d),0); if(comm>0){ const dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate(); pp.textContent="≈ "+money(comm/now.getDate()*dim)+" paycheck pace"; } }
     const st=weekStreak(), sw=$("streakWrap"); sw.replaceChildren();
     if(st>=2){ const sp=document.createElement("span"); sp.className="streak"; const si=document.createElement("i"); si.setAttribute("aria-hidden","true"); si.textContent="📆"; const sb=document.createElement("b"); sb.textContent=st+"-week streak"; sp.append(si,sb); sw.append(sp); } renderFire(sw); }
-  renderPay(mk, live); renderBadges(mk);
+  renderPay(mk, live); renderWhatIf(mk, live); renderBadges(mk);
   { const now=new Date(), nk=monthKey(now), pe=$("paceText"); pe.className="pace";
     if(mk===nk){ const dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate(), day=now.getDate();
       if(units>0){ const proj=Math.round(units/day*dim*2)/2; pe.textContent="On pace for "+proj+" by "+now.toLocaleString("en-US",{month:"short"})+" "+dim; if(goal) pe.classList.add(proj>=goal?"good":"warn"); }
       else pe.textContent="Log a deal to see your pace"; }
     else if(mk<nk) pe.textContent="Final: "+units+" unit"+(units===1?"":"s");
     else pe.textContent=""; }
-  { const liveComm=live.reduce((s,d)=>s+num(d.commission),0);
+  { const liveComm=live.reduce((s,d)=>s+netC(d),0);
     $("avgDeal").textContent=live.length?money(liveComm/live.length):"$0";
     $("avgSub").textContent=live.length+" deal"+(live.length===1?"":"s");
     const vsaN=live.filter(d=>(d.products||[]).includes("VSA")).length;
@@ -2922,7 +2945,7 @@ function render(){
     $("bestMonthLbl").textContent=best?new Date(+best.k.slice(0,4),+best.k.slice(5,7)-1,1).toLocaleString("en-US",{month:"short",year:"2-digit"}).replace(" "," '"):""; }
   $("goalText").textContent=goal?(units>=goal?"Goal hit: "+units+" of "+goal:(goal-units)+" to go for "+goal+" units"):"No goal set";
 
-  renderMix(live); renderCotm(live); renderBoss(mk, units); renderQuests(); renderTrophies(); renderCGoal(mk, live); renderWrapBanner(); renderSources(live); renderLenders(live); renderOwed(); renderMonthEnd(mk, units); renderRank(); renderSpiffs(); renderIous(); renderAlert(); try{ renderToday(); }catch(e){} renderFuBar(); renderCoach(mk, units); renderCal(mk, live); renderYear(); if(typeof renderBackup==="function") renderBackup();
+  renderMix(live); renderCotm(live); renderBoss(mk, units); renderQuests(); renderTrophies(); renderCGoal(mk, live); renderWrapBanner(); renderSources(live); renderHeat(); renderLenders(live); renderOwed(); renderMonthEnd(mk, units); renderRank(); renderSpiffs(); renderIous(); renderAlert(); try{ renderToday(); }catch(e){} renderFuBar(); renderCoach(mk, units); renderCal(mk, live); renderYear(); if(typeof renderBackup==="function") renderBackup();
   let shown, headText="";
   if(searchQ){ shown=deals.filter(d=>matches(d,searchQ)).sort((a,b)=>(b.date||"").localeCompare(a.date||"")); headText=shown.length+" result"+(shown.length===1?"":"s")+" for “"+searchQ+"” in all months"; }
   else if(filter==="followup"){ shown=overdue(); headText="Pending over "+FOLLOW_DAYS+" days · all months"; }
@@ -2960,12 +2983,13 @@ function render(){
     { const sc=stipCount(d); if(sc.need) tag("Stips "+sc.got+"/"+sc.need, sc.got<sc.need?"follow":"paid"); }
     { const sp=spiffOfDeal(d); if(sp) tag("💰 Spiff "+money(num(sp.amount)),"spiff"); }
     if(d.processor) tag("Docs: "+d.processor, "proc-sophia");
+    if(num(d.chargeback)) tag("Chargeback −"+money(num(d.chargeback)),"cb");
     if(d.paid) tag("Paid ✓","paid");
     { const due=fuDue(d); if(due.length) tag(due[0].label+" due","fu"); else if(d.fu&&d.fu.thanks&&d.fu.check3&&surveyDone(d.fu)) tag("Follow-ups ✓","paid"); }
     if(d.status==="pending"){ const age=daysSince(d.date); if(age>FOLLOW_DAYS) tag("Follow up · "+age+"d","follow"); }
     main.append(c,v,tags);
     const right=document.createElement("div"); right.className="dright";
-    const cm=document.createElement("div"); cm.className="comm"+(d.status!=="unwound"&&num(d.commission)>0?" lit":""); cm.textContent=money(num(d.commission));
+    const cm=document.createElement("div"); cm.className="comm"+(d.status!=="unwound"&&netC(d)>0?" lit":""); cm.textContent=money(netC(d));
     const g=document.createElement("div"); g.className="gross"; g.textContent="F "+money(num(d.front))+" · B "+money(num(d.back));
     right.append(cm,g);
     r.append(day,main,right);
@@ -2998,7 +3022,7 @@ function openForm(d){
   $("fDeal").value=d?.dealNo||""; $("fStock").value=d?.stock||""; $("fCust").value=d?.customer||""; $("fVeh").value=d?.vehicle||"";
   const lp=d?{}:lastPrefs(); setSeg("fType",d?.type||lp.type||"New"); setSeg("fSource",d?.source||""); setSeg("fStatus",d?.status||"pending"); setSeg("fSplit",d?.split?"yes":"no"); setSeg("fVeritas",d?.veritas?"yes":"no"); setSeg("fTrade",d?.trade?"yes":"no"); $("fPhone").value=d?.phone||""; $("fLender").value=d?.lender||""; syncLenderPicks(); updateFuTexts(); $("snapNote").hidden=true; setTimeout(updateSpiffHint,0); setSeg("fProc",d?(d.processor||""):(lp.processor||"")); setSeg("fPaid",d?.paid?"yes":"no"); setFu(d); $("quickHint").hidden=!!d||!(lp.type||lp.processor);
   $("partnerWrap").hidden=!d?.split; $("fPartner").value=d?.partner||""; syncPartner();
-  $("fFront").value=d?.front??""; $("fBack").value=d?.back??""; $("fComm").value=d?.commission??"";
+  $("fFront").value=d?.front??""; $("fBack").value=d?.back??""; $("fComm").value=d?.commission??""; $("fCb").value=d&&num(d.chargeback)?d.chargeback:""; try{ $("pasteBox").hidden=true; $("pasteBtn").hidden=false; }catch(e){}
   $("fProds").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String((d?.products||[]).includes(b.dataset.p))));
   $("fNotes").value=d?.notes||"";
   setStips(d?.stips||{}); setSeg("fEo",d?.eo?"yes":"no"); $("fEoDate").value=d?.eo||""; $("eoWrap").hidden=!d?.eo; stopMic();
@@ -3020,7 +3044,7 @@ $("form").addEventListener("submit",async e=>{
     created:editing?.created||Date.now(), date:$("fDate").value, dealNo:$("fDeal").value.trim(), stock:$("fStock").value.trim().toUpperCase(),
     customer:$("fCust").value.trim().toUpperCase(), vehicle:$("fVeh").value.trim().toUpperCase(), type:segVal("fType"), source:segVal("fSource")||"", status:segVal("fStatus"),
     split, partner:split?$("fPartner").value.trim():"", front:num($("fFront").value), back:num($("fBack").value),
-    commission:num($("fComm").value), products:[...$("fProds").querySelectorAll('[aria-pressed="true"]')].map(b=>b.dataset.p),
+    commission:num($("fComm").value), chargeback:num($("fCb").value), products:[...$("fProds").querySelectorAll('[aria-pressed="true"]')].map(b=>b.dataset.p),
     notes:$("fNotes").value.trim(), veritas:segVal("fVeritas")==="yes", trade:segVal("fTrade")==="yes", phone:$("fPhone").value.trim(), lender:$("fLender").value.trim(), fundedDate:(segVal("fStatus")==="funded"?(editing&&editing.status==="funded"?(editing.fundedDate||""):today()):""), processor:segVal("fProc")||"", paid:segVal("fPaid")==="yes", fu:readFu(), stips:readStips(), eo:(segVal("fEo")==="yes"?($("fEoDate").value||""):"")};
   $("save").disabled=true;
   const dayBefore=deals.filter(x=>x.date===d.date && x.status!=="unwound" && x.id!==d.id).length;
@@ -3155,7 +3179,7 @@ function setTicker(el,label,items){ if(items===el.dataset.tk) return; el.dataset
   requestAnimationFrame(()=>{ const st=el.querySelector(".tk-set"), w=st?st.offsetWidth:0; if(w) el.querySelector(".tk-track").style.setProperty("--tkdur",Math.max(10,w/55).toFixed(1)+"s"); else el.dataset.tk=""; }); }
 
 /* ---------- round 4: customer follow-ups ---------- */
-const FU=[{k:"thanks",label:"Thank-you text",due:0,until:14},{k:"check3",label:"3-day check-in",due:3,until:21}];
+const FU=[{k:"thanks",label:"Thank-you text",due:0,until:14},{k:"check3",label:"3-day check-in",due:3,until:21},{k:"d30",label:"30-day check-in",due:30,until:60},{k:"y1",label:"1-year check-in",due:365,until:400}];
 const SURVEY_EVERY=5, SURVEY_UNTIL=30;
 function dayDiff(a,b){ return Math.round((Date.parse(b+"T12:00:00")-Date.parse(a+"T12:00:00"))/864e5); }
 function surveyMark(d){ const age=daysSince(d.date); if(age<SURVEY_EVERY) return -1; const m=Math.floor(age/SURVEY_EVERY)*SURVEY_EVERY; return m>SURVEY_UNTIL?-1:m; }
@@ -3170,18 +3194,18 @@ function renderFuBar(){
   const n=fuList().length, bar=$("fuBar"); bar.hidden=!n;
   if(n) $("fuText").textContent=n+" customer follow-up"+(n===1?"":"s")+" due. Keep them coming back.";
 }
-[["thanks","Thank-you text"],["check3","3-day check-in"],["survey","Survey reminder sent"],["surveyDone","Survey done"]].forEach(([k,l])=>{ const b=document.createElement("button"); b.type="button"; b.className="chipbtn"; b.textContent=l; b.dataset.k=k; b.setAttribute("aria-pressed","false");
+[["thanks","Thank-you text"],["check3","3-day check-in"],["d30","30-day check-in"],["y1","1-year check-in"],["survey","Survey reminder sent"],["surveyDone","Survey done"]].forEach(([k,l])=>{ const b=document.createElement("button"); b.type="button"; b.className="chipbtn"; b.textContent=l; b.dataset.k=k; b.setAttribute("aria-pressed","false");
   b.addEventListener("click",()=>b.setAttribute("aria-pressed",String(b.getAttribute("aria-pressed")!=="true"))); $("fFu").append(b); });
 let fuPrev=null;
 const fuOn=k=>$("fFu").querySelector('[data-k="'+k+'"]').getAttribute("aria-pressed")==="true";
 function readFu(){ const p=fuPrev||{}, pf=p.fu||{}, o={};
-  if(fuOn("thanks")) o.thanks=true; if(fuOn("check3")) o.check3=true; if(fuOn("surveyDone")) o.surveyDone=true;
+  if(fuOn("thanks")) o.thanks=true; if(fuOn("check3")) o.check3=true; if(fuOn("d30")) o.d30=true; if(fuOn("y1")) o.y1=true; if(fuOn("surveyDone")) o.surveyDone=true;
   const sentNow=p.date&&surveySentThisRound(p);
   if(fuOn("survey")) o.survey=sentNow?pf.survey:today();
   else if(typeof pf.survey==="string" && !sentNow) o.survey=pf.survey;
   return o; }
 function setFu(d){ fuPrev=d||null; const fu=(d&&d.fu)||{};
-  const st={thanks:!!fu.thanks, check3:!!fu.check3, survey:!!(d&&surveySentThisRound(d)), surveyDone:surveyDone(fu)};
+  const st={thanks:!!fu.thanks, check3:!!fu.check3, d30:!!fu.d30, y1:!!fu.y1, survey:!!(d&&surveySentThisRound(d)), surveyDone:surveyDone(fu)};
   $("fFu").querySelectorAll("[data-k]").forEach(b=>b.setAttribute("aria-pressed",String(st[b.dataset.k]))); }
 
 /* ---------- VSA / RX by vehicle type ---------- */
@@ -3201,7 +3225,7 @@ function renderYear(){
   const y=view.getFullYear(), now=new Date(), cur=y===now.getFullYear(), sel=monthKey(view);
   $("yearLbl").textContent=String(y);
   const us=[], cs=[];
-  for(let m=1;m<=12;m++){ const k=y+"-"+String(m).padStart(2,"0"); us.push(unitsIn(k)); cs.push(deals.filter(d=>(d.date||"").startsWith(k)&&d.status!=="unwound").reduce((s,d)=>s+num(d.commission),0)); }
+  for(let m=1;m<=12;m++){ const k=y+"-"+String(m).padStart(2,"0"); us.push(unitsIn(k)); cs.push(deals.filter(d=>(d.date||"").startsWith(k)&&d.status!=="unwound").reduce((s,d)=>s+netC(d),0)); }
   const max=Math.max(1,...us), g=$("yBars"); g.replaceChildren();
   us.forEach((u,i)=>{ const k=y+"-"+String(i+1).padStart(2,"0"), mn=new Date(y,i,1);
     const b=document.createElement("button"); b.type="button"; b.className="ybar"+(k===sel?" sel":"")+((cur&&i>now.getMonth())||y>now.getFullYear()?" future":"");
@@ -3414,7 +3438,7 @@ function renderCotm(live){ const cnt={}; live.forEach(d=>{ const m=modelOf(d.veh
 function scheduleScratch(){ let tries=0; const go=()=>{ if(++tries>40) return; if(document.querySelector(".achv,.scratch-scrim,.thanks-pop") || Date.now()<cheerFree-800 || !$("scrim").hidden) return setTimeout(go,600); showScratch(); }; setTimeout(go,2700); }
 function scratchPrize(){
   const gold=Math.random()<0.06; if(gold) return {gold, t:"GOLD CARD 🏆", s:"Legendary close. Screenshot this one."};
-  const mk=monthKey(new Date()), u=unitsIn(mk), comm=deals.filter(d=>(d.date||"").startsWith(mk)&&d.status!=="unwound").reduce((a,d)=>a+num(d.commission),0);
+  const mk=monthKey(new Date()), u=unitsIn(mk), comm=deals.filter(d=>(d.date||"").startsWith(mk)&&d.status!=="unwound").reduce((a,d)=>a+netC(d),0);
   const hype=[["Closer energy 🔥","The lot fears you."],["Another one 🎤","Keep the line moving."],["Money moves 💸","Bag secured."],["Built different 💪","That's how it's done."],["Keys handed 🔑","Next customer's walking in."],["Too smooth 😎","They didn't stand a chance."]];
   const facts=[["Deal #"+u+" this month","Every one counts."], goal?(u>=goal?["Goal crushed","+"+(u-goal)+" past "+goal+" units"]:[(goal-u)+" more to "+goal,"You're "+Math.round(u/goal*100)+"% there"]):null, comm?[money(comm),"Commission this month so far"]:null].filter(Boolean);
   const pool=Math.random()<.5?hype:facts, p=pool[Math.floor(Math.random()*pool.length)]; return {gold:false,t:p[0],s:p[1]};
@@ -3735,6 +3759,8 @@ function firstName(c){ const w=String(c||"").trim().split(/\s+/)[0]||""; return 
 function fuMessages(){ const nm=firstName($("fCust").value), car=modelOf($("fVeh").value)||"new ride", hi=nm?"Hi "+nm+", ":"Hi, ";
   return [["thanks","Thank-you",hi+"it's Jonathan from Toyota Marin. Congrats again on your "+car+"! Thank you for choosing us. Text me anytime if you need anything."],
           ["check3","3-day check-in",hi+"Jonathan from Toyota Marin checking in. How's the "+car+" treating you so far? Any questions about the features, I'm here to help."],
+          ["d30","30-day check-in",hi+"it's Jonathan from Toyota Marin. It's been about a month with your "+car+". How's everything going? If anything comes up, or you have a friend shopping, I'm here."],
+          ["y1","1-year check-in",hi+"it's Jonathan from Toyota Marin. Happy one year with your "+car+"! Thanks again for choosing us. If you know anyone shopping, or you're curious what yours is worth today, I'd be glad to help."],
           ["survey","Survey reminder",hi+"Jonathan from Toyota Marin. Toyota may send you a short survey about your purchase. If I took great care of you, a top score would mean a lot to me. Thank you!"]]; }
 function updateFuTexts(){ const box=$("fuTexts"); if(!box) return; box.replaceChildren(); const ph=phoneDigits($("fPhone").value);
   if(!ph){ const s=document.createElement("small"); s.textContent="Add the customer's phone above to text them in one tap."; box.append(s); return; }
@@ -3743,9 +3769,73 @@ function updateFuTexts(){ const box=$("fuTexts"); if(!box) return; box.replaceCh
     box.append(a); }); }
 $("fPhone").addEventListener("input",updateFuTexts); $("fCust").addEventListener("input",updateFuTexts); $("fVeh").addEventListener("input",updateFuTexts);
 
+/* ===== round 10 ===== */
+/* --- chargebacks: commission taken back after the deal; the unit still counts --- */
+function netC(d){ return num(d.commission)-num(d.chargeback); }
+
+/* --- what-if slider on the paycheck card --- */
+function wiAvg(live){ const net=live.filter(d=>netC(d)>0); if(net.length) return net.reduce((a,d)=>a+netC(d),0)/net.length;
+  const cut=new Date(); cut.setDate(cut.getDate()-90); const ck=cut.getFullYear()+"-"+String(cut.getMonth()+1).padStart(2,"0")+"-"+String(cut.getDate()).padStart(2,"0");
+  const rec=deals.filter(d=>d.status!=="unwound"&&(d.date||"")>=ck&&netC(d)>0); return rec.length?rec.reduce((a,d)=>a+netC(d),0)/rec.length:0; }
+var wiCtx=null;
+function renderWhatIf(mk, live){ const box=$("whatIf"); if(!box) return; const nk=monthKey(new Date());
+  const avg=mk===nk?wiAvg(live):0; if(!avg){ box.hidden=true; wiCtx=null; return; }
+  wiCtx={comm:live.reduce((a,d)=>a+netC(d),0), units:live.reduce((a,d)=>a+(d.split?.5:1),0), avg, fromMonth:live.some(d=>netC(d)>0)}; box.hidden=false; updateWhatIf(); }
+function updateWhatIf(){ if(!wiCtx) return; const n=+$("wiRange").value||1, c=wiCtx;
+  $("wiLbl").textContent="If I sell "+n+" more deal"+(n===1?"":"s");
+  $("wiAmt").textContent=money(c.comm+n*c.avg);
+  const u=c.units+n; let g=""; if(goal){ g=u>=goal?" · goal hit 🎯":" · "+(Math.round((goal-u)*2)/2)+" short of "+goal; }
+  $("wiSub").textContent=u+" units"+g+" · +"+money(n*c.avg)+" at your "+money(c.avg)+" "+(c.fromMonth?"average this month":"90-day average"); }
+$("wiRange").addEventListener("input",()=>{ updateWhatIf(); try{ tap(); }catch(e){} });
+
+/* --- best-days heat map --- */
+var HEAT_DAYS=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"], HEAT_ROWS=["1–7","8–14","15–21","22–28","29–31"];
+function renderHeat(){ const sec=$("heatBox"), grid=$("heatGrid"); if(!sec) return;
+  const cut=new Date(); cut.setFullYear(cut.getFullYear()-1); const ck=cut.getFullYear()+"-"+String(cut.getMonth()+1).padStart(2,"0")+"-"+String(cut.getDate()).padStart(2,"0");
+  const ds=deals.filter(d=>d.status!=="unwound"&&d.date&&d.date>=ck);
+  if(ds.length<3){ sec.hidden=true; return; } sec.hidden=false;
+  const cells=HEAT_ROWS.map(()=>Array(7).fill(0)), byDay=Array(7).fill(0), byRow=Array(5).fill(0);
+  ds.forEach(d=>{ const [y,m,dd]=d.date.split("-").map(Number); const wd=(new Date(y,m-1,dd).getDay()+6)%7, r=Math.min(4,Math.floor((dd-1)/7)), u=d.split?.5:1; cells[r][wd]+=u; byDay[wd]+=u; byRow[r]+=u; });
+  const max=Math.max(...cells.flat(),0.5); let best=null; cells.forEach((row,r)=>row.forEach((v,c)=>{ if(v>0&&(!best||v>best.v)) best={r,c,v}; }));
+  const fmt=v=>String(Math.round(v*2)/2);
+  grid.replaceChildren(); const add=(cls,txt)=>{ const e=document.createElement("div"); e.className=cls; e.textContent=txt; grid.append(e); return e; };
+  add("hr",""); HEAT_DAYS.forEach(d=>add("hh",d.slice(0,2)));
+  HEAT_ROWS.forEach((lbl,r)=>{ add("hr",lbl); for(let c=0;c<7;c++){ const v=cells[r][c], h=v/max; const e=add("hc"+(h>.55?" hot":"")+(best&&best.r===r&&best.c===c?" best":""), v?fmt(v):"");
+    if(v) e.style.background="color-mix(in srgb,var(--accent) "+Math.round(18+h*72)+"%,var(--chip))"; e.title=HEAT_DAYS[c]+"s, days "+lbl+": "+fmt(v)+" units"; } });
+  add("hr","Total"); byDay.forEach(v=>add("htot",v?fmt(v):"·"));
+  const bd=byDay.indexOf(Math.max(...byDay)), br=byRow.indexOf(Math.max(...byRow)), slow=byDay.indexOf(Math.min(...byDay));
+  const names=["Mondays","Tuesdays","Wednesdays","Thursdays","Fridays","Saturdays","Sundays"], rowName=["the 1st–7th","the 8th–14th","the 15th–21st","the 22nd–28th","the 29th–31st"];
+  const note=$("heatNote"); note.replaceChildren();
+  const b=t=>{ const x=document.createElement("b"); x.textContent=t; return x; };
+  note.append("Best day: ",b(names[bd]+" ("+fmt(byDay[bd])+")"),". Hottest stretch: ",b(rowName[br]+" ("+fmt(byRow[br])+")"),". Slowest: "+names[slow]+".");
+}
+
+/* --- paste a deal recap to fill the form (works without photo reading) --- */
+function parseRecap(t){ const T=String(t||"").replace(/\r/g,"").toUpperCase(), o={}; let m;
+  const val=(re)=>{ const x=T.match(re); return x?x[1].trim():null; };
+  o.dealNo=val(/DEAL\s*(?:NO\.?|NUMBER|#)?\s*[:#]?\s*(\d{4,8})\b/);
+  o.stock=val(/STOCK\s*(?:NO\.?|NUMBER|#)?\s*[:#]?\s*([A-Z0-9][A-Z0-9-]{2,11})\b/);
+  if((m=T.match(/\b(\d{1,2})[\/-](\d{1,2})[\/-](\d{4}|\d{2})\b/))){ const y=m[3].length===2?"20"+m[3]:m[3], mo=+m[1], dd=+m[2]; if(mo>=1&&mo<=12&&dd>=1&&dd<=31) o.date=y+"-"+String(mo).padStart(2,"0")+"-"+String(dd).padStart(2,"0"); }
+  else if((m=T.match(/\b(20\d{2})-(\d{2})-(\d{2})\b/))) o.date=m[1]+"-"+m[2]+"-"+m[3];
+  { const x=T.match(/(?:^|[^-])\b(?:BUYER|CUSTOMER|PURCHASER)(?:'S)?(?:\s*NAME)?\s*[:#]?[ \t]*([A-Z][A-Z'.-]*(?:[ \t][A-Z][A-Z'.-]*){0,4})/m);
+    if(x){ const nm=x[1].replace(/\s+(CO-?BUYER|DATE|ADDRESS|PHONE|DEAL|STOCK|VIN).*$/,"").trim(); if(nm.length>=3&&!/^(INFO|INFORMATION|SIGNATURE)$/.test(nm)) o.customer=nm; } }
+  { const lines=T.split("\n"); for(const ln of lines){ const x=ln.match(/\b(20\d{2})\s+(?:TOYOTA\s+)?([A-Z0-9][A-Z0-9 -]{1,40})/); if(x){ const v=(x[1]+" "+x[2]).replace(/\s+(STOCK|VIN|MILES|COLOR|DEAL)\b.*$/,"").trim(); if(modelOf(v)){ o.vehicle=v; break; } } } }
+  if(/\b(TCUV|CPO|CERTIFIED)\b/.test(T)) o.type="CPO"; else if(/\b(USED|PRE-?OWNED)\b/.test(T)) o.type="Used"; else if(/\bNEW\b/.test(T)) o.type="New";
+  const amt=re=>{ const x=T.match(re); return x?num(x[1]):null; };
+  o.front=amt(/FRONT(?:\s*END)?(?:\s*GROSS)?\s*[:=]?\s*\$?\s*(-?[\d,]+(?:\.\d{1,2})?)/); o.back=amt(/BACK(?:\s*END)?(?:\s*GROSS)?\s*[:=]?\s*\$?\s*(-?[\d,]+(?:\.\d{1,2})?)/);
+  o.products=[]; return o; }
+function pasteFill(text){ const n=fillFromSnap(parseRecap(text)); const note=$("snapNote"); note.hidden=false;
+  note.textContent=n?"Filled in "+n+" field"+(n===1?"":"s")+" from the paste. Check everything before you save.":"Couldn't find deal details in that text. Paste the full recap, or type it in.";
+  if(n){ $("pasteBox").hidden=true; $("pasteBtn").hidden=false; try{ tapSuccess(); }catch(e){} } }
+$("pasteBtn").addEventListener("click",async()=>{ $("pasteBtn").hidden=true; $("pasteBox").hidden=false; $("pasteText").value="";
+  let clip=""; try{ if(navigator.clipboard&&navigator.clipboard.readText) clip=await navigator.clipboard.readText(); }catch(e){}
+  if(clip&&clip.trim().length>8){ $("pasteText").value=clip; pasteFill(clip); } else $("pasteText").focus(); });
+$("pasteGo").addEventListener("click",()=>pasteFill($("pasteText").value));
+$("pasteCancel").addEventListener("click",()=>{ $("pasteBox").hidden=true; $("pasteBtn").hidden=false; });
+
 /* --- paycheck check --- */
 function owedList(){ return deals.filter(d=>d.status!=="unwound"&&d.status!=="pending"&&!d.paid&&num(d.commission)>0).sort((a,b)=>(a.date||"").localeCompare(b.date||"")); }
-function renderOwed(){ const l=owedList(), tot=l.reduce((s,d)=>s+num(d.commission),0), bar=$("owedBar"); bar.hidden=!l.length;
+function renderOwed(){ const l=owedList(), tot=l.reduce((s,d)=>s+netC(d),0), bar=$("owedBar"); bar.hidden=!l.length;
   if(l.length){ $("owedAmt").textContent=money(tot); $("owedTxt").textContent=" not on a paycheck yet · "+l.length+" deal"+(l.length===1?"":"s"); }
   $("owedTile").textContent=l.length?money(tot):"$0"; $("owedSub").textContent=l.length+" deal"+(l.length===1?"":"s"); }
 $("owedBar").addEventListener("click",()=>{ filter="owed"; searchQ=""; $("searchBox").value=""; dayFilter=null; document.querySelectorAll(".filters .chipbtn").forEach(x=>x.setAttribute("aria-pressed","false")); listEnter=true; render(); $("listHead").scrollIntoView({behavior:reduceMotion()?"auto":"smooth",block:"start"}); });
@@ -3753,7 +3843,7 @@ $("owedBar").addEventListener("click",()=>{ filter="owed"; searchQ=""; $("search
 /* --- deal sources --- */
 const SOURCES=["Showroom","Internet","Phone","Campaign"];
 function renderSources(live){ const box=$("srcRows"), sec=$("srcBox"); const withSrc=live.filter(d=>d.source); sec.hidden=!withSrc.length; if(!withSrc.length) return; box.replaceChildren();
-  const rows=SOURCES.map(s=>{ const ds=live.filter(d=>d.source===s); return {s,n:ds.length,avg:ds.length?ds.reduce((a,d)=>a+num(d.commission),0)/ds.length:0}; }).filter(r=>r.n);
+  const rows=SOURCES.map(s=>{ const ds=live.filter(d=>d.source===s); return {s,n:ds.length,avg:ds.length?ds.reduce((a,d)=>a+netC(d),0)/ds.length:0}; }).filter(r=>r.n);
   const none=live.length-withSrc.length; if(none) rows.push({s:"Not set",n:none,avg:0,ns:true});
   const best=rows.filter(r=>!r.ns).sort((a,b)=>b.avg-a.avg)[0];
   rows.forEach(r=>{ const row=document.createElement("div"); row.className="srow"+(best&&r===best&&rows.filter(x=>!x.ns).length>1?" best":"");
@@ -3811,7 +3901,7 @@ function replayRings(){ const U=document.querySelector(".units"); let rm=false; 
 afterEnter(()=>{ const w=()=>{ if(document.getElementById("splash")) return setTimeout(w,150); setTimeout(replayRings,80); }; w(); });
 /* deal marriage */
 function renderMarriage(){ const box=document.getElementById("marryBody"); if(!box) return; const mk=monthKey(new Date()), by={};
-  deals.filter(d=>d.split&&d.partner&&d.status!=="unwound").forEach(d=>{ const raw=String(d.partner).trim(); const k=raw.toLowerCase(); if(!k) return; const o=by[k]=by[k]||{name:raw.charAt(0).toUpperCase()+raw.slice(1),all:0,month:0,comm:0,last:""}; o.all++; if((d.date||"").startsWith(mk)) o.month++; o.comm+=num(d.commission); if((d.date||"")>o.last) o.last=d.date; });
+  deals.filter(d=>d.split&&d.partner&&d.status!=="unwound").forEach(d=>{ const raw=String(d.partner).trim(); const k=raw.toLowerCase(); if(!k) return; const o=by[k]=by[k]||{name:raw.charAt(0).toUpperCase()+raw.slice(1),all:0,month:0,comm:0,last:""}; o.all++; if((d.date||"").startsWith(mk)) o.month++; o.comm+=netC(d); if((d.date||"")>o.last) o.last=d.date; });
   const list=Object.values(by).sort((a,b)=>b.all-a.all||b.month-a.month||b.last.localeCompare(a.last)); box.replaceChildren();
   if(!list.length){ const p=document.createElement("p"); p.className="mr-empty"; p.textContent="Split a deal with a teammate and your deal spouse shows up here 💍"; box.append(p); return; }
   const top=list[0], ini=n=>String(n||"?").trim().split(/\s+/).map(w=>w[0]||"").join("").slice(0,2).toUpperCase(), hue=n=>{ let h=0; for(const ch of String(n).toLowerCase()) h=(h*31+ch.charCodeAt(0))%360; return h; };
@@ -4039,7 +4129,7 @@ function renderUps(){ if(!$("upsBtns")) return; const t=today(), o=(upsData||{})
   const units=unitsIn(mk), left=Math.max(0,goal-units), st=m.ups>=5?m:all, take=$("upsTake");
   const dim=new Date(new Date().getFullYear(),new Date().getMonth()+1,0).getDate(), daysLeft=dim-new Date().getDate()+1;
   const need=(left>0&&st.ups>=3&&st.rate>0)?Math.ceil(left/st.rate):0, upT=upsOn(t), soldT=deals.filter(d=>d.date===t&&d.status!=="unwound").length;
-  const comm=deals.filter(d=>(d.date||"").startsWith(mk)&&d.status!=="unwound").reduce((a,d)=>a+num(d.commission),0);
+  const comm=deals.filter(d=>(d.date||"").startsWith(mk)&&d.status!=="unwound").reduce((a,d)=>a+netC(d),0);
   const I=(s,v,c)=>'<span class="tk-i"><b>'+s+'</b><em class="'+(c||"")+'">'+v+'</em></span>';
   const items=[ left<=0?I("GOAL","HIT ▲","up"):need?I("NEED",need+" UPS","fl")+I("PACE",Math.ceil(need/daysLeft)+"/DAY","fl"):I("NEED","LOG UPS","fl"),
     I("UPS",upT+(upT?" ▲":""),upT?"up":""), m.ups?I("CLOSE",Math.round(m.rate*100)+"% "+(m.rate>=all.rate?"▲":"▼"),m.rate>=all.rate?"up":"dn"):"",
@@ -4237,7 +4327,7 @@ function renderQuests(){ const box=$("qList"); if(!box) return; const day=today(
   questSeen={day,n:qd.n,done:qd.qs.filter(q=>q.done).map(q=>q.id)}; }
 /* --- trophy room --- */
 function recordsCalc(){ const live=deals.filter(d=>d.status!=="unwound"&&d.date); const months={}, days={};
-  live.forEach(d=>{ const k=d.date.slice(0,7), u=d.split?.5:1; (months[k]=months[k]||{u:0,c:0}); months[k].u+=u; months[k].c+=num(d.commission); days[d.date]=(days[d.date]||0)+u; });
+  live.forEach(d=>{ const k=d.date.slice(0,7), u=d.split?.5:1; (months[k]=months[k]||{u:0,c:0}); months[k].u+=u; months[k].c+=netC(d); days[d.date]=(days[d.date]||0)+u; });
   const mlab=k=>new Date(+k.slice(0,4),+k.slice(5,7)-1,1).toLocaleString("en-US",{month:"short",year:"numeric"});
   const bm=Object.entries(months).sort((a,b)=>b[1].u-a[1].u)[0], bc=Object.entries(months).sort((a,b)=>b[1].c-a[1].c)[0];
   const big=live.slice().sort((a,b)=>num(b.commission)-num(a.commission))[0], pr=live.slice().sort((a,b)=>(b.products||[]).length-(a.products||[]).length)[0];
@@ -4256,7 +4346,7 @@ function checkRecords(before){ const after=recordsCalc();
   TROPHIES.forEach(([k,ic,l])=>{ if(k==="month") return; if(before[k].v>0 && after[k].v>before[k].v){ cheer("NEW RECORD "+ic, l+": "+after[k].s, true); const t=$("tGrid").querySelector('[data-k="'+k+'"]'); if(t){ t.classList.remove("flash"); void t.offsetWidth; t.classList.add("flash"); } } }); }
 /* --- commission goal --- */
 let commGoal=0;
-function renderCGoal(mk, live){ const el=$("cGoal"); if(!commGoal){ el.hidden=true; return; } el.hidden=false; const c=live.reduce((a,d)=>a+num(d.commission),0), pc=Math.min(100,c/commGoal*100);
+function renderCGoal(mk, live){ const el=$("cGoal"); if(!commGoal){ el.hidden=true; return; } el.hidden=false; const c=live.reduce((a,d)=>a+netC(d),0), pc=Math.min(100,c/commGoal*100);
   $("cgTxt").textContent=money(c)+" of "+money(commGoal)+" goal"; $("cgPct").textContent=Math.round(c/commGoal*100)+"%"; $("cgFill").style.width=pc+"%"; el.classList.toggle("hit",c>=commGoal); }
 /* --- split high five --- */
 function showHighFive(name){ if(reduceMotion()) return; const o=document.createElement("div"); o.className="hi5"; o.innerHTML='<span class="hb"></span><span class="hh">🙌</span><b></b>'; o.querySelector("b").textContent="High five, "+name+"!";
@@ -4292,7 +4382,7 @@ $("licFile").addEventListener("change",async e=>{ const f=e.target.files[0]; e.t
   catch(err){ note.textContent="Couldn't read that license photo. Try again closer, with no glare."; } });
 /* --- Wrapped --- */
 function wrappedData(y){ const ds=deals.filter(d=>(d.date||"").startsWith(String(y))&&d.status!=="unwound"); if(!ds.length) return null;
-  const u=ds.reduce((a,d)=>a+(d.split?.5:1),0), c=ds.reduce((a,d)=>a+num(d.commission),0), byM={}; ds.forEach(d=>{ const k=d.date.slice(0,7); byM[k]=(byM[k]||0)+(d.split?.5:1); });
+  const u=ds.reduce((a,d)=>a+(d.split?.5:1),0), c=ds.reduce((a,d)=>a+netC(d),0), byM={}; ds.forEach(d=>{ const k=d.date.slice(0,7); byM[k]=(byM[k]||0)+(d.split?.5:1); });
   const bm=Object.entries(byM).sort((a,b)=>b[1]-a[1])[0], cars={}; ds.forEach(d=>{ const m=modelOf(d.vehicle); if(m) cars[m]=(cars[m]||0)+1; }); const car=Object.entries(cars).sort((a,b)=>b[1]-a[1])[0];
   const pc={}; ds.forEach(d=>(d.products||[]).forEach(p=>pc[p]=(pc[p]||0)+1)); const topP=Object.entries(pc).sort((a,b)=>b[1]-a[1])[0];
   const vsa=Math.round(ds.filter(d=>(d.products||[]).includes("VSA")).length/ds.length*100), ppd=ds.reduce((a,d)=>a+(d.products||[]).length,0)/ds.length;
@@ -4313,7 +4403,7 @@ function playWedding(){ stopWedding(); if(typeof soundPref!=="undefined"&&soundP
     t+=dur; });
   wedAudio={out,nodes,ctx}; }
 function stopWedding(){ if(!wedAudio) return; const {out,nodes,ctx}=wedAudio; wedAudio=null; try{ out.gain.cancelScheduledValues(ctx.currentTime); out.gain.setValueAtTime(out.gain.value,ctx.currentTime); out.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+.35); }catch(e){} setTimeout(()=>nodes.forEach(o=>{ try{o.stop();}catch(e){} }),400); }
-function wrapSpouse(y){ const by={}; deals.filter(d=>(d.date||"").startsWith(String(y))&&d.split&&d.partner&&d.status!=="unwound").forEach(d=>{ const k=String(d.partner).trim().toLowerCase(); if(!k) return; const o=by[k]=by[k]||{name:String(d.partner).trim().replace(/^./,c=>c.toUpperCase()),n:0,c:0}; o.n++; o.c+=num(d.commission); }); return Object.values(by).sort((a,b)=>b.n-a.n)[0]||null; }
+function wrapSpouse(y){ const by={}; deals.filter(d=>(d.date||"").startsWith(String(y))&&d.split&&d.partner&&d.status!=="unwound").forEach(d=>{ const k=String(d.partner).trim().toLowerCase(); if(!k) return; const o=by[k]=by[k]||{name:String(d.partner).trim().replace(/^./,c=>c.toUpperCase()),n:0,c:0}; o.n++; o.c+=netC(d); }); return Object.values(by).sort((a,b)=>b.n-a.n)[0]||null; }
 var WRAP_MUSIC_SRC="wrapped-music.mp3";
 var wrapMus={buf:null,src:null,g:null,loading:null};
 function wrapMusicStart(){ try{ if(navigator.audioSession) navigator.audioSession.type="playback"; }catch(e){}
@@ -4353,7 +4443,7 @@ async function makeLockCard(){ const W=1179,H=2556, c=document.createElement("ca
   const acc=cs.getPropertyValue("--accent").trim()||"#2f6bff", good=cs.getPropertyValue("--good").trim()||"#00b862";
   const g=x.createLinearGradient(0,0,W,H); g.addColorStop(0,"#05070f"); g.addColorStop(.55,"#0b1630"); g.addColorStop(1,"#05070f"); x.fillStyle=g; x.fillRect(0,0,W,H);
   const rg=x.createRadialGradient(W/2,1450,50,W/2,1450,900); rg.addColorStop(0,acc+"55"); rg.addColorStop(1,"transparent"); x.fillStyle=rg; x.fillRect(0,0,W,H);
-  const mk=monthKey(view), live=deals.filter(d=>(d.date||"").startsWith(mk)&&d.status!=="unwound"), u=unitsIn(mk), comm=live.reduce((a,d)=>a+num(d.commission),0), li=levelInfo();
+  const mk=monthKey(view), live=deals.filter(d=>(d.date||"").startsWith(mk)&&d.status!=="unwound"), u=unitsIn(mk), comm=live.reduce((a,d)=>a+netC(d),0), li=levelInfo();
   const cx=W/2, cy=1420, R=330, pct=goal?Math.min(1,u/goal):0;
   x.lineCap="round"; x.lineWidth=46; x.strokeStyle="rgba(255,255,255,.12)"; x.beginPath(); x.arc(cx,cy,R,0,Math.PI*2); x.stroke();
   const rgr=x.createLinearGradient(cx-R,cy-R,cx+R,cy+R); rgr.addColorStop(0,acc); rgr.addColorStop(1,good); x.strokeStyle=rgr; x.shadowColor=acc; x.shadowBlur=40;
@@ -4416,7 +4506,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v98", tpChecked=0;
+var TP_BUILD="trip-pad-v99", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
