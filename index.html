@@ -1790,6 +1790,16 @@ html:not(.tp-in) .fabqr{visibility:hidden}
 @keyframes fwIn{0%{opacity:0;transform:translateY(46px) scale(.84)}60%{opacity:1}100%{opacity:1;transform:none}}
 @keyframes fwOut{to{opacity:0;transform:translateY(70px) scale(.9)}}
 @media (prefers-reduced-motion:reduce){#scrim,#qrScrim,#scrim > .sheet,#qrScrim > .sheet{animation:none!important}.fab,.fabqr{transition:none}}
+/* deal form + QR window: blurred background and a color-cycling glow border */
+#scrim:not([hidden]),#qrScrim:not([hidden]){background:rgba(8,12,22,.42);-webkit-backdrop-filter:blur(12px) saturate(1.15);backdrop-filter:blur(12px) saturate(1.15)}
+#scrim:not([hidden]) > .sheet,#qrScrim:not([hidden]) > .sheet{animation:fwIn .46s cubic-bezier(.18,1.15,.32,1) both,fwGlow 4.8s linear .4s infinite}
+#scrim.closing{-webkit-backdrop-filter:blur(0);backdrop-filter:blur(0);transition:backdrop-filter .28s,-webkit-backdrop-filter .28s}
+@keyframes fwGlow{
+ 0%,100%{box-shadow:0 0 0 2px #3b6dff,0 0 22px 3px rgba(59,109,255,.55),0 -10px 40px rgba(59,109,255,.25)}
+ 25%{box-shadow:0 0 0 2px #a855f7,0 0 22px 3px rgba(168,85,247,.55),0 -10px 40px rgba(168,85,247,.25)}
+ 50%{box-shadow:0 0 0 2px #ff3d9a,0 0 22px 3px rgba(255,61,154,.55),0 -10px 40px rgba(255,61,154,.25)}
+ 75%{box-shadow:0 0 0 2px #00c2ff,0 0 22px 3px rgba(0,194,255,.55),0 -10px 40px rgba(0,194,255,.25)}}
+@media (prefers-reduced-motion:reduce){#scrim:not([hidden]) > .sheet,#qrScrim:not([hidden]) > .sheet{box-shadow:0 0 0 2px #3b6dff,0 0 22px 3px rgba(59,109,255,.5)}}
 /* ===== round 12: QR code tool ===== */
 .td-tools{grid-template-columns:repeat(3,minmax(0,1fr))!important}
 @media (min-width:640px){.td-tools{grid-template-columns:repeat(6,minmax(0,1fr))!important}}
@@ -4728,7 +4738,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v109", tpChecked=0;
+var TP_BUILD="trip-pad-v110", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
