@@ -1798,6 +1798,56 @@ html.tp-hidden :is(.ious,.iou-row,.iou-half,.iou-count)::after,html.tp-hidden .i
 @keyframes netstrobe{0%,14%,28%,100%{box-shadow:0 0 0 rgba(34,211,238,0);filter:none}
  7%,21%{box-shadow:0 0 0 1.5px #22d3ee,0 0 14px 2px rgba(34,211,238,.85);filter:brightness(1.6)}}
 @media (prefers-reduced-motion:reduce){.tag.src-net{animation:none}}
+/* ===== round 16: IOU payback check on splits, drag-to-browse deal cards ===== */
+.iou-xref{margin-top:8px;border-radius:14px;padding:10px 12px;background:color-mix(in srgb,#16a34a 10%,var(--chip));box-shadow:inset 0 0 0 1.5px color-mix(in srgb,#16a34a 45%,transparent);display:flex;flex-direction:column;gap:8px}
+.iou-xref .ix-top{font-size:13px;line-height:1.35;color:var(--ink)}
+.iou-xref .ix-top b{color:#16a34a}
+.iou-xref .ix-btn{align-self:flex-start;border:0;border-radius:999px;padding:9px 14px;font:700 13.5px var(--f-body);cursor:pointer;background:var(--card);color:var(--ink);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,#16a34a 55%,var(--line))}
+.iou-xref .ix-btn[aria-pressed="true"]{background:#16a34a;color:#fff;box-shadow:0 0 12px rgba(22,163,74,.45)}
+.iou-xref .ix-sub{font-size:12px;color:var(--muted);line-height:1.35}
+.iou-xref.warn{background:color-mix(in srgb,var(--warn) 10%,var(--chip));box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--warn) 45%,transparent)}
+.tcs-row{cursor:grab}
+.tcs-row.dragging{cursor:grabbing;scroll-snap-type:none!important;user-select:none;-webkit-user-select:none}
+.tcs-row.dragging .tc{pointer-events:none}
+/* ===== round 15: a color for every button choice, form scroll progress ===== */
+.seg.colorful button{color:color-mix(in srgb,var(--bc) 78%,var(--ink));box-shadow:inset 0 -3px 0 color-mix(in srgb,var(--bc) 50%,transparent);transition:background .18s,color .18s,box-shadow .18s}
+.seg.colorful button[aria-pressed="true"]{background:var(--bc)!important;color:#fff!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18),0 0 14px color-mix(in srgb,var(--bc) 55%,transparent)!important}
+#partnerPick .chipbtn{color:color-mix(in srgb,var(--bc) 80%,var(--ink));border-color:color-mix(in srgb,var(--bc) 45%,var(--line));background:color-mix(in srgb,var(--bc) 8%,var(--card))}
+#partnerPick .chipbtn[aria-pressed="true"]{background:var(--bc)!important;color:#fff!important;border-color:var(--bc)!important;box-shadow:0 0 12px color-mix(in srgb,var(--bc) 50%,transparent)}
+.fprog{position:sticky;top:-18px;z-index:6;margin:-18px calc(-1 * max(16px,env(safe-area-inset-left,0px))) 0;padding:9px max(16px,env(safe-area-inset-left,0px)) 7px;
+  background:color-mix(in srgb,var(--card) 86%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);display:flex;align-items:center;gap:10px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.fprog .fp-track{flex:1;height:5px;border-radius:99px;background:var(--chip);overflow:hidden}
+.fprog .fp-fill{display:block;height:100%;width:var(--fp,0%);border-radius:inherit;background:linear-gradient(90deg,#3b6dff,#a855f7,#ff3d9a);box-shadow:0 0 8px rgba(168,85,247,.6);transition:width .12s linear}
+.fprog .fp-sec{min-width:0;max-width:46%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}
+.fprog .fp-pct{font-family:var(--f-num);font-variant-numeric:tabular-nums;min-width:34px;text-align:right}
+#form{scrollbar-width:thin;scrollbar-color:color-mix(in srgb,#a855f7 70%,transparent) transparent}
+#form::-webkit-scrollbar{width:6px}
+#form::-webkit-scrollbar-track{background:transparent}
+#form::-webkit-scrollbar-thumb{border-radius:99px;background:linear-gradient(180deg,#3b6dff,#a855f7,#ff3d9a)}
+/* ===== round 14: profit stamp, gross + minis, delivery checklist, badge ===== */
+.pstamp{position:fixed;inset:0;z-index:85;display:grid;place-items:center;pointer-events:auto;cursor:pointer}
+.pstamp .ps-in{display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 22px 12px;border:6px solid currentColor;border-radius:14px;
+  font-family:"Barlow Condensed","Arial Narrow",Impact,sans-serif;font-weight:800;text-transform:uppercase;letter-spacing:.04em;line-height:.95;text-align:center;
+  background:color-mix(in srgb,var(--card) 82%,transparent);box-shadow:0 0 0 3px color-mix(in srgb,currentColor 25%,transparent) inset,0 18px 50px rgba(0,0,0,.35);
+  animation:psSlam .34s cubic-bezier(.2,1.5,.4,1) both;max-width:calc(100vw - 40px)}
+.pstamp .ps-in b{font-size:clamp(38px,12vw,76px)}
+.pstamp .ps-in small{font-size:clamp(14px,3.6vw,20px);letter-spacing:.22em;opacity:.85}
+.pstamp.pro{color:#e11d2e}
+.pstamp.pro .ps-in{--rot:-11deg}
+.pstamp.mini{color:#c2410c}
+.pstamp.mini .ps-in{--rot:7deg}
+.pstamp.mini .ps-in b{font-size:clamp(30px,9.5vw,60px)}
+.pstamp.out{animation:psOut .45s ease forwards}
+@keyframes psSlam{0%{opacity:0;transform:scale(2.6) rotate(calc(var(--rot) + 8deg))}70%{opacity:1}100%{opacity:1;transform:scale(1) rotate(var(--rot))}}
+@keyframes psOut{to{opacity:0;transform:scale(1.06)}}
+.wrap.psshake{animation:psShake .32s cubic-bezier(.36,.07,.19,.97)}
+@keyframes psShake{20%{transform:translate(-5px,3px)}40%{transform:translate(5px,-3px)}60%{transform:translate(-3px,2px)}80%{transform:translate(2px,-1px)}}
+@media (prefers-reduced-motion:reduce){.pstamp .ps-in,.pstamp.out,.wrap.psshake{animation:none}.pstamp .ps-in{transform:rotate(var(--rot))}}
+.cring .cr-stat{width:66px;height:66px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-num);font-weight:700;font-size:14px;color:var(--ink);font-variant-numeric:tabular-nums}
+.gs-grid{display:grid;grid-template-columns:1fr;gap:10px}
+@media (min-width:480px){.gs-grid{grid-template-columns:1fr 1fr 1fr}}
+.badge-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.badge-row .setnote{margin:0}
 /* ===== round 13: QR button beside Log a deal, press + click, form window animation ===== */
 .fab{left:calc(50% - var(--fabShift,33px))}
 .fabqr{position:fixed;z-index:5;bottom:calc(18px + env(safe-area-inset-bottom,0px));left:calc(50% - var(--fabShift,33px) + var(--fabW,170px) / 2 + 10px);
@@ -2397,6 +2447,7 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
     <div class="cotm" id="cotm" hidden><span class="cotm-ic" aria-hidden="true"><svg viewBox="0 0 64 30"><path d="M4 21v-4.5c0-1.6 1-2.8 2.6-3.1l7.4-1.4 7.6-6.4C23 4.4 24.6 4 26.3 4h13.9c2 0 3.8.9 5 2.5l4.3 5.6 8.2 1.4c2.4.4 4.3 2.5 4.3 5V21c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2z" fill="currentColor"/><path d="M24 12.5l4.6-5c.6-.6 1.4-1 2.3-1H40c1 0 1.9.5 2.5 1.2l3.6 4.8z" fill="var(--card)" opacity=".85"/><circle cx="17" cy="23" r="5.6" fill="var(--ink)"/><circle cx="17" cy="23" r="2.3" fill="var(--chip)"/><circle cx="49" cy="23" r="5.6" fill="var(--ink)"/><circle cx="49" cy="23" r="2.3" fill="var(--chip)"/></svg></span><div><small>Car of the month</small><b><span id="cotmName"></span><em id="cotmCount"></em></b></div></div>
     <div class="srcs" id="srcBox" hidden><div class="sechd">Closing % this month · sources by ups, VSA, RX &amp; 0% by deals</div><div class="crings" id="srcRows"></div></div>
     <div class="heat" id="heatBox" hidden><div class="sechd">Best days · units, last 12 months</div><div class="hgrid" id="heatGrid"></div><div class="hnote" id="heatNote"></div></div>
+    <div class="srcs" id="grossBox" hidden><div class="sechd">Gross this month · front + back</div><div class="crings" id="grossRows"></div></div>
     <div class="lnds" id="lndBox" hidden><div class="sechd">Lenders · avg days to fund</div><div id="lndRows"></div></div>
   </section>
 
@@ -2487,6 +2538,7 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
 
 <div class="scrim" id="scrim" hidden>
   <form class="sheet" id="form" novalidate>
+    <div class="fprog" id="fProg" aria-hidden="true"><span class="fp-sec" id="fpSec">Log a deal</span><span class="fp-track"><i class="fp-fill"></i></span><span class="fp-pct" id="fpPct">0%</span></div>
     <h2 id="formTitle">Log a deal</h2>
     <button type="button" class="snapbtn" id="snapBtn" hidden>📷 Snap the deal paper to fill this in</button><input type="file" id="snapFile" accept="image/*" capture="environment" hidden><p class="snapnote" id="snapNote" hidden></p><button type="button" class="snapbtn" id="pasteBtn">📋 Paste a deal recap to fill this in</button><div class="pastebox" id="pasteBox" hidden><textarea id="pasteText" placeholder="Paste the deal recap or buyer's order text here"></textarea><div class="pb-row"><button type="button" class="chipbtn" id="pasteCancel">Cancel</button><button type="button" class="btn primary" id="pasteGo">Fill in</button></div></div>
     <p class="formhint" id="quickHint" hidden>Quick log: today’s date and your usual type and doc processor are filled in.</p>
@@ -2495,7 +2547,7 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
       <label class="f">Date processed<input id="fDate" type="date" required></label>
       <div class="f full"><span class="f">My credit</span>
         <div class="seg" id="fSplit"><button type="button" data-v="no">100%</button><button type="button" data-v="yes">50% split</button></div></div>
-      <div class="f full partnerbox" id="partnerWrap" hidden><span class="f">Split with</span><div class="prods" id="partnerPick"></div><input id="fPartner" autocomplete="off" autocapitalize="words" placeholder="Or type a name" aria-label="Split with"></div>
+      <div class="f full partnerbox" id="partnerWrap" hidden><span class="f">Split with</span><div class="prods" id="partnerPick"></div><input id="fPartner" autocomplete="off" autocapitalize="words" placeholder="Or type a name" aria-label="Split with"><div class="iou-xref" id="iouXref" hidden></div></div>
       <label class="f full">My commission<input id="fComm" class="num" inputmode="decimal" placeholder="0"></label>
       <label class="f full">Chargeback <small style="font-weight:500;color:var(--muted)">(taken back later, like a cancelled product)</small><input id="fCb" class="num" inputmode="decimal" placeholder="0"></label>
       <p class="f full" style="margin:4px 0 0;border-top:1px solid var(--line);padding-top:12px">Optional details</p>
@@ -2512,6 +2564,7 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
       <div class="f full"><span class="f">Status</span>
         <div class="seg" id="fStatus"><button type="button" data-v="pending">Pending</button><button type="button" data-v="funded">Funded</button><button type="button" data-v="cash">Cash deal</button><button type="button" data-v="unwound">Unwound</button></div></div>
       <div class="f full"><span class="f">Lender</span><div class="lenders" id="fLenderPicks"></div><input id="fLender" autocomplete="off" placeholder="Other lender (type it)"></div>
+      <div class="f full"><span class="f">Delivery checklist</span><div class="prods" id="fDl"></div></div>
       <div class="f full"><span class="f">Stips<a class="stiplink" href="https://claude.ai/artifact/5TWM8Mn8v3b8GknKnaHooN" target="_blank" rel="noopener">Pre-Check ›</a></span><div class="prods stips" id="fStips"></div><p class="stiphint">Tap once = needed, tap again = got it ✓</p></div>
       <label class="f">Front gross<input id="fFront" class="num" inputmode="decimal" placeholder="0"></label>
       <label class="f">Back gross<input id="fBack" class="num" inputmode="decimal" placeholder="0"></label>
@@ -2672,6 +2725,11 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
       <div class="row2"><button type="button" class="btn" id="hsPlay">▶ Preview</button><button type="button" class="btn danger" id="hsDel">Remove</button></div>
       <p class="setnote hs-credit" style="margin:10px 0 0;font-size:11.5px;opacity:.75">Built-in Hero music: “Wave Rider” by Shane Ivers – <a href="https://www.silvermansound.com" target="_blank" rel="noopener">silvermansound.com</a> (CC BY 4.0)</p>
     </div>
+    <div class="setgrp"><h3>💰 Gross</h3>
+      <div class="gs-grid"><label class="f">Monthly gross goal<input id="gGoal" class="num" inputmode="decimal" placeholder="e.g. 40000"></label><label class="f">Mini deal = front under<input id="gMini" class="num" inputmode="decimal" placeholder="500"></label><label class="f">“Profitable” stamp at front of<input id="gStamp" class="num" inputmode="decimal" placeholder="2000"></label></div>
+      <p class="setnote">Gross = front + back on this month's deals. When you log a deal, a mini gets Kunle's “Is it profitable?” stamp and a deal at or above the stamp amount gets “PROFITABLE ✓”.</p></div>
+    <div class="setgrp" id="badgeGrp" hidden><h3>🔴 App icon badge</h3><p class="setnote">Shows a red number on the Trip Pad icon for customer follow-ups due and pending deals that need a follow-up.</p>
+      <div class="badge-row"><button type="button" class="btn" id="badgeOn">Turn on</button><p class="setnote" id="badgeNote"></p></div></div>
     <div class="setgrp"><h3>📕 Close the book</h3><p class="setnote" id="setBookNote">Done for the month? Close the book to lock the Fun Trip Pad until next month.</p><button type="button" class="closebook setbook" id="setCloseBook"><span class="cbk-ico" aria-hidden="true">📕</span><span class="cbk-txt"><b>Close the book</b><small id="setBookSub">Wrap up this month</small></span><span class="cbk-go" aria-hidden="true">›</span></button></div>
     <div class="setgrp"><h3>📱 Lock screen card</h3><p class="setnote">Makes a picture of this month's numbers you can save and set as your lock screen.</p>
   <button type="button" class="totop" id="lockCard">📱 Make lock screen card</button>
@@ -2708,6 +2766,7 @@ function localStore(){
   const K="trippad.deals", G="trippad.goal";
   try{deals=JSON.parse(localStorage.getItem(K)||"[]");goal=num(localStorage.getItem(G))||15;commGoal=num(localStorage.getItem("trippad.commgoal"))||0;spiffs=JSON.parse(localStorage.getItem("trippad.spiffs")||"[]");ious=JSON.parse(localStorage.getItem("trippad.ious")||"[]");}catch(e){}
   try{daysOff=(JSON.parse(localStorage.getItem("trippad.off")||"{}").list)||[];}catch(e){}
+  try{const gg=JSON.parse(localStorage.getItem("trippad.gross")||"null"); if(gg) grossCfg=gg;}catch(e){}
   try{upsData=(JSON.parse(localStorage.getItem("trippad.ups")||"{}").byDay)||{}; plan=(JSON.parse(localStorage.getItem("trippad.plan")||"{}").list)||[];}catch(e){}
   const persist=()=>{try{localStorage.setItem(K,JSON.stringify(deals));}catch(e){}};
   return {
@@ -2717,7 +2776,7 @@ function localStore(){
     async saveSpiffs(list){spiffs=list; try{localStorage.setItem("trippad.spiffs",JSON.stringify(list));}catch(e){} render();},
     async saveIous(list){ious=list; try{localStorage.setItem("trippad.ious",JSON.stringify(list));}catch(e){} render();},
     async saveCommGoal(n){commGoal=n; try{localStorage.setItem("trippad.commgoal",String(n));}catch(e){} render();},
-    async saveDoc(k,o){ if(k==="ups") upsData=o.byDay; else if(k==="plan") plan=o.list; else if(k==="off") daysOff=o.list; try{localStorage.setItem("trippad."+k,JSON.stringify(o));}catch(e){} render();}
+    async saveDoc(k,o){ if(k==="ups") upsData=o.byDay; else if(k==="plan") plan=o.list; else if(k==="off") daysOff=o.list; else if(k==="gross") grossCfg=o; try{localStorage.setItem("trippad."+k,JSON.stringify(o));}catch(e){} render();}
   };
 }
 async function init(){
@@ -2733,7 +2792,7 @@ async function init(){
   const col=db.collection("data/users/"+uid);
   let timer=setTimeout(()=>setNote("Can't reach your saved deals yet. Check your connection.","warn"),10000);
   col.onSnapshot(snap=>{
-    const list=[]; snap.docs.forEach(d=>{const v=d.data(); if(d.id==="settings"){goal=num(v.goal)||goal; commGoal=num(v.commGoal)||0;} else if(d.id==="spiffs"){spiffs=Array.isArray(v.list)?v.list:[];} else if(d.id==="ious"){ious=Array.isArray(v.list)?v.list:[];} else if(d.id==="ups"){upsData=v.byDay||{};} else if(d.id==="plan"){plan=Array.isArray(v.list)?v.list:[];} else if(d.id==="off"){daysOff=Array.isArray(v.list)?v.list:[];} else list.push({...v,id:d.id});});
+    const list=[]; snap.docs.forEach(d=>{const v=d.data(); if(d.id==="settings"){goal=num(v.goal)||goal; commGoal=num(v.commGoal)||0;} else if(d.id==="spiffs"){spiffs=Array.isArray(v.list)?v.list:[];} else if(d.id==="ious"){ious=Array.isArray(v.list)?v.list:[];} else if(d.id==="ups"){upsData=v.byDay||{};} else if(d.id==="plan"){plan=Array.isArray(v.list)?v.list:[];} else if(d.id==="off"){daysOff=Array.isArray(v.list)?v.list:[];} else if(d.id==="gross"){grossCfg=v;} else list.push({...v,id:d.id});});
     deals=list; dealsLoaded=true; render();
     if(!snap.metadata.fromCache){clearTimeout(timer); setNote("Synced to your Claude account. Only you can see these deals.");}
   },e=>{clearTimeout(timer); setNote("Couldn't load your deals. Reload the page to try again.","warn");});
@@ -2744,7 +2803,7 @@ async function init(){
     async saveCommGoal(n){commGoal=n; render(); await col.doc("settings").set({goal,commGoal:n});},
     async saveSpiffs(list){spiffs=list; render(); await col.doc("spiffs").set({list});},
     async saveIous(list){ious=list; render(); await col.doc("ious").set({list});},
-    async saveDoc(k,o){ if(k==="ups") upsData=o.byDay; else if(k==="plan") plan=o.list; else if(k==="off") daysOff=o.list; render(); await col.doc(k).set(o);}
+    async saveDoc(k,o){ if(k==="ups") upsData=o.byDay; else if(k==="plan") plan=o.list; else if(k==="off") daysOff=o.list; else if(k==="gross") grossCfg=o; render(); await col.doc(k).set(o);}
   };
   setupTeam(db,user,uid);
 }
@@ -3241,7 +3300,7 @@ function render(){
     $("bestMonthLbl").textContent=best?new Date(+best.k.slice(0,4),+best.k.slice(5,7)-1,1).toLocaleString("en-US",{month:"short",year:"2-digit"}).replace(" "," '"):""; }
   $("goalText").textContent=goal?(units>=goal?"Goal hit: "+units+" of "+goal:(goal-units)+" to go for "+goal+" units"):"No goal set";
 
-  renderMix(live); renderCotm(live); renderBoss(mk, units); renderQuests(); renderTrophies(); renderCGoal(mk, live); renderWrapBanner(); renderSources(live); renderHeat(); renderLenders(live); renderOwed(); renderMonthEnd(mk, units); renderRank(); renderSpiffs(); renderIous(); renderAlert(); try{ renderToday(); }catch(e){} renderFuBar(); renderCoach(mk, units); renderCal(mk, live); renderYear(); if(typeof renderBackup==="function") renderBackup();
+  renderMix(live); renderCotm(live); renderBoss(mk, units); renderQuests(); renderTrophies(); renderCGoal(mk, live); renderWrapBanner(); renderSources(live); renderGross(live); renderHeat(); renderLenders(live); renderOwed(); renderMonthEnd(mk, units); renderRank(); renderSpiffs(); renderIous(); renderAlert(); try{ renderToday(); }catch(e){} renderFuBar(); renderCoach(mk, units); renderCal(mk, live); renderYear(); if(typeof renderBackup==="function") renderBackup();
   let shown, headText="";
   if(searchQ){ shown=deals.filter(d=>matches(d,searchQ)).sort((a,b)=>(b.date||"").localeCompare(a.date||"")); headText=shown.length+" result"+(shown.length===1?"":"s")+" for “"+searchQ+"” in all months"; }
   else if(filter==="followup"){ shown=overdue(); headText="Pending over "+FOLLOW_DAYS+" days · all months"; }
@@ -3277,6 +3336,7 @@ function render(){
     if(d.trade) tag("Trade-in","tradein");
     if(d.eo) tag("E/O "+(d.eo===today()?"today":md(d.eo)), d.eo===today()?"eo hot":"eo");
     { const sc=stipCount(d); if(sc.need) tag("Stips "+sc.got+"/"+sc.need, sc.got<sc.need?"follow":"paid"); }
+    { const dc=dlCount(d); if(dc) tag(dc>=DL.length?"Delivered ✓":"Delivery "+dc+"/"+DL.length, dc>=DL.length?"paid":"fu"); }
     { const sp=spiffOfDeal(d); if(sp) tag("💰 Spiff "+money(num(sp.amount)),"spiff"); }
     if(d.processor) tag("Docs: "+d.processor, "proc-sophia");
     if(num(d.chargeback)) tag("Chargeback −"+money(num(d.chargeback)),"cb");
@@ -3306,7 +3366,7 @@ $("fProc").addEventListener("click",e=>{const b=e.target.closest("button"); if(!
 PRODUCTS.forEach(p=>{const b=document.createElement("button"); b.type="button"; b.className="chipbtn"; b.textContent=p; b.dataset.p=p; b.setAttribute("aria-pressed","false");
   b.addEventListener("click",()=>b.setAttribute("aria-pressed",String(b.getAttribute("aria-pressed")!=="true"))); $("fProds").append(b);});
 
-const PARTNERS=["Luis","Jeremy","Oscar","Keren","Daryl","Darwin"];
+const PARTNERS=["Luis","Jeremy","Oscar","Keren","Daryl","Darwin","Lora"];
 function syncPartner(){ const v=$("fPartner").value.trim().toLowerCase(); $("partnerPick").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.n.toLowerCase()===v))); }
 PARTNERS.forEach(n=>{ const b=document.createElement("button"); b.type="button"; b.className="chipbtn"; b.textContent=n; b.dataset.n=n; b.setAttribute("aria-pressed","false");
   b.addEventListener("click",()=>{ const on=b.getAttribute("aria-pressed")==="true"; $("fPartner").value=on?"":n; syncPartner(); }); $("partnerPick").append(b); });
@@ -3317,13 +3377,13 @@ function openForm(d){
   $("fDate").value=d?.date||(monthKey(view)===monthKey(new Date())?today():monthKey(view)+"-01");
   $("fDeal").value=d?.dealNo||""; $("fStock").value=d?.stock||""; $("fCust").value=d?.customer||""; $("fVeh").value=d?.vehicle||"";
   const lp=d?{}:lastPrefs(); setSeg("fType",d?.type||lp.type||"New"); setSeg("fSource",d?.source||""); setSeg("fStatus",d?.status||"pending"); setSeg("fSplit",d?.split?"yes":"no"); setSeg("fVeritas",d?.veritas?"yes":"no"); setSeg("fTrade",d?.trade?"yes":"no"); $("fPhone").value=d?.phone||""; $("fLender").value=d?.lender||""; syncLenderPicks(); updateFuTexts(); $("snapNote").hidden=true; setTimeout(updateSpiffHint,0); setSeg("fProc",d?(d.processor||""):(lp.processor||"")); setSeg("fPaid",d?.paid?"yes":"no"); setFu(d); $("quickHint").hidden=!!d||!(lp.type||lp.processor);
-  $("partnerWrap").hidden=!d?.split; $("fPartner").value=d?.partner||""; syncPartner();
+  $("partnerWrap").hidden=!d?.split; $("fPartner").value=d?.partner||""; syncPartner(); try{ iouRepay=!!(d&&(ious||[]).some(i=>i.paidBy===d.id)); renderIouXref(); }catch(e){}
   $("fFront").value=d?.front??""; $("fBack").value=d?.back??""; $("fComm").value=d?.commission??""; $("fCb").value=d&&num(d.chargeback)?d.chargeback:""; try{ $("pasteBox").hidden=true; $("pasteBtn").hidden=false; }catch(e){}
   $("fProds").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String((d?.products||[]).includes(b.dataset.p))));
   $("fNotes").value=d?.notes||"";
-  setStips(d?.stips||{}); setSeg("fEo",d?.eo?"yes":"no"); $("fEoDate").value=d?.eo||""; $("eoWrap").hidden=!d?.eo; stopMic();
+  setStips(d?.stips||{}); setDl(d?.dl||{}); setSeg("fEo",d?.eo?"yes":"no"); $("fEoDate").value=d?.eo||""; $("eoWrap").hidden=!d?.eo; stopMic();
   $("del").hidden=!d; $("confirm").hidden=true; $("formErr").hidden=true;
-  clearTimeout(closeForm.t); $("scrim").classList.remove("closing"); $("scrim").hidden=false; setTimeout(()=>$("fDeal").focus({preventScroll:true}),50);
+  clearTimeout(closeForm.t); $("scrim").classList.remove("closing"); $("scrim").hidden=false; try{ $("form").scrollTop=0; requestAnimationFrame(updateFormProg); }catch(e){} setTimeout(()=>$("fDeal").focus({preventScroll:true}),50);
 }
 function closeForm(){ const sc=$("scrim"); editing=null; try{ stopMic(); }catch(e){} if(sc.hidden) return; clearTimeout(closeForm.t); if(reduceMotion()){ sc.hidden=true; sc.classList.remove("closing"); return; } try{ const sh=sc.querySelector(".sheet"), a=$("add"), r=sh.getBoundingClientRect(), f=a.getBoundingClientRect(); if(r.width&&f.width){ sh.style.setProperty("--fx",((f.left+f.width/2)-(r.left+r.width/2))+"px"); sh.style.setProperty("--fy",((f.top+f.height/2)-(r.top+r.height/2))+"px"); sh.style.setProperty("--fsx",Math.max(.05,f.width/r.width)); sh.style.setProperty("--fsy",Math.max(.02,f.height/r.height)); } }catch(e){} sc.classList.add("closing"); closeForm.t=setTimeout(()=>{ sc.hidden=true; sc.classList.remove("closing"); const a=$("add"); if(a){ a.classList.add("catch"); setTimeout(()=>a.classList.remove("catch"),100); } },250); }
 $("add").addEventListener("click",()=>openForm(null));
@@ -3341,8 +3401,8 @@ $("form").addEventListener("submit",async e=>{
     customer:$("fCust").value.trim().toUpperCase(), vehicle:$("fVeh").value.trim().toUpperCase(), type:segVal("fType"), source:segVal("fSource")||"", status:segVal("fStatus"),
     split, partner:split?$("fPartner").value.trim():"", front:num($("fFront").value), back:num($("fBack").value),
     commission:num($("fComm").value), chargeback:num($("fCb").value), products:[...$("fProds").querySelectorAll('[aria-pressed="true"]')].map(b=>b.dataset.p),
-    notes:$("fNotes").value.trim(), veritas:segVal("fVeritas")==="yes", trade:segVal("fTrade")==="yes", phone:$("fPhone").value.trim(), lender:$("fLender").value.trim(), fundedDate:(segVal("fStatus")==="funded"?(editing&&editing.status==="funded"?(editing.fundedDate||""):today()):""), processor:segVal("fProc")||"", paid:segVal("fPaid")==="yes", fu:readFu(), stips:readStips(), eo:(segVal("fEo")==="yes"?($("fEoDate").value||""):"")};
-  $("save").disabled=true;
+    notes:$("fNotes").value.trim(), veritas:segVal("fVeritas")==="yes", trade:segVal("fTrade")==="yes", phone:$("fPhone").value.trim(), lender:$("fLender").value.trim(), fundedDate:(segVal("fStatus")==="funded"?(editing&&editing.status==="funded"?(editing.fundedDate||""):today()):""), processor:segVal("fProc")||"", paid:segVal("fPaid")==="yes", fu:readFu(), stips:readStips(), dl:readDl(), eo:(segVal("fEo")==="yes"?($("fEoDate").value||""):"")};
+  const iouAct=iouSaveAction(d); $("save").disabled=true;
   const dayBefore=deals.filter(x=>x.date===d.date && x.status!=="unwound" && x.id!==d.id).length;
   const wasLiveSameDay=!!editing && editing.status!=="unwound" && editing.date===d.date;
   const fiveDay=d.status!=="unwound" && !wasLiveSameDay && dayBefore===4;
@@ -3354,7 +3414,7 @@ $("form").addEventListener("submit",async e=>{
   const goingCash=d.status==="cash" && (isNew || editing.status!=="cash");
   const hotBefore=todayLive();
   const thanksCalvin=d.source==="Internet" && d.status!=="unwound" && (isNew || editing.source!=="Internet" || editing.status==="unwound");
-  try{ await store.save(d); if(isNew) saveLastPrefs(d); if(spHit) setTimeout(()=>showSpiffHit(spHit,d),700); if(goingUnwound) setTimeout(playAww,150); if(goingCash){ spiffPartyUntil=Math.max(spiffPartyUntil,Date.now()+4500); setTimeout(showCashStack,spHit?6200:450); } if(isNew&&d.date===today()&&d.status!=="unwound"){ const hn=hotBefore+1; if(hn===3) setTimeout(onFireIntro,goingCash?6800:(spHit?6800:1300)); else if(hn>3) setTimeout(sizzle,250); } if(hatTrick) setTimeout(yayParty,900); if(hi5) setTimeout(()=>showHighFive(d.partner),spHit?6000:900); if(thanksCalvin) setTimeout(showThanksWhenClear,Math.max(2200,spHit?6800:0,hi5?3600:0,goingCash?(spHit?6200:450)+6500:0)); setTimeout(()=>checkRecords(recBefore),1900); if(isNew) scheduleScratch();
+  try{ await store.save(d); if(isNew) saveLastPrefs(d); if(isNew&&d.status!=="unwound") queueStamp(d); applyIouAct(iouAct,d); if(spHit) setTimeout(()=>showSpiffHit(spHit,d),700); if(goingUnwound) setTimeout(playAww,150); if(goingCash){ spiffPartyUntil=Math.max(spiffPartyUntil,Date.now()+4500); setTimeout(showCashStack,spHit?6200:450); } if(isNew&&d.date===today()&&d.status!=="unwound"){ const hn=hotBefore+1; if(hn===3) setTimeout(onFireIntro,goingCash?6800:(spHit?6800:1300)); else if(hn>3) setTimeout(sizzle,250); } if(hatTrick) setTimeout(yayParty,900); if(hi5) setTimeout(()=>showHighFive(d.partner),spHit?6000:900); if(thanksCalvin) setTimeout(showThanksWhenClear,Math.max(2200,spHit?6800:0,hi5?3600:0,goingCash?(spHit?6200:450)+6500:0)); setTimeout(()=>checkRecords(recBefore),1900); if(isNew) scheduleScratch();
     if(fiveDay) setTimeout(()=>showAchievement(5,d.date),500); const [y,m]=d.date.split("-"); view=new Date(+y,+m-1,1); closeForm(); render(); if(isNew) chaChing(ctx); tapSuccess(); }
   catch(err){ $("formErr").textContent=err?.code==="quota_exceeded"?"Storage is full. Delete some old deals, then save again.":"Couldn't save. Check your connection and tap Save again."; $("formErr").hidden=false; }
   finally{ $("save").disabled=false; }
@@ -3486,7 +3546,7 @@ function fuDue(d){ if(d.status==="unwound"||!d.date) return []; const age=daysSi
   if(!surveyDone(done) && surveyMark(d)>=0 && !surveySentThisRound(d)) out.push({k:"survey",label:"Survey reminder (day "+surveyMark(d)+")"});
   return out; }
 function fuList(){ return deals.filter(d=>fuDue(d).length).sort((a,b)=>(a.date||"").localeCompare(b.date||"")); }
-function renderFuBar(){
+function renderFuBar(){ try{ updateBadge(); }catch(e){}
   const n=fuList().length, bar=$("fuBar"); bar.hidden=!n;
   if(n) $("fuText").textContent=n+" customer follow-up"+(n===1?"":"s")+" due. Keep them coming back.";
 }
@@ -3953,7 +4013,7 @@ function renderIous(){
     const nm=String(i.who||"?").trim(), ini=nm.split(/\s+/).map(w=>w[0]||"").join("").slice(0,2).toUpperCase()||"?"; let h=0; for(const ch of nm.toLowerCase()) h=(h*31+ch.charCodeAt(0))%360;
     const av=document.createElement("span"); av.className="iou-av"; av.style.setProperty("--h",h); av.textContent=ini;
     const wb=document.createElement("span"); wb.className="iou-who"; const b=document.createElement("b"); b.textContent=nm; const sm=document.createElement("span");
-    sm.textContent=i.paid?"Paid you back "+shortDate(i.paidDate):(i.date?(ago===0?"Owes you since today":"Owes you · "+ago+(ago===1?" day":" days")+(ago>=14?" ⏰":"")):"Owes you"); wb.append(b,sm);
+    sm.textContent=i.paid?"Paid you back "+shortDate(i.paidDate)+(i.paidBy?((x=>x?" · deal #"+(x.dealNo||"—"):"")(deals.find(z=>z.id===i.paidBy))):""):(i.date?(ago===0?"Owes you since today":"Owes you · "+ago+(ago===1?" day":" days")+(ago>=14?" ⏰":"")):"Owes you"); wb.append(b,sm);
     const half=document.createElement("span"); half.className="iou-half"; half.textContent=i.paid?"✓ ½":"½ unit";
     top.append(av,wb,half); top.addEventListener("click",()=>openIou(i)); li.append(top);
     if(i.note){ const n=document.createElement("div"); n.className="iou-note"; n.textContent=i.note; li.append(n); }
@@ -4038,6 +4098,121 @@ $("fPhone").addEventListener("input",updateFuTexts); $("fCust").addEventListener
 
 
 
+
+
+
+
+/* ===== round 16: IOU cross-check when you split a deal ===== */
+var iouRepay=false;
+function iouMatch(name){ const n=String(name||"").trim().toLowerCase().replace(/\s+/g," "); if(!n) return []; const f=n.split(" ")[0];
+  return (ious||[]).filter(i=>{ const w=String(i.who||"").trim().toLowerCase().replace(/\s+/g," "); return w===n || w.split(" ")[0]===f; }); }
+function iouLinked(){ return editing?(ious||[]).find(i=>i.paidBy===editing.id)||null:null; }
+function iouTarget(){ const linked=iouLinked(); if(linked) return linked; const open=iouMatch($("fPartner").value).filter(i=>!i.paid).sort((a,b)=>(a.date||"").localeCompare(b.date||"")); return open[0]||null; }
+function renderIouXref(){ const box=$("iouXref"); if(!box) return; const split=segVal("fSplit")==="yes", p=$("fPartner").value.trim(), linked=iouLinked();
+  const open=iouMatch(p).filter(i=>!i.paid), t=iouTarget(), unw=segVal("fStatus")==="unwound";
+  if(!split||!p||!t){ box.hidden=true; if(!linked) iouRepay=false; return; }
+  box.hidden=false; box.replaceChildren(); box.className="iou-xref"+(unw?" warn":"");
+  const who=String(t.who||p).trim(), top=document.createElement("div"); top.className="ix-top";
+  const ex=t.expires&&!t.paid&&t.expires<($("fDate").value||today());
+  if(linked&&t===linked){ top.innerHTML="This split paid back <b></b>'s IOU from "+shortDate(t.date)+"."; top.querySelector("b").textContent=who; }
+  else { top.innerHTML="💸 <b></b> owes you "+(open.length*0.5)+" unit"+(open.length===2?"":"s")+" ("+open.length+" IOU"+(open.length===1?"":"s")+", oldest "+shortDate(t.date)+(ex?", expired "+shortDate(t.expires):"")+")."; top.querySelector("b").textContent=who; }
+  const btn=document.createElement("button"); btn.type="button"; btn.className="ix-btn"; btn.setAttribute("aria-pressed",String(iouRepay)); btn.textContent=(iouRepay?"✓ ":"↩︎ ")+"This split is "+who.split(" ")[0]+" paying me back";
+  btn.addEventListener("click",()=>{ iouRepay=!iouRepay; try{ tap(); }catch(e){} renderIouXref(); });
+  const sub=document.createElement("div"); sub.className="ix-sub";
+  sub.textContent=unw?(iouRepay?"This deal is unwound, so saving puts the IOU back on the list as not paid.":"Unwound deals can't pay back an IOU."):iouRepay?(linked&&t===linked?"Keeping this IOU marked paid by this deal.":"Saving marks the IOU from "+shortDate(t.date)+" paid ✓ and links it to this deal."):(linked&&t===linked?"Turned off: saving puts the IOU back on the list as not paid.":"Leave this off if it's a new split, not a payback.");
+  box.append(top,btn,sub); }
+function iouSaveAction(d){ const linked=iouLinked(); if(!d.split||d.status==="unwound"){ return linked?{unpay:linked}:null; }
+  if(linked){ const same=iouMatch(d.partner).some(i=>i.id===linked.id); return (!iouRepay||!same)?{unpay:linked}:null; }
+  if(iouRepay){ const t=iouTarget(); if(t&&!t.paid) return {pay:t}; } return null; }
+async function applyIouAct(act,d){ if(!act) return; try{
+  if(act.pay){ const n={...act.pay,paid:true,paidDate:today(),paidBy:d.id}; await store.saveIous(ious.map(x=>x.id===n.id?n:x));
+    setTimeout(()=>{ const t0=Date.now(); (function chk(){ if(Date.now()-t0>20000) return; if(document.querySelector(".cashstack,.achv,.hi5,.scratch-scrim,.thanks-pop,.pstamp,#scrim:not([hidden])")) return setTimeout(chk,400); showDebtPaid(n.who); })(); },900); }
+  else if(act.unpay){ const n={...act.unpay,paid:false,paidDate:"",paidBy:""}; await store.saveIous(ious.map(x=>x.id===n.id?n:x)); setNote(n.who+"'s IOU is back on the list as not paid.",""); }
+  }catch(e){ setNote("Couldn't update the IOU. Check it in the IOU tracker.","warn"); } }
+$("fPartner").addEventListener("input",renderIouXref);
+$("partnerPick").addEventListener("click",()=>setTimeout(renderIouXref,0));
+$("fSplit").addEventListener("click",()=>setTimeout(renderIouXref,0));
+$("fStatus").addEventListener("click",()=>setTimeout(renderIouXref,0));
+
+/* ===== round 16: grab and drag (or mouse wheel) to move between deal cards ===== */
+function enableDragScroll(row){ if(!row) return; let down=false, moved=false, sx=0, sl=0, lx=0, lt=0, v=0, restore=0;
+  const cards=()=>[...row.querySelectorAll(".tc")];
+  const snapTo=dir=>{ const cs=cards(); if(!cs.length) return; const mid=row.scrollLeft+row.clientWidth/2; let i=0, best=1e9; cs.forEach((c,k)=>{ const d=Math.abs(c.offsetLeft+c.offsetWidth/2-mid); if(d<best){ best=d; i=k; } });
+    i=Math.max(0,Math.min(cs.length-1,i+dir)); const c=cs[i]; row.scrollTo({left:c.offsetLeft+c.offsetWidth/2-row.clientWidth/2,behavior:reduceMotion()?"auto":"smooth"});
+    clearTimeout(restore); restore=setTimeout(()=>row.classList.remove("dragging"),420); };
+  row.addEventListener("pointerdown",e=>{ if(e.pointerType!=="mouse"||e.button!==0) return; down=true; moved=false; sx=lx=e.clientX; sl=row.scrollLeft; lt=performance.now(); v=0; clearTimeout(restore); });
+  addEventListener("pointermove",e=>{ if(!down) return; const dx=e.clientX-sx; if(!moved&&Math.abs(dx)>5){ moved=true; row.classList.add("dragging"); }
+    if(moved){ row.scrollLeft=sl-dx; const now=performance.now(), dt=now-lt; if(dt>0) v=(e.clientX-lx)/dt; lx=e.clientX; lt=now; e.preventDefault(); } });
+  addEventListener("pointerup",()=>{ if(!down) return; down=false; if(!moved) return; const dir=v<-.35?1:v>.35?-1:0; snapTo(dir); });
+  row.addEventListener("click",e=>{ if(moved){ e.stopPropagation(); e.preventDefault(); moved=false; } },true);
+  row.addEventListener("wheel",e=>{ if(Math.abs(e.deltaY)>Math.abs(e.deltaX)&&Math.abs(e.deltaY)>2){ e.preventDefault(); if(row._wl&&performance.now()-row._wl<380) return; row._wl=performance.now(); row.classList.add("dragging"); snapTo(e.deltaY>0?1:-1); } },{passive:false});
+  row.tabIndex=0; row.addEventListener("keydown",e=>{ if(e.key==="ArrowRight"||e.key==="ArrowLeft"){ e.preventDefault(); row.classList.add("dragging"); snapTo(e.key==="ArrowRight"?1:-1); } });
+  setTimeout(()=>{ try{ row.focus({preventScroll:true}); }catch(e){} },120); }
+
+/* ===== round 15: colors per choice + scroll progress in the deal form ===== */
+const SEG_COLORS={fType:{New:"#2563eb",Used:"#d97706",CPO:"#dc2626"},fSource:{Showroom:"#1f5fff",Internet:"#0891b2",Phone:"#c2410c",Campaign:"#7c3aed"},
+  fStatus:{pending:"#ca8a04",funded:"#16a34a",cash:"#0d9488",unwound:"#e11d48"},fVeritas:{no:"#64748b",yes:"#ec4899"},fTrade:{no:"#64748b",yes:"#0ea5e9"},
+  fEo:{no:"#64748b",yes:"#f97316"},fProc:{Nikki:"#db2777",Vicky:"#7c3aed",Sophia:"#0891b2"}};
+Object.entries(SEG_COLORS).forEach(([id,m])=>{ const el=$(id); if(!el) return; el.classList.add("colorful"); el.querySelectorAll("button[data-v]").forEach(b=>{ if(m[b.dataset.v]) b.style.setProperty("--bc",m[b.dataset.v]); }); });
+const PARTNER_COLORS={Luis:"#2563eb",Jeremy:"#16a34a",Oscar:"#ea580c",Keren:"#db2777",Daryl:"#7c3aed",Darwin:"#0891b2",Lora:"#e11d48"};
+$("partnerPick").querySelectorAll("button[data-n]").forEach(b=>b.style.setProperty("--bc",PARTNER_COLORS[b.dataset.n]||"#64748b"));
+function updateFormProg(){ const f=$("form"), p=$("fProg"); if(!f||!p) return; const max=f.scrollHeight-f.clientHeight, k=max>4?Math.min(1,Math.max(0,f.scrollTop/max)):1;
+  p.style.setProperty("--fp",(k*100).toFixed(1)+"%"); $("fpPct").textContent=Math.round(k*100)+"%";
+  const top=f.getBoundingClientRect().top+p.offsetHeight+24; let name=$("formTitle").textContent;
+  f.querySelectorAll("p.f.full, .f.full > span.f, label.f").forEach(el=>{ if(el.offsetParent===null) return; if(el.getBoundingClientRect().top<top){ const t=(el.firstChild&&el.firstChild.nodeType===3?el.firstChild.textContent:el.textContent).trim(); if(t) name=t; } });
+  $("fpSec").textContent=name; }
+$("form").addEventListener("scroll",()=>requestAnimationFrame(updateFormProg),{passive:true});
+
+/* ===== round 14: gross settings, gross + minis section, profit stamp, delivery checklist, app badge ===== */
+var grossCfg;
+function gc(){ const o=Object.assign({goal:0,mini:500,stamp:2000},grossCfg||{}); o.goal=num(o.goal); o.mini=num(o.mini)||500; o.stamp=num(o.stamp)||2000; return o; }
+function fillGrossSettings(){ const c=gc(); $("gGoal").value=c.goal||""; $("gMini").value=(grossCfg&&grossCfg.mini)?c.mini:""; $("gStamp").value=(grossCfg&&grossCfg.stamp)?c.stamp:""; }
+async function saveGrossSettings(){ const o={goal:num($("gGoal").value),mini:num($("gMini").value)||500,stamp:num($("gStamp").value)||2000}; grossCfg=o; render(); try{ if(store&&store.saveDoc) await store.saveDoc("gross",o); }catch(e){} }
+["gGoal","gMini","gStamp"].forEach(id=>$(id).addEventListener("change",saveGrossSettings));
+$("setBtn").addEventListener("click",()=>{ try{ fillGrossSettings(); renderBadgeSetting(); }catch(e){} });
+const kmoney=n=>Math.abs(n)>=10000?(n<0?"-$":"$")+(Math.abs(n)/1000).toFixed(1).replace(/\.0$/,"")+"k":money(n);
+function crStat(key,big,sub){ const w=document.createElement("div"); w.className="cring"; const c=CR_COL[key]||["#888","#ccc"];
+  w.innerHTML='<div class="cr-wrap"><span class="cr-stat"></span></div><span class="cr-lbl"><i></i></span><span class="cr-sub"></span>';
+  const st=w.querySelector(".cr-stat"); st.textContent=big; st.style.background="color-mix(in srgb,"+c[0]+" 16%,var(--chip))"; st.style.boxShadow="inset 0 0 0 2px color-mix(in srgb,"+c[0]+" 55%,transparent)";
+  w.querySelector(".cr-lbl i").style.background=c[0]; w.querySelector(".cr-lbl").append(key); w.querySelector(".cr-sub").textContent=sub; return w; }
+
+function renderGross(live){ const sec=$("grossBox"), box=$("grossRows"); if(!sec) return; Object.assign(CR_COL,{Gross:["#d97706","#fcd34d"],Minis:["#64748b","#cbd5e1"],"Avg gross":["#0891b2","#67e8f9"],"Avg front":["#7c3aed","#c4b5fd"]}); const c=gc(), n=live.length;
+  sec.hidden=!n&&!c.goal; if(sec.hidden) return; box.replaceChildren();
+  const front=live.reduce((a,d)=>a+num(d.front),0), back=live.reduce((a,d)=>a+num(d.back),0), gross=front+back;
+  box.append(crRing("Gross",c.goal?gross/c.goal:null,c.goal?kmoney(gross)+" of "+kmoney(c.goal):kmoney(gross)+" · set goal ⚙️"));
+  const minis=live.filter(d=>num(d.front)<c.mini).length;
+  box.append(crRing("Minis",n?minis/n:null,n?minis+" of "+n+" deals":"no deals yet"));
+  box.append(crStat("Avg gross",n?kmoney(gross/n):"—","front + back"));
+  box.append(crStat("Avg front",n?kmoney(front/n):"—","per deal")); }
+
+/* profit stamp */
+function stampThud(){ try{ if(typeof soundPref!=="undefined"&&soundPref==="off") return; const ctx=audioCtx(); if(!ctx) return; const t=ctx.currentTime;
+  const o=ctx.createOscillator(), g=ctx.createGain(); o.type="sine"; o.frequency.setValueAtTime(140,t); o.frequency.exponentialRampToValueAtTime(48,t+.22); g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.55,t+.008); g.gain.exponentialRampToValueAtTime(.0001,t+.3); o.connect(g).connect(ctx.destination); o.start(t); o.stop(t+.32);
+  const len=Math.floor(ctx.sampleRate*.12), buf=ctx.createBuffer(1,len,ctx.sampleRate), dd=buf.getChannelData(0); for(let i=0;i<len;i++) dd[i]=(Math.random()*2-1)*Math.pow(1-i/len,3);
+  const nz=ctx.createBufferSource(), lp=ctx.createBiquadFilter(), ng=ctx.createGain(); lp.type="lowpass"; lp.frequency.value=1800; ng.gain.value=.45; nz.buffer=buf; nz.connect(lp).connect(ng).connect(ctx.destination); nz.start(t); }catch(e){} }
+function showStamp(kind){ const o=document.createElement("div"); o.className="pstamp "+kind; o.setAttribute("role","status");
+  o.innerHTML=kind==="pro"?'<div class="ps-in"><b>Profitable ✓</b><small>— Kunle approved</small></div>':'<div class="ps-in"><b>Is it profitable?</b><small>— Kunle 🤨</small></div>';
+  document.body.append(o); stampThud(); try{ tap(); setTimeout(tap,90); }catch(e){}
+  const w=document.querySelector(".wrap"); if(w&&!reduceMotion()){ w.classList.remove("psshake"); void w.offsetWidth; w.classList.add("psshake"); setTimeout(()=>w.classList.remove("psshake"),400); }
+  const bye=()=>{ if(!o.isConnected) return; o.classList.add("out"); setTimeout(()=>o.remove(),460); }; o.addEventListener("click",bye); setTimeout(bye,2300); }
+function queueStamp(d){ const c=gc(), f=num(d.front); if(!f&&!num(d.back)) return; const kind=f>=c.stamp?"pro":f<c.mini?"mini":""; if(!kind) return;
+  const t0=Date.now(); setTimeout(function chk(){ if(Date.now()-t0>60000) return; if(document.querySelector(".cashstack,.achv,.dp,.hi5,.scratch-scrim,.thanks-pop,.pstamp,#scrim:not([hidden])")) return setTimeout(chk,400); showStamp(kind); },1300); }
+
+/* delivery checklist */
+const DL=[["app","Toyota app paired"],["bt","Phone on Bluetooth"],["key2","2nd key"],["svc","1st service booked"],["mats","Floor mats"],["survey","Survey explained"]];
+DL.forEach(([k,l])=>{ const b=document.createElement("button"); b.type="button"; b.className="chipbtn"; b.dataset.k=k; b.textContent=l; b.setAttribute("aria-pressed","false");
+  b.addEventListener("click",()=>{ const on=b.getAttribute("aria-pressed")!=="true"; b.setAttribute("aria-pressed",String(on)); b.textContent=l+(on?" ✓":""); }); $("fDl").append(b); });
+function setDl(o){ $("fDl").querySelectorAll("[data-k]").forEach(b=>{ const on=!!(o&&o[b.dataset.k]); b.setAttribute("aria-pressed",String(on)); b.textContent=DL.find(x=>x[0]===b.dataset.k)[1]+(on?" ✓":""); }); }
+function readDl(){ const o={}; $("fDl").querySelectorAll("[data-k]").forEach(b=>{ if(b.getAttribute("aria-pressed")==="true") o[b.dataset.k]=true; }); return o; }
+function dlCount(d){ return Object.keys(d.dl||{}).filter(k=>d.dl[k]).length; }
+
+/* app icon badge */
+function badgeCount(){ const ids=new Set(); try{ fuList().forEach(d=>ids.add(d.id)); overdue().forEach(d=>ids.add(d.id)); }catch(e){} return ids.size; }
+function updateBadge(){ try{ if(!("setAppBadge" in navigator)) return; const n=badgeCount(); if(n) navigator.setAppBadge(n).catch(()=>{}); else if(navigator.clearAppBadge) navigator.clearAppBadge().catch(()=>{}); }catch(e){} }
+function renderBadgeSetting(){ const g=$("badgeGrp"); if(!g) return; const ok="setAppBadge" in navigator; g.hidden=!ok; if(!ok) return;
+  const perm=window.Notification?Notification.permission:"granted", n=badgeCount();
+  $("badgeOn").hidden=perm==="granted"; $("badgeNote").textContent=perm==="granted"?"On · "+n+" showing now":perm==="denied"?"Blocked. Allow notifications for Trip Pad in your phone's Settings.":"On iPhone, tap Turn on and allow notifications. Nothing gets sent; it only shows the number."; }
+$("badgeOn").addEventListener("click",async()=>{ try{ if(window.Notification&&Notification.permission==="default") await Notification.requestPermission(); }catch(e){} updateBadge(); renderBadgeSetting(); });
 
 /* ===== round 13: press-and-click on Log a deal + QR, QR button sizing ===== */
 function uiClick(){ try{ if(typeof soundPref!=="undefined"&&soundPref==="off") return; const ctx=audioCtx(); if(!ctx) return; const t=ctx.currentTime;
@@ -4326,7 +4501,7 @@ function cardRarity(d){ const p=(d.products||[]).length, g=num(d.front)+num(d.ba
 function openCards(){ const mk=monthKey(view), list=deals.filter(d=>(d.date||"").startsWith(mk)&&d.status!=="unwound").sort((a,b)=>(a.date||"").localeCompare(b.date||"")||(a.created||0)-(b.created||0));
   const o=document.createElement("div"); o.className="tcs"; o.setAttribute("role","dialog"); o.setAttribute("aria-label","Deal cards");
   const mn=view.toLocaleDateString("en-US",{month:"long",year:"numeric"}), holo=list.filter(d=>cardRarity(d)[0]==="holo").length;
-  o.innerHTML='<div class="tcs-head"><div><b>🃏 Deal cards</b><small></small></div><button type="button" class="tcs-x" aria-label="Close">✕</button></div><div class="tcs-row"></div><div class="tcs-tip">Swipe to browse · tap a card to flip it</div>';
+  o.innerHTML='<div class="tcs-head"><div><b>🃏 Deal cards</b><small></small></div><button type="button" class="tcs-x" aria-label="Close">✕</button></div><div class="tcs-row"></div><div class="tcs-tip">Swipe or drag to browse · tap a card to flip it</div>';
   o.querySelector(".tcs-head small").textContent=mn+" · "+list.length+" card"+(list.length===1?"":"s")+(holo?" · "+holo+" holo":"");
   const row=o.querySelector(".tcs-row"), art=carArt();
   if(!list.length){ row.innerHTML='<p class="tcs-empty">No deals this month yet. Every deal you log becomes a card.</p>'; }
@@ -4342,7 +4517,7 @@ function openCards(){ const mk=monthKey(view), list=deals.filter(d=>(d.date||"")
     [["Customer",d.customer],["Date",md(d.date)],["Source",d.source],["Status",d.status],["Lender",d.lender],["Docs",d.processor],["Split",d.split?("with "+(d.partner||"teammate")):"No"],["Trade",d.trade?"Yes":"No"]].forEach(([k,v])=>{ if(!v) return; const dt=document.createElement("dt"); dt.textContent=k; const dd=document.createElement("dd"); dd.textContent=v; dl.append(dt,dd); });
     q(".tc-notes").textContent=d.notes||"";
     c.addEventListener("click",()=>{ c.classList.toggle("flip"); try{ tap(); }catch(e){} }); row.append(c); });
-  o.querySelector(".tcs-x").addEventListener("click",()=>o.remove()); document.body.append(o); try{ tap(); }catch(e){}
+  o.querySelector(".tcs-x").addEventListener("click",()=>o.remove()); document.body.append(o); try{ enableDragScroll(row); }catch(e){} try{ tap(); }catch(e){}
   setTimeout(()=>{ const last=row.lastElementChild; if(last&&last.scrollIntoView) last.scrollIntoView({inline:"center",block:"nearest"}); },60); }
 /* --- mic drop on goal --- */
 function micDrop(units,then){ if(reduceMotion()){ then&&then(); return; } const o=document.createElement("div"); o.className="micdrop"; o.setAttribute("role","status"); o.setAttribute("aria-label","Goal hit");
