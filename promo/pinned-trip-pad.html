@@ -1784,6 +1784,16 @@ html.tp-hidden :is(.ious,.iou-row,.iou-half,.iou-count)::after,html.tp-hidden .i
  20%{transform:scale(1);box-shadow:inset 0 0 0 1.5px #ff4fa3,0 0 4px rgba(255,79,163,.35)}
  30%{transform:scale(1.05);box-shadow:inset 0 0 0 1.5px #ff4fa3,0 0 10px rgba(255,79,163,.6)}}
 @media (prefers-reduced-motion:reduce){.tag.veritas-ol{animation:none}}
+/* deal tags: Trade-in white outline, Internet strobe */
+.tag.tradein{background:transparent!important;color:var(--ink)!important;box-shadow:inset 0 0 0 1.5px #fff,0 0 0 1px rgba(0,0,0,.22)}
+:root[data-theme="dark"] .tag.tradein{color:#fff!important;box-shadow:inset 0 0 0 1.5px #fff}
+@media (prefers-color-scheme:dark){:root:not([data-theme]) .tag.tradein{color:#fff!important;box-shadow:inset 0 0 0 1.5px #fff}}
+.tag.src-net{color:#0891b2;background:color-mix(in srgb,#22d3ee 16%,var(--chip));animation:netstrobe 1.4s linear infinite}
+:root[data-theme="dark"] .tag.src-net{color:#67e8f9}
+@media (prefers-color-scheme:dark){:root:not([data-theme]) .tag.src-net{color:#67e8f9}}
+@keyframes netstrobe{0%,14%,28%,100%{box-shadow:0 0 0 rgba(34,211,238,0);filter:none}
+ 7%,21%{box-shadow:0 0 0 1.5px #22d3ee,0 0 14px 2px rgba(34,211,238,.85);filter:brightness(1.6)}}
+@media (prefers-reduced-motion:reduce){.tag.src-net{animation:none}}
 /* ===== round 11: closing-% rings, days off ===== */
 .crings{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:12px 6px;margin-top:2px}
 .cring{display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;min-width:0}
@@ -3179,12 +3189,12 @@ function render(){
     const v=document.createElement("div"); v.className="veh"; v.textContent=[d.vehicle?String(d.vehicle).toUpperCase():"",d.stock?"STOCK# "+String(d.stock).toUpperCase():""].filter(Boolean).join(" · ")||"Processed "+new Date(+y,+m-1,+dd).toLocaleDateString("en-US");
     const tags=document.createElement("div"); tags.className="tags";
     const tag=(t,cl)=>{const s=document.createElement("span"); s.className="tag "+(cl||""); s.textContent=t; tags.append(s);};
-    tag(d.status==="cash"?"cash deal":(d.status||"pending"),d.status||"pending"); if(d.type&&d.type!=="New") tag(d.type==="CPO"?"TCUV":d.type); if(d.source) tag(d.source); if(d.lender) tag(d.lender);
+    tag(d.status==="cash"?"cash deal":(d.status||"pending"),d.status||"pending"); if(d.type&&d.type!=="New") tag(d.type==="CPO"?"TCUV":d.type); if(d.source) tag(d.source,d.source==="Internet"?"src-net":""); if(d.lender) tag(d.lender);
     tag(d.split?"50% credit":"100% credit", d.split?"split":"funded");
     if(d.split&&d.partner) tag("w/ "+d.partner,"split");
     if((d.products||[]).length) tag((d.products.length)+" product"+(d.products.length>1?"s":""));
     if(d.veritas) tag("Veritas bonus","veritas-ol");
-    if(d.trade) tag("Trade");
+    if(d.trade) tag("Trade-in","tradein");
     if(d.eo) tag("E/O "+(d.eo===today()?"today":md(d.eo)), d.eo===today()?"eo hot":"eo");
     { const sc=stipCount(d); if(sc.need) tag("Stips "+sc.got+"/"+sc.need, sc.got<sc.need?"follow":"paid"); }
     { const sp=spiffOfDeal(d); if(sp) tag("💰 Spiff "+money(num(sp.amount)),"spiff"); }
