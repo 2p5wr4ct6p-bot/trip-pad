@@ -927,7 +927,7 @@ html.tp-hidden .fire-edge,html.tp-hidden .onfire,html.tp-hidden .tc-f::after{ani
 .units.rdone .cring{animation:rflash .8s ease-out both}
 @keyframes rflash{0%{filter:brightness(2.2) saturate(1.4) drop-shadow(0 0 10px var(--c2))}100%{filter:none}}
 /* faint heartbeat */
-.units.rbeat .ringwrap,.units.rbeat .netwrap{animation:rbeat 1.8s ease-in-out infinite}
+.units.rbeat .ringwrap,.units.rbeat .netwrap{animation:rbeat 1.8s ease-in-out 2}
 .units.rbeat .netwrap:not(.phwrap){animation-delay:.12s}.units.rbeat .phwrap{animation-delay:.24s}
 @keyframes rbeat{0%,40%,100%{transform:scale(1);filter:none}8%{transform:scale(1.03);filter:drop-shadow(0 0 7px color-mix(in srgb,var(--c2) 45%,transparent))}16%{transform:scale(1.005)}24%{transform:scale(1.02);filter:drop-shadow(0 0 5px color-mix(in srgb,var(--c2) 35%,transparent))}}
 html.tp-hidden .units.rbeat .ringwrap,html.tp-hidden .units.rbeat .netwrap{animation-play-state:paused}
@@ -1319,11 +1319,11 @@ html:not(.tp-in) .wrap,html:not(.tp-in) .fab{visibility:hidden}
 @keyframes warplines{0%{transform:scale(.3) rotate(0);opacity:0}30%{opacity:1}100%{transform:scale(1.6) rotate(25deg);opacity:.25}}
 @keyframes warpflash{0%{transform:scale(.2);opacity:1}60%{transform:scale(6);opacity:.9}100%{transform:scale(14);opacity:0}}
 @keyframes warpout{0%{opacity:1;clip-path:circle(150vmax at var(--wx) var(--wy))}100%{opacity:0;transform:scale(1.15);clip-path:circle(150vmax at var(--wx) var(--wy))}}
-.gate-bg i{position:absolute;width:70vmax;height:70vmax;border-radius:50%;filter:blur(60px);opacity:.55;animation:gateblob 12s ease-in-out infinite alternate}
+.gate-bg i{position:absolute;width:70vmax;height:70vmax;border-radius:50%;filter:blur(60px);opacity:.55;animation:gateblob 6s ease-in-out infinite alternate}
 .gate-bg i:nth-child(1){background:#2f6bff;top:-30vmax;left:-25vmax}
-.gate-bg i:nth-child(2){background:#ff1f8e;bottom:-35vmax;right:-30vmax;animation-delay:-4s}
-.gate-bg i:nth-child(3){background:#00b862;top:30%;left:40%;width:40vmax;height:40vmax;opacity:.35;animation-delay:-8s}
-@keyframes gateblob{0%{transform:translate(0,0) scale(1)}100%{transform:translate(6vmax,4vmax) scale(1.15)}}
+.gate-bg i:nth-child(2){background:#ff1f8e;bottom:-35vmax;right:-30vmax;animation-delay:-2s}
+.gate-bg i:nth-child(3){background:#00b862;top:30%;left:40%;width:40vmax;height:40vmax;opacity:.35;animation-delay:-4s}
+@keyframes gateblob{0%{transform:translate(0,0) scale(1)}100%{transform:translate(9vmax,6vmax) scale(1.2)}}
 .gate-in{position:relative;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;width:min(360px,100%)}
 .gate-logo span{display:block;font:600 16px "Sora",var(--f-body);opacity:.8;letter-spacing:.01em}
 .gate-logo b{display:block;font:700 clamp(40px,12vw,58px)/1.05 "Sora",var(--f-body);letter-spacing:-.03em;white-space:nowrap;
@@ -3646,7 +3646,7 @@ function replayRings(){ const U=document.querySelector(".units"); let rm=false; 
     try{ const ctx=audioCtx(); if(ctx&&soundPref!=="off"){ const t=ctx.currentTime, o=ctx.createOscillator(), g=ctx.createGain(); o.type="sine"; o.frequency.setValueAtTime(220,t); o.frequency.exponentialRampToValueAtTime(880,t+1.2); g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.045,t+.15); g.gain.exponentialRampToValueAtTime(.0001,t+1.35); o.connect(g).connect(ctx.destination); o.start(t); o.stop(t+1.4); } }catch(e){} },1250);
   replayRings.t2=setTimeout(()=>{ U.classList.add("rdone"); try{ tap(); }catch(e){} },2850);
   replayRings.t3=setTimeout(()=>{ U.classList.remove("rintro","rdone"); },4600);
-  U.classList.remove("rbeat"); clearTimeout(replayRings.t4); replayRings.t4=setTimeout(()=>U.classList.add("rbeat"),15000); }
+  U.classList.remove("rbeat"); clearTimeout(replayRings.t4); clearInterval(replayRings.iv); const beat=()=>{ U.classList.remove("rbeat"); void U.offsetWidth; U.classList.add("rbeat"); }; replayRings.t4=setTimeout(()=>{ beat(); replayRings.iv=setInterval(beat,18900); },15000); }
 afterEnter(()=>{ const w=()=>{ if(document.getElementById("splash")) return setTimeout(w,150); setTimeout(replayRings,80); }; w(); });
 /* deal marriage */
 function renderMarriage(){ const box=document.getElementById("marryBody"); if(!box) return; const mk=monthKey(new Date()), by={};
@@ -4229,7 +4229,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v91", tpChecked=0;
+var TP_BUILD="trip-pad-v92", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
