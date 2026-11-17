@@ -2080,10 +2080,12 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
       if(th==="matrix"){ const gs=document.getElementById("gateSub"); setTimeout(()=>{ gs.innerHTML='<span class="gate-typing">Wake up, Jonathan…</span>'; },10); } } }catch(e){}
   try{ document.getElementById("gateSub").textContent=new Date().toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"}); }catch(e){}
   const btn=document.getElementById("gateBtn"); setTimeout(()=>{ try{ btn.focus({preventScroll:true}); }catch(e){} },300);
+  window.HERO_MUSIC_SRC="hero-music.mp3";
   let done=false; let heroAud=null;
   try{ if(localStorage.getItem("trippad.theme")==="hero"){ const r=indexedDB.open("trippad",1); r.onupgradeneeded=()=>r.result.createObjectStore("files"); r.onsuccess=()=>{ try{ const q=r.result.transaction("files").objectStore("files").get("herosong"); q.onsuccess=()=>{ const v=q.result; if(v&&v.blob){ heroAud=new Audio(URL.createObjectURL(v.blob)); heroAud.preload="auto"; heroAud.setAttribute("playsinline",""); } }; }catch(e){} }; } }catch(e){}
+  try{ if(localStorage.getItem("trippad.theme")==="hero"&&localStorage.getItem("trippad.sound")!=="off"){ window.__heroDef=new Audio(HERO_MUSIC_SRC); window.__heroDef.preload="auto"; window.__heroDef.setAttribute("playsinline",""); } }catch(e){}
   btn.addEventListener("click",()=>{ if(done) return; done=true;
-    let heroPlayed=false; try{ if(heroAud){ try{ if(navigator.audioSession) navigator.audioSession.type="playback"; }catch(e){} heroAud.currentTime=0; heroAud.volume=1; const pr=heroAud.play(); heroPlayed=true; if(pr&&pr.catch) pr.catch(()=>{}); window.__heroAud=heroAud; const a=heroAud; setTimeout(()=>{ let v=1; const t=setInterval(()=>{ v-=.08; if(v<=0){ clearInterval(t); a.pause(); } else { try{ a.volume=v; }catch(e){} } },90); setTimeout(()=>{ try{ a.pause(); }catch(e){} },1300); },17000); } }catch(e){}
+    let heroPlayed=false; try{ if(!heroAud&&window.__heroDef) heroAud=window.__heroDef; if(heroAud){ try{ if(navigator.audioSession) navigator.audioSession.type="playback"; }catch(e){} heroAud.currentTime=0; heroAud.volume=1; const pr=heroAud.play(); heroPlayed=true; if(pr&&pr.catch) pr.catch(()=>{}); window.__heroAud=heroAud; const a=heroAud; setTimeout(()=>{ let v=1; const t=setInterval(()=>{ v-=.08; if(v<=0){ clearInterval(t); a.pause(); } else { try{ a.volume=v; }catch(e){} } },90); setTimeout(()=>{ try{ a.pause(); }catch(e){} },1300); },17000); } }catch(e){}
     if(!heroPlayed&&localStorage.getItem("trippad.theme")==="hero"&&window.playHeroFanfare&&(typeof soundPref==="undefined"||soundPref!=="off")){ try{ playHeroFanfare(); heroPlayed=true; }catch(e){} }
     if(!heroPlayed) try{ if(window.audioCtx && (typeof soundPref==="undefined"||soundPref!=="off")){ const ctx=audioCtx(); if(ctx){ const bin=atob(ENTER_SFX), arr=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) arr[i]=bin.charCodeAt(i);
       ctx.decodeAudioData(arr.buffer, buf=>{ const src=ctx.createBufferSource(); src.buffer=buf; src.connect(ctx.destination); src.start(); }, ()=>{}); } } }catch(e){}
@@ -2435,6 +2437,7 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
       <p class="wu-name" id="hsName">No song picked</p>
       <button type="button" class="btn" id="hsFan" style="width:100%;margin-bottom:8px">💥 Play the built-in Hero theme</button>
       <div class="row2"><button type="button" class="btn" id="hsPlay">▶ Preview</button><button type="button" class="btn danger" id="hsDel">Remove</button></div>
+      <p class="setnote hs-credit" style="margin:10px 0 0;font-size:11.5px;opacity:.75">Built-in Hero music: “Wave Rider” by Shane Ivers – <a href="https://www.silvermansound.com" target="_blank" rel="noopener">silvermansound.com</a> (CC BY 4.0)</p>
     </div>
     <div class="setgrp"><h3>📕 Close the book</h3><p class="setnote" id="setBookNote">Done for the month? Close the book to lock the Fun Trip Pad until next month.</p><button type="button" class="closebook setbook" id="setCloseBook"><span class="cbk-ico" aria-hidden="true">📕</span><span class="cbk-txt"><b>Close the book</b><small id="setBookSub">Wrap up this month</small></span><span class="cbk-go" aria-hidden="true">›</span></button></div>
     <div class="setgrp"><h3>📱 Lock screen card</h3><p class="setnote">Makes a picture of this month's numbers you can save and set as your lock screen.</p>
@@ -3819,7 +3822,8 @@ document.getElementById("hsFile").addEventListener("change",async e=>{ const f=e
 document.getElementById("hsPlay").addEventListener("click",()=>{ if(!hsAud){ setNote("Pick a song first.","warn"); return; } const b=document.getElementById("hsPlay"); if(!hsAud.paused){ hsStop(); return; } try{ if(navigator.audioSession) navigator.audioSession.type="playback"; }catch(e){} hsAud.currentTime=0; const pr=hsAud.play(); if(pr&&pr.catch) pr.catch(()=>setNote("Couldn't play that file. Try an MP3 or M4A.","warn")); b.textContent="⏹ Stop"; hsAud.onended=hsStop; });
 document.getElementById("hsDel").addEventListener("click",async()=>{ hsStop(); try{ await hsPut(null); }catch(e){} await hsLoad(); setNote("Hero theme song removed."); });
 hsLoad();
-document.getElementById("hsFan").addEventListener("click",()=>{ hsStop(); playHeroFanfare(); });
+let hsDef=null; function hsDefStop(){ if(hsDef){ try{ hsDef.pause(); hsDef.currentTime=0; }catch(e){} } const b=document.getElementById("hsFan"); if(b) b.textContent="💥 Play the built-in Hero theme"; }
+document.getElementById("hsFan").addEventListener("click",()=>{ hsStop(); const b=document.getElementById("hsFan"); if(hsDef&&!hsDef.paused){ hsDefStop(); return; } try{ if(navigator.audioSession) navigator.audioSession.type="playback"; }catch(e){} hsDef=hsDef||new Audio(window.HERO_MUSIC_SRC); hsDef.currentTime=0; const pr=hsDef.play(); if(pr&&pr.catch) pr.catch(()=>{ try{ playHeroFanfare(); }catch(e){} }); b.textContent="⏹ Stop"; hsDef.onended=hsDefStop; });
 document.getElementById("wuDel").addEventListener("click",async()=>{ try{ await wuPut(null); }catch(e){} wu.buf=null; wu.name=""; wuUI(); setNote("Walk-up song removed."); });
 wuPrefs(); wuUI(); addEventListener("tp-enter",()=>wuLoad(),{once:true}); if(!document.getElementById("gate")) wuLoad();
 /* --- shared car art --- */
@@ -3916,7 +3920,7 @@ if(bookClosed()) showBookClosed(false);
 syncCloseBtn(); setInterval(syncCloseBtn,60000);
 /* settings sheet */
 function openSettings(){ $("setScrim").hidden=false; $("setBtn").setAttribute("aria-expanded","true"); try{ tap(); }catch(e){} }
-function closeSettings(){ try{ if(typeof hsStop==="function") hsStop(); }catch(e){} $("setScrim").hidden=true; $("setBtn").setAttribute("aria-expanded","false"); }
+function closeSettings(){ try{ if(typeof hsStop==="function") hsStop(); if(typeof hsDefStop==="function") hsDefStop(); }catch(e){} $("setScrim").hidden=true; $("setBtn").setAttribute("aria-expanded","false"); }
 $("setBtn").addEventListener("click",openSettings);
 $("setClose").addEventListener("click",closeSettings);
 $("setScrim").addEventListener("click",e=>{ if(e.target===$("setScrim")) closeSettings(); });
@@ -4363,7 +4367,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v96", tpChecked=0;
+var TP_BUILD="trip-pad-v97", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
