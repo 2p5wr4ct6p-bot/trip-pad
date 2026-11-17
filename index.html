@@ -632,6 +632,11 @@ html.tp-hidden .tag.eo::before{animation-play-state:paused}
 .setsheet .soundlbl{display:none}
 .setsheet .totop{margin:0;align-self:stretch}
 .setsheet .setnote{margin:0;font-size:12px;color:var(--muted)}
+.mxr{position:fixed;inset:0;z-index:260;background:#000;display:grid;place-items:center;animation:setfade .2s both}
+.mxr canvas{position:absolute;inset:0;width:100%;height:100%}
+.mxr-t{position:relative;font:700 clamp(20px,6vw,28px) "Courier New",ui-monospace,monospace;color:#00ff66;text-shadow:0 0 10px #00ff66,0 0 24px rgba(0,255,102,.6);background:rgba(0,0,0,.6);padding:8px 14px;border-radius:6px;letter-spacing:.06em;animation:mxtxt 1.2s steps(2) infinite}
+@keyframes mxtxt{50%{opacity:.75}}
+.mxr.fade{transition:opacity .5s;opacity:0}
 .mxm-scrim{position:fixed;inset:0;z-index:240;display:grid;place-items:center;padding:22px;background:rgba(0,8,2,.72);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);animation:setfade .25s both}
 .mxm{width:100%;max-width:360px;background:#020a04;color:#b8ffcc;border:1px solid #0f5d2a;border-radius:18px;padding:22px 18px 18px;text-align:center;font-family:"Courier New",ui-monospace,monospace;box-shadow:0 0 0 1px rgba(0,255,102,.15),0 0 40px rgba(0,255,102,.18);animation:setpop .35s cubic-bezier(.2,1.3,.35,1) both}
 .mxm-t{font:700 20px "Courier New",ui-monospace,monospace;color:#00ff66;text-shadow:0 0 8px rgba(0,255,102,.6);margin-bottom:8px}
@@ -3251,17 +3256,36 @@ function toCastle(){ themePref="princess"; try{ localStorage.setItem("trippad.th
   o.innerHTML='<div class="cg-sp">'+Array.from({length:22},(_,k)=>'<i style="left:'+((k*37)%100)+'%;top:'+((k*53)%100)+'%;animation-delay:'+(k*.07).toFixed(2)+'s">'+["✨","💖","⭐"][k%3]+'</i>').join("")+'</div><div class="cg-in"><div class="cg-c">🏰</div><div class="cg-t">Opening the castle gates…</div></div>';
   document.body.append(o); try{ tapSuccess(); }catch(e){} try{ playB64("yay",YAY_SFX); }catch(e){}
   setTimeout(()=>o.classList.add("flash"),1500); setTimeout(()=>{ try{ window.scrollTo(0,0); location.reload(); }catch(e){} },1900); }
+/* full-screen matrix code rain transition */
+function mxRainOverlay(o){ o=o||{}; const dur=o.dur||2400, el=document.createElement("div"); el.className="mxr"+(o.out?" out-mode":""); el.setAttribute("role","status"); el.setAttribute("aria-label",o.label||"Matrix");
+  el.innerHTML='<canvas></canvas><div class="mxr-t"></div>'; document.body.append(el);
+  const t=el.querySelector(".mxr-t"); t.textContent=o.text||""; try{ tapSuccess(); }catch(e){}
+  let rm=false; try{ rm=matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){}
+  const cv=el.querySelector("canvas"), x=cv.getContext("2d"), dpr=Math.min(2,window.devicePixelRatio||1), W=cv.width=innerWidth*dpr, H=cv.height=innerHeight*dpr, fs=Math.round(16*dpr), cols=Math.ceil(W/fs);
+  const chars="ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ0123456789$¥₿Z:.=*+-<>¦";
+  const drops=Array.from({length:cols},()=>o.out?Math.random()*H/fs:-Math.random()*40), speed=Array.from({length:cols},()=>.55+Math.random()*.9);
+  x.font=fs+"px monospace"; x.fillStyle="#000"; x.fillRect(0,0,W,H);
+  try{ const ctx=audioCtx(); if(ctx&&soundPref!=="off"){ const t0=ctx.currentTime, n=ctx.createBufferSource(), len=ctx.sampleRate*1.6, buf=ctx.createBuffer(1,len,ctx.sampleRate), d=buf.getChannelData(0); for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*(Math.random()<.04?1:.12);
+    n.buffer=buf; const bp=ctx.createBiquadFilter(); bp.type="bandpass"; bp.frequency.setValueAtTime(o.out?4000:600,t0); bp.frequency.exponentialRampToValueAtTime(o.out?500:4500,t0+1.5); bp.Q.value=4; const g=ctx.createGain(); g.gain.setValueAtTime(.0001,t0); g.gain.exponentialRampToValueAtTime(.35,t0+.15); g.gain.exponentialRampToValueAtTime(.0001,t0+1.6); n.connect(bp).connect(g).connect(ctx.destination); n.start(t0); } }catch(e){}
+  const start=performance.now(); let last=start, mid=false;
+  (function f(now){ const k=(now-start)/dur, dt=Math.min(3,(now-last)/16.67); last=now;
+    x.fillStyle="rgba(0,0,0,"+(o.out&&k>.55?.22:.09)*dt+")"; x.fillRect(0,0,W,H);
+    for(let i=0;i<cols;i++){ const yy=drops[i]*fs; if(o.out&&k>.5&&Math.random()<.02*dt) continue;
+      x.fillStyle="#d6ffe0"; x.fillText(chars[Math.random()*chars.length|0],i*fs,yy); x.fillStyle="#00ff66"; x.fillText(chars[Math.random()*chars.length|0],i*fs,yy-fs);
+      drops[i]+=speed[i]*dt*(o.out?1.4:1); if(yy>H&&Math.random()>.96) drops[i]=o.out&&k>.4?-9999:0; }
+    if(!mid&&k>=.5){ mid=true; try{ o.onMid&&o.onMid(); }catch(e){} }
+    if(k<1&&!rm) requestAnimationFrame(f); else { if(!mid) try{ o.onMid&&o.onMid(); }catch(e){} el.classList.add("fade"); setTimeout(()=>{ el.remove(); try{ o.onEnd&&o.onEnd(); }catch(e){} },500); } })(start); }
 /* matrix: pill choice + operator disconnect */
 function setThemeNow(k){ themePref=k; try{localStorage.setItem("trippad.theme",k);}catch(e){} applyTheme(); renderThemePicker(); }
 function mxModal(html,wire){ const s=document.createElement("div"); s.className="mxm-scrim"; s.setAttribute("role","dialog"); s.setAttribute("aria-modal","true"); s.innerHTML='<div class="mxm">'+html+'</div>';
   const close=()=>s.remove(); s.addEventListener("click",e=>{ if(e.target===s) close(); }); document.body.append(s); wire(s,close); try{ tap(); }catch(e){} }
 function askPill(){ mxModal('<div class="mxm-t">This is your last chance.</div><p>Take the <b class="rp">red pill</b> and you stay right where you are. Take the <b class="bp">blue pill</b> and you enter the Matrix.</p><div class="pills"><button type="button" class="pill red"><i></i><span>Red pill</span><small>Stay</small></button><button type="button" class="pill blue"><i></i><span>Blue pill</span><small>Enter the Matrix</small></button></div>',
   (s,close)=>{ s.querySelector(".pill.red").addEventListener("click",()=>{ close(); setNote("You stayed. The story ends."); });
-    s.querySelector(".pill.blue").addEventListener("click",e=>{ const b=e.currentTarget; b.classList.add("taken"); try{ tapSuccess(); }catch(er){} setTimeout(()=>{ close(); setThemeNow("matrix"); },650); }); }); }
+    s.querySelector(".pill.blue").addEventListener("click",e=>{ const b=e.currentTarget; b.classList.add("taken"); try{ tapSuccess(); }catch(er){} setTimeout(()=>{ close(); mxRainOverlay({text:"ENTERING THE MATRIX",label:"Entering the Matrix",onMid:()=>setThemeNow("matrix")}); },650); }); }); }
 function askDisconnect(k){ mxModal('<div class="mxm-ph" aria-hidden="true">☎️</div><div class="mxm-t">Operator</div><p>Would you like the phone operator to disconnect you?</p><div class="row2"><button type="button" class="btn mx-no">Stay plugged in</button><button type="button" class="btn primary mx-yes">Disconnect me</button></div>',
   (s,close)=>{ s.querySelector(".mx-no").addEventListener("click",close);
     s.querySelector(".mx-yes").addEventListener("click",()=>{ const m=s.querySelector(".mxm"); m.classList.add("hangup"); try{ const ctx=audioCtx(); if(ctx&&soundPref!=="off"){ const t=ctx.currentTime; [0,.45].forEach(d=>{ const o=ctx.createOscillator(), g=ctx.createGain(); o.type="sine"; o.frequency.value=425; g.gain.setValueAtTime(.0001,t+d); g.gain.exponentialRampToValueAtTime(.15,t+d+.02); g.gain.setValueAtTime(.15,t+d+.3); g.gain.exponentialRampToValueAtTime(.0001,t+d+.34); o.connect(g).connect(ctx.destination); o.start(t+d); o.stop(t+d+.4); }); } }catch(e){}
-      setTimeout(()=>{ close(); if(k==="princess") toCastle(); else if(k==="grid") askEnterGrid(); else setThemeNow(k); },900); }); }); }
+      setTimeout(()=>{ close(); mxRainOverlay({out:true,text:"CALL DISCONNECTED",label:"Disconnecting from the Matrix",onMid:()=>{ if(k!=="princess"&&k!=="grid") setThemeNow(k); },onEnd:()=>{ if(k==="princess") toCastle(); else if(k==="grid") askEnterGrid(); }}); },900); }); }); }
 function askEnterGrid(){
   if(document.querySelector(".gridask")) return;
   const o=document.createElement("div"); o.className="gridask"; o.setAttribute("role","dialog"); o.setAttribute("aria-label","Enter the Grid");
@@ -3857,6 +3881,15 @@ function playWedding(){ stopWedding(); if(typeof soundPref!=="undefined"&&soundP
   wedAudio={out,nodes,ctx}; }
 function stopWedding(){ if(!wedAudio) return; const {out,nodes,ctx}=wedAudio; wedAudio=null; try{ out.gain.cancelScheduledValues(ctx.currentTime); out.gain.setValueAtTime(out.gain.value,ctx.currentTime); out.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+.35); }catch(e){} setTimeout(()=>nodes.forEach(o=>{ try{o.stop();}catch(e){} }),400); }
 function wrapSpouse(y){ const by={}; deals.filter(d=>(d.date||"").startsWith(String(y))&&d.split&&d.partner&&d.status!=="unwound").forEach(d=>{ const k=String(d.partner).trim().toLowerCase(); if(!k) return; const o=by[k]=by[k]||{name:String(d.partner).trim().replace(/^./,c=>c.toUpperCase()),n:0,c:0}; o.n++; o.c+=num(d.commission); }); return Object.values(by).sort((a,b)=>b.n-a.n)[0]||null; }
+var WRAP_MUSIC_SRC="wrapped-music.mp3";
+var wrapMus={buf:null,src:null,g:null,loading:null};
+async function wrapMusicStart(){ if(typeof soundPref!=="undefined"&&soundPref==="off") return; const ctx=audioCtx&&audioCtx(); if(!ctx) return; try{ if(ctx.state==="suspended") await ctx.resume(); }catch(e){}
+  try{ if(!wrapMus.buf){ wrapMus.loading=wrapMus.loading||fetch(WRAP_MUSIC_SRC).then(r=>r.arrayBuffer()).then(a=>new Promise((res,rej)=>ctx.decodeAudioData(a,res,rej))); wrapMus.buf=await wrapMus.loading; }
+    if(!document.querySelector(".wstory")) return; wrapMusicStop(true);
+    const src=ctx.createBufferSource(), g=ctx.createGain(); src.buffer=wrapMus.buf; src.loop=true; g.gain.setValueAtTime(.0001,ctx.currentTime); g.gain.exponentialRampToValueAtTime(document.querySelector(".wstory.wedding")?.0001:.55,ctx.currentTime+1.2);
+    src.connect(g).connect(ctx.destination); src.start(); wrapMus.src=src; wrapMus.g=g; }catch(e){} }
+function wrapMusicLevel(v){ const ctx=audioCtx&&audioCtx(); if(!ctx||!wrapMus.g) return; const g=wrapMus.g.gain, t=ctx.currentTime; try{ g.cancelScheduledValues(t); g.setValueAtTime(Math.max(.0001,g.value),t); g.exponentialRampToValueAtTime(Math.max(.0001,v),t+.6); }catch(e){} }
+function wrapMusicStop(now){ const ctx=audioCtx&&audioCtx(); const s=wrapMus.src, g=wrapMus.g; wrapMus.src=null; wrapMus.g=null; if(!s) return; try{ if(!now&&ctx){ g.gain.cancelScheduledValues(ctx.currentTime); g.gain.setValueAtTime(Math.max(.0001,g.gain.value),ctx.currentTime); g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+.8); s.stop(ctx.currentTime+.85); } else s.stop(); }catch(e){} }
 function showWrapped(y){ const w=wrappedData(y); if(!w){ setNote("No deals in "+y+" yet for a Wrapped.","warn"); return; }
   const mn=k=>new Date(+k.slice(0,4),+k.slice(5,7)-1,1).toLocaleString("en-US",{month:"long"});
   const cards=[
@@ -3873,13 +3906,13 @@ function showWrapped(y){ const w=wrappedData(y); if(!w){ setNote("No deals in "+
   const o=document.createElement("div"); o.className="wstory"; o.setAttribute("role","dialog"); o.setAttribute("aria-label",y+" Wrapped");
   o.innerHTML='<div class="wbars">'+cards.map(()=>'<i><b></b></i>').join("")+'</div><button type="button" class="wx" aria-label="Close">✕</button><div class="wtap"><span data-d="-1"></span><span data-d="1"></span></div><div class="wcard"></div>';
   document.body.append(o); let i=0, timer=0; const bars=[...o.querySelectorAll(".wbars i")];
-  const show=n=>{ i=Math.max(0,Math.min(cards.length-1,n)); clearTimeout(timer); o.style.background=cards[i][0]; o.classList.toggle("wedding",cards[i][2]==="wedding"); if(cards[i][2]==="wedding") playWedding(); else stopWedding(); const c=o.querySelector(".wcard"); c.remove(); const nc=document.createElement("div"); nc.className="wcard"; nc.innerHTML=cards[i][1]; o.append(nc);
+  const show=n=>{ i=Math.max(0,Math.min(cards.length-1,n)); clearTimeout(timer); o.style.background=cards[i][0]; o.classList.toggle("wedding",cards[i][2]==="wedding"); if(cards[i][2]==="wedding"){ wrapMusicLevel(.0001); playWedding(); } else { if(wedAudio) stopWedding(); wrapMusicLevel(.55); } const c=o.querySelector(".wcard"); c.remove(); const nc=document.createElement("div"); nc.className="wcard"; nc.innerHTML=cards[i][1]; o.append(nc);
     bars.forEach((b,k)=>{ b.className=k<i?"done":k===i?"cur":""; void b.offsetWidth; }); try{ tap(); }catch(e){}
     const sv=nc.querySelector(".wsave"); if(sv) sv.addEventListener("click",async ev=>{ ev.stopPropagation(); sv.textContent="Saving…"; try{ await loadH2C(); const cv=await html2canvas(o,{backgroundColor:null,scale:2,logging:false,ignoreElements:el=>el.classList&&(el.classList.contains("wx")||el.classList.contains("wsave")||el.classList.contains("wbars")||el.classList.contains("wtap"))}); const bl=await new Promise(r=>cv.toBlob(r,"image/png")); await deliverShot(bl,"trip-pad-wrapped-"+y+".png"); sv.textContent="Saved ✓"; }catch(err){ sv.textContent="Couldn't save. Screenshot instead."; } });
     if(i<cards.length-1) timer=setTimeout(()=>show(i+1),cards[i][2]==="wedding"?9000:5500); if(i===1) confetti(1.4); };
-  o.querySelector(".wx").addEventListener("click",()=>{ clearTimeout(timer); stopWedding(); o.remove(); });
+  o.querySelector(".wx").addEventListener("click",()=>{ clearTimeout(timer); stopWedding(); wrapMusicStop(); o.remove(); });
   o.querySelectorAll(".wtap span").forEach(s=>s.addEventListener("click",()=>show(i+ +s.dataset.d)));
-  show(0); }
+  show(0); wrapMusicStart(); }
 /* --- lock screen card --- */
 async function makeLockCard(){ const W=1179,H=2556, c=document.createElement("canvas"); c.width=W; c.height=H; const x=c.getContext("2d"), cs=getComputedStyle(document.documentElement);
   const acc=cs.getPropertyValue("--accent").trim()||"#2f6bff", good=cs.getPropertyValue("--good").trim()||"#00b862";
@@ -3948,7 +3981,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v84", tpChecked=0;
+var TP_BUILD="trip-pad-v85", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
