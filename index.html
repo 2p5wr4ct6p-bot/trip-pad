@@ -1667,6 +1667,10 @@ html.tp-hidden :is(.ious,.iou-row,.iou-half,.iou-count)::after,html.tp-hidden .i
 .shout button{border:0;border-radius:10px;background:var(--accent);color:var(--accent-ink,#fff);font-size:18px;padding:5px 10px;cursor:pointer}
 @keyframes shoutin{from{opacity:0;transform:translate(-50%,-20px)}to{opacity:1;transform:translate(-50%,0)}}
 /* wrapped story */
+.wpcrown{font-size:46px;margin:6px 0 2px;animation:wpbob 2.4s ease-in-out infinite}
+@keyframes wpbob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-6px) rotate(4deg)}}
+.wprs{margin-top:18px;display:grid;gap:6px;width:min(260px,80%)}
+.wpr{display:flex;justify-content:space-between;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.18);font:600 15px var(--f-body);color:#fff}
 .wstory{position:fixed;inset:0;z-index:128;background:#000;color:#fff;display:flex;flex-direction:column;user-select:none}
 .wstory .wbars{display:flex;gap:4px;padding:calc(10px + env(safe-area-inset-top,0px)) 12px 8px}
 .wstory .wbars i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.3);overflow:hidden}
@@ -4076,13 +4080,11 @@ function stopWedding(){ if(!wedAudio) return; const {out,nodes,ctx}=wedAudio; we
 function wrapSpouse(y){ const by={}; deals.filter(d=>(d.date||"").startsWith(String(y))&&d.split&&d.partner&&d.status!=="unwound").forEach(d=>{ const k=String(d.partner).trim().toLowerCase(); if(!k) return; const o=by[k]=by[k]||{name:String(d.partner).trim().replace(/^./,c=>c.toUpperCase()),n:0,c:0}; o.n++; o.c+=num(d.commission); }); return Object.values(by).sort((a,b)=>b.n-a.n)[0]||null; }
 var WRAP_MUSIC_SRC="wrapped-music.mp3";
 var wrapMus={buf:null,src:null,g:null,loading:null};
-async function wrapMusicStart(){ if(typeof soundPref!=="undefined"&&soundPref==="off") return; const ctx=audioCtx&&audioCtx(); if(!ctx) return; try{ if(ctx.state==="suspended") await ctx.resume(); }catch(e){}
-  try{ if(!wrapMus.buf){ wrapMus.loading=wrapMus.loading||fetch(WRAP_MUSIC_SRC).then(r=>r.arrayBuffer()).then(a=>new Promise((res,rej)=>ctx.decodeAudioData(a,res,rej))); wrapMus.buf=await wrapMus.loading; }
-    if(!document.querySelector(".wstory")) return; wrapMusicStop(true);
-    const src=ctx.createBufferSource(), g=ctx.createGain(); src.buffer=wrapMus.buf; src.loop=true; g.gain.setValueAtTime(.0001,ctx.currentTime); g.gain.exponentialRampToValueAtTime(document.querySelector(".wstory.wedding")?.0001:.55,ctx.currentTime+1.2);
-    src.connect(g).connect(ctx.destination); src.start(); wrapMus.src=src; wrapMus.g=g; }catch(e){} }
-function wrapMusicLevel(v){ const ctx=audioCtx&&audioCtx(); if(!ctx||!wrapMus.g) return; const g=wrapMus.g.gain, t=ctx.currentTime; try{ g.cancelScheduledValues(t); g.setValueAtTime(Math.max(.0001,g.value),t); g.exponentialRampToValueAtTime(Math.max(.0001,v),t+.6); }catch(e){} }
-function wrapMusicStop(now){ const ctx=audioCtx&&audioCtx(); const s=wrapMus.src, g=wrapMus.g; wrapMus.src=null; wrapMus.g=null; if(!s) return; try{ if(!now&&ctx){ g.gain.cancelScheduledValues(ctx.currentTime); g.gain.setValueAtTime(Math.max(.0001,g.gain.value),ctx.currentTime); g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+.8); s.stop(ctx.currentTime+.85); } else s.stop(); }catch(e){} }
+function wrapMusicStart(){ try{ if(navigator.audioSession) navigator.audioSession.type="playback"; }catch(e){}
+  try{ wrapMusicStop(true); const a=new Audio(WRAP_MUSIC_SRC); a.loop=true; a.preload="auto"; a.playsInline=true; a.setAttribute("playsinline",""); a.volume=.7; wrapMus.el=a; const pr=a.play(); if(pr&&pr.catch) pr.catch(()=>{ wrapMus.blocked=1; }); }catch(e){} }
+function wrapMusicLevel(v){ const a=wrapMus.el; if(!a) return; try{ if(v<.01){ a.pause(); } else { a.volume=.7; if(a.paused){ const pr=a.play(); if(pr&&pr.catch) pr.catch(()=>{}); } } }catch(e){} }
+function wrapMusicStop(now){ const a=wrapMus.el; wrapMus.el=null; if(!a) return; try{ if(now){ a.pause(); a.src=""; return; } let v=a.volume; const t=setInterval(()=>{ v-=.1; if(v<=0){ clearInterval(t); a.pause(); a.src=""; } else { try{ a.volume=v; }catch(e){} } },70); setTimeout(()=>{ try{ a.pause(); }catch(e){} },900); }catch(e){} }
+function wrapProc(y){ const by={}; deals.filter(d=>(d.date||"").startsWith(String(y))&&d.status!=="unwound"&&d.processor).forEach(d=>{ const k=String(d.processor).trim(); if(!k) return; by[k]=(by[k]||0)+1; }); const arr=Object.entries(by).sort((a,b)=>b[1]-a[1]); return arr.length?arr:null; }
 function showWrapped(y){ const w=wrappedData(y); if(!w){ setNote("No deals in "+y+" yet for a Wrapped.","warn"); return; }
   const mn=k=>new Date(+k.slice(0,4),+k.slice(5,7)-1,1).toLocaleString("en-US",{month:"long"});
   const cards=[
@@ -4092,6 +4094,9 @@ function showWrapped(y){ const w=wrappedData(y); if(!w){ setNote("No deals in "+
     ["linear-gradient(160deg,#2f6bff,#0b1f66)",'<div class="wk">Your top car</div><div class="wbig" style="font-size:clamp(44px,15vw,76px)">'+(w.car?w.car[0]:"—")+'</div><div class="wmid">'+(w.car?"× "+w.car[1]:"Add the vehicle on deals to see this")+'</div>'],
     ["linear-gradient(160deg,#9b5bff,#ff4fae)",'<div class="wk">Products</div><div class="wbig">'+w.vsa+'%</div><div class="wmid">of deals had a VSA</div><div class="wsm">'+(w.topP?"Your most-sold product: <b>"+w.topP[0]+"</b> × "+w.topP[1]+".":"")+' Average '+(Math.round(w.ppd*10)/10)+' products per deal.</div>'],
     ["linear-gradient(160deg,#0ea5a4,#164e63)",'<div class="wk">Where it came from</div><div class="wmid">'+(w.src?"Top source: "+w.src[0]+" ("+w.src[1]+")":"Pick a deal source to see this")+'</div><div class="wmid">'+(w.lend?"Top lender: "+w.lend[0]+" ("+w.lend[1]+")":"")+'</div><div class="wsm">Biggest single deal: <b>'+money(num(w.big.commission))+'</b>'+(w.big.dealNo?" on #"+w.big.dealNo:"")+'.</div>'],
+    ...(()=>{ const pr=wrapProc(y); if(!pr) return []; const nm=String(pr[0][0]).replace(/[<>&"]/g,''), tot=pr.reduce((t,x)=>t+x[1],0);
+      const rest=pr.slice(1,4).map(x=>'<div class="wpr"><span>'+String(x[0]).replace(/[<>&"]/g,'')+'</span><b>'+x[1]+'</b></div>').join("");
+      return [["linear-gradient(160deg,#ff8cc6,#ff4fa3 50%,#b0127a)",'<div class="wk">Who&rsquo;s your favorite doc processor?</div><div class="wpcrown">👑📄</div><div class="wbig" style="font-size:clamp(48px,16vw,84px)">'+nm+'</div><div class="wmid">did your docs on <b>'+pr[0][1]+'</b> deal'+(pr[0][1]===1?"":"s")+'</div><div class="wsm">That&rsquo;s '+Math.round(pr[0][1]/tot*100)+'% of your paperwork. Bring '+nm+' a coffee ☕💕</div>'+(rest?'<div class="wprs">'+rest+'</div>':'')]]; })(),
     ...(()=>{ const sp=wrapSpouse(y); if(!sp) return []; const hearts='<div class="wedhearts">'+Array.from({length:14},(_,k)=>'<i style="left:'+(4+k*7)%96+'%;animation-delay:'+(k*.45).toFixed(2)+'s;font-size:'+(16+(k%4)*6)+'px">'+["💗","🤍","💍","💐","💕"][k%5]+'</i>').join("")+'</div>';
       return [["linear-gradient(160deg,#fff5f8,#ffd6e7 55%,#ffc2d9)",hearts+'<div class="wed"><div class="wk">Your '+y+' deal marriage</div><div class="wrings">💍</div><div class="wcouple">You &amp; '+String(sp.name).replace(/[<>&"]/g,'')+'</div><div class="wvow">Split <b>'+sp.n+'</b> deal'+(sp.n===1?"":"s")+' together and made <b>'+money(sp.c)+'</b>.</div><div class="wsm">Till month-end do us part 💐</div></div>',"wedding"]]; })(),
     ["linear-gradient(160deg,#111,#3a2a00)",'<div class="wk">Your salesperson personality</div><div class="wbig" style="font-size:clamp(40px,13vw,64px);color:#ffd54a">'+w.pers[0]+'</div><div class="wsm">'+w.pers[1]+'</div>'],
@@ -4104,8 +4109,9 @@ function showWrapped(y){ const w=wrappedData(y); if(!w){ setNote("No deals in "+
     const sv=nc.querySelector(".wsave"); if(sv) sv.addEventListener("click",async ev=>{ ev.stopPropagation(); sv.textContent="Saving…"; try{ await loadH2C(); const cv=await html2canvas(o,{backgroundColor:null,scale:2,logging:false,ignoreElements:el=>el.classList&&(el.classList.contains("wx")||el.classList.contains("wsave")||el.classList.contains("wbars")||el.classList.contains("wtap"))}); const bl=await new Promise(r=>cv.toBlob(r,"image/png")); await deliverShot(bl,"trip-pad-wrapped-"+y+".png"); sv.textContent="Saved ✓"; }catch(err){ sv.textContent="Couldn't save. Screenshot instead."; } });
     if(i<cards.length-1) timer=setTimeout(()=>show(i+1),cards[i][2]==="wedding"?9000:5500); if(i===1) confetti(1.4); };
   o.querySelector(".wx").addEventListener("click",()=>{ clearTimeout(timer); stopWedding(); wrapMusicStop(); o.remove(); });
+  o.addEventListener("click",()=>{ const m=wrapMus.el; if(m&&m.paused&&!o.classList.contains("wedding")){ const pr=m.play(); if(pr&&pr.catch) pr.catch(()=>{}); } },true);
   o.querySelectorAll(".wtap span").forEach(s=>s.addEventListener("click",()=>show(i+ +s.dataset.d)));
-  show(0); wrapMusicStart(); }
+  wrapMusicStart(); show(0); }
 /* --- lock screen card --- */
 async function makeLockCard(){ const W=1179,H=2556, c=document.createElement("canvas"); c.width=W; c.height=H; const x=c.getContext("2d"), cs=getComputedStyle(document.documentElement);
   const acc=cs.getPropertyValue("--accent").trim()||"#2f6bff", good=cs.getPropertyValue("--good").trim()||"#00b862";
@@ -4174,7 +4180,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v86", tpChecked=0;
+var TP_BUILD="trip-pad-v87", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
