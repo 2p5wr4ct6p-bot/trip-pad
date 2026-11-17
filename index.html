@@ -1639,7 +1639,7 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
           <defs><linearGradient id="netGrad" gradientUnits="userSpaceOnUse" x1="14" y1="106" x2="106" y2="14"><stop offset="0" stop-color="#0e7490"/><stop offset="1" stop-color="#67e8f9"/></linearGradient></defs>
           <circle class="track" cx="60" cy="60" r="53"/><circle class="fill" id="netFill" cx="60" cy="60" r="53"/><circle class="rtip" id="netTip" cx="113" cy="60" r="7" fill="url(#netGrad)" style="opacity:0"/>
         </svg>
-        <div class="big nbig"><span class="unum" id="netPct">—</span><small>Internet close</small><em id="netSub"></em></div>
+        <div class="big nbig"><span class="unum" id="netPct">—</span><small>Internet deals</small><em id="netSub"></em></div>
       </button>
       <div class="pay"><div class="lbl">Commission</div><div class="amt" id="comm">$0</div><div class="pace" id="paceText"></div><div class="paypace" id="payPace"></div><div id="streakWrap"></div></div>
     </div>
@@ -3155,11 +3155,12 @@ try{ matchMedia("(prefers-color-scheme: light)").addEventListener("change",apply
 applyBg();
 function renderNetRing(){ const el=document.getElementById("netRing"); if(!el) return; const mk=monthKey(new Date()); let ups=0;
   Object.keys(upsData||{}).forEach(k=>{ if(k.startsWith(mk)) ups+=((upsData[k]||{}).Internet|0); });
-  const sold=deals.filter(d=>(d.date||"").startsWith(mk)&&d.status!=="unwound"&&d.source==="Internet").length;
-  const pct=ups?Math.min(100,Math.round(sold/ups*100)):0; el.classList.toggle("empty",!ups);
-  document.getElementById("netPct").textContent=ups?pct+"%":"—"; document.getElementById("netSub").textContent=ups?sold+" of "+ups+" leads":"log internet ups";
+  const month=deals.filter(d=>(d.date||"").startsWith(mk)&&d.status!=="unwound"), total=month.length, sold=month.filter(d=>d.source==="Internet").length;
+  const pct=total?Math.round(sold/total*100):0; el.classList.toggle("empty",!total);
+  document.getElementById("netPct").textContent=total?pct+"%":"—";
+  document.getElementById("netSub").textContent=total?(sold+" of "+total+" deals"+(ups?" · "+Math.min(100,Math.round(sold/ups*100))+"% of leads":"")):"no deals yet";
   animRing("netFill","netTip",pct,"net");
-  el.setAttribute("aria-label", ups?("Internet closing "+pct+"% this month: "+sold+" sold from "+ups+" internet ups"):"Internet closing: log internet ups in Today to see it"); el.title=el.getAttribute("aria-label"); }
+  el.setAttribute("aria-label", total?("Internet deals: "+sold+" of your "+total+" deals this month ("+pct+"%)"+(ups?". Closed "+sold+" of "+ups+" internet leads.":"")):"Internet deals: none logged this month yet"); el.title=el.getAttribute("aria-label"); }
 var ringState={};
 function animRing(fillId,tipId,pct,key){ const f=document.getElementById(fillId), tp=document.getElementById(tipId); if(!f) return; const from=ringState[key]==null?0:ringState[key], to=pct; ringState[key]=to;
   const put=v=>{ f.style.strokeDashoffset=String(333.0*(1-v/100)); if(tp){ const a=v*3.6*Math.PI/180; tp.setAttribute("cx",(60+53*Math.cos(a)).toFixed(2)); tp.setAttribute("cy",(60+53*Math.sin(a)).toFixed(2)); tp.style.opacity=v>1.5?"1":"0"; } };
@@ -3615,7 +3616,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v63", tpChecked=0;
+var TP_BUILD="trip-pad-v64", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
