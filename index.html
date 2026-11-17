@@ -2154,7 +2154,7 @@ try{ const _b=localStorage.getItem("trippad.bg"); if(_b){ const r=document.docum
 (function(){ const top=()=>{ try{ window.scrollTo(0,0); document.documentElement.scrollTop=0; document.body&&(document.body.scrollTop=0); }catch(e){} };
   top(); document.addEventListener("DOMContentLoaded",top); addEventListener("load",top); addEventListener("pageshow",top); addEventListener("tp-enter",top); })();
 (function(){ const sp=document.getElementById("splash"); if(!sp) return;
-  try{ const L=[["You got","this!"],["Close","strong."],["One","more."],["Own","today."],["Stay","hungry."],["Make it","count."],["No days","off."],["Sell","the day."],["Is it","profitable?","Kunle"],["Do whatever","it takes, baby.","Calvin"]];
+  try{ const L=[["You got","this!"],["Close","strong."],["One","more."],["Own","today."],["Stay","hungry."],["Make it","count."],["No days","off."],["Sell","the day."],["Is it","profitable?","Kunle"],["Do whatever","it takes, baby.","Calvin"],["Be","strong.","Kunle"]];
     const n=new Date(), doy=Math.floor((n-new Date(n.getFullYear(),0,0))/864e5), pick=(()=>{ let last=-1; try{ last=+localStorage.getItem("trippad.quote"); }catch(e){} let i=Math.floor(Math.random()*L.length); if(L.length>1&&i===last) i=(i+1+Math.floor(Math.random()*(L.length-1)))%L.length; try{ localStorage.setItem("trippad.quote",String(i)); }catch(e){} return L[i]; })(), s=sp.querySelectorAll(".sp-in b span");
     const mo=n.getMonth(), dt=n.getDate(), nv1=new Date(n.getFullYear(),10,1).getDay(), tg=1+((4-nv1+7)%7)+21;
     const hp=(mo===10&&dt===tg)?["Give","thanks."]:(mo===11&&(dt===24||dt===25))?["Merry","Christmas."]:((mo===11&&dt===31)||(mo===0&&dt===1))?["New year,","new money."]:(mo===6&&dt===4)?["Happy","4th."]:null, use=hp||pick;
@@ -4602,7 +4602,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v104", tpChecked=0;
+var TP_BUILD="trip-pad-v105", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
