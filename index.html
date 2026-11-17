@@ -645,6 +645,15 @@ html.tp-hidden .tag.eo::before{animation-play-state:paused}
 .netwrap .nbig small{margin:6px 0 0;font-size:10.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#22d3ee}
 .netwrap .nbig em{margin-top:3px;font-style:normal;font-size:11px;font-weight:700;color:var(--muted)}
 .netwrap.empty .nbig .unum{color:var(--muted)}
+/* three rings across */
+.units .ringwrap,.units .netwrap{width:min(136px,calc((100vw - 104px) / 3));height:min(136px,calc((100vw - 104px) / 3))}
+.units{gap:14px clamp(8px,2.6vw,18px)}
+.phwrap .ring .track{stroke:color-mix(in srgb,#fb923c 22%,transparent)!important}
+.phwrap .ring .fill{stroke:url(#phGrad)!important}
+.phwrap .nbig small{color:#fb923c}
+:root[data-theme="light"] .phwrap .nbig small{color:#c2410c}
+@media (max-width:440px){.ringwrap #units{font-size:clamp(30px,9vw,42px)}.ringwrap #units small{font-size:10px}.netwrap .nbig .unum{font-size:clamp(20px,6.4vw,30px)}.netwrap .nbig small{font-size:8.5px;letter-spacing:.06em}.netwrap .nbig em{font-size:9.5px}}
+@media (max-width:360px){.netwrap .nbig em{display:none}}
 /* ===== close the book ===== */
 html.tp-closed #gate,html.tp-closed #splash{visibility:hidden!important}
 .closebook{display:flex;align-items:center;gap:12px;width:100%;margin:0 0 14px;padding:14px 16px;border-radius:16px;cursor:pointer;text-align:left;color:var(--ink);font:inherit;
@@ -1640,7 +1649,14 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
           <defs><linearGradient id="netGrad" gradientUnits="userSpaceOnUse" x1="14" y1="106" x2="106" y2="14"><stop offset="0" stop-color="#0e7490"/><stop offset="1" stop-color="#67e8f9"/></linearGradient></defs>
           <circle class="track" cx="60" cy="60" r="53"/><circle class="fill" id="netFill" cx="60" cy="60" r="53"/><circle class="rtip" id="netTip" cx="113" cy="60" r="7" fill="url(#netGrad)" style="opacity:0"/>
         </svg>
-        <div class="big nbig"><span class="unum" id="netPct">—</span><small>Internet deals</small><em id="netSub"></em></div>
+        <div class="big nbig"><span class="unum" id="netPct">—</span><small>Internet</small><em id="netSub"></em></div>
+      </button>
+      <button type="button" class="netwrap phwrap" id="phoneRing" aria-label="Phone pop deals">
+        <svg class="ring nring" viewBox="0 0 120 120" aria-hidden="true">
+          <defs><linearGradient id="phGrad" gradientUnits="userSpaceOnUse" x1="14" y1="106" x2="106" y2="14"><stop offset="0" stop-color="#c2410c"/><stop offset="1" stop-color="#fdba74"/></linearGradient></defs>
+          <circle class="track" cx="60" cy="60" r="53"/><circle class="fill" id="phoneFill" cx="60" cy="60" r="53"/><circle class="rtip" id="phoneTip" cx="113" cy="60" r="7" fill="url(#phGrad)" style="opacity:0"/>
+        </svg>
+        <div class="big nbig"><span class="unum" id="phonePct">—</span><small>Phone pop</small><em id="phoneSub"></em></div>
       </button>
       <div class="pay"><div class="lbl">Commission</div><div class="amt" id="comm">$0</div><div class="pace" id="paceText"></div><div class="paypace" id="payPace"></div><div id="streakWrap"></div></div>
     </div>
@@ -3149,20 +3165,18 @@ function renderBgPick(){ const box=document.getElementById("bgPick"); if(!box) r
   mk("","Theme",""); (BG_LIST||[]).forEach(([k,n,d,l])=>mk(k,n,light?l:d)); }
 try{ matchMedia("(prefers-color-scheme: light)").addEventListener("change",applyBg); }catch(e){}
 applyBg();
-function renderNetRing(){ const el=document.getElementById("netRing"); if(!el) return; const mk=monthKey(new Date()); let ups=0;
-  Object.keys(upsData||{}).forEach(k=>{ if(k.startsWith(mk)) ups+=((upsData[k]||{}).Internet|0); });
-  const month=deals.filter(d=>(d.date||"").startsWith(mk)&&d.status!=="unwound"), total=month.length, sold=month.filter(d=>d.source==="Internet").length;
-  const pct=total?Math.round(sold/total*100):0; el.classList.toggle("empty",!total);
-  document.getElementById("netPct").textContent=total?pct+"%":"—";
-  document.getElementById("netSub").textContent=total?(sold+" of "+total+" deals"):"no deals yet";
-  animRing("netFill","netTip",pct,"net");
-  el.setAttribute("aria-label", total?("Internet deals: "+sold+" of your "+total+" deals this month ("+pct+"%)"):"Internet deals: none logged this month yet"); el.title=el.getAttribute("aria-label"); }
+function renderSrcRing(src,pre,label){ const el=document.getElementById(pre+"Ring"); if(!el) return; const mk=monthKey(new Date());
+  const month=deals.filter(d=>(d.date||"").startsWith(mk)&&d.status!=="unwound"), total=month.length, sold=month.filter(d=>d.source===src).length, pct=total?Math.round(sold/total*100):0;
+  el.classList.toggle("empty",!total); document.getElementById(pre+"Pct").textContent=total?pct+"%":"—"; document.getElementById(pre+"Sub").textContent=total?(sold+" of "+total+" deals"):"no deals yet";
+  animRing(pre+"Fill",pre+"Tip",pct,pre); el.setAttribute("aria-label", total?(label+": "+sold+" of your "+total+" deals this month ("+pct+"%)"):label+": none logged this month yet"); el.title=el.getAttribute("aria-label"); }
+function renderNetRing(){ renderSrcRing("Internet","net","Internet deals"); renderSrcRing("Phone","phone","Phone pop deals"); }
 var ringState={};
 function animRing(fillId,tipId,pct,key){ const f=document.getElementById(fillId), tp=document.getElementById(tipId); if(!f) return; const from=ringState[key]==null?0:ringState[key], to=pct; ringState[key]=to;
   const put=v=>{ f.style.strokeDashoffset=String(333.0*(1-v/100)); if(tp){ const a=v*3.6*Math.PI/180; tp.setAttribute("cx",(60+53*Math.cos(a)).toFixed(2)); tp.setAttribute("cy",(60+53*Math.sin(a)).toFixed(2)); tp.style.opacity=v>1.5?"1":"0"; } };
   cancelAnimationFrame(animRing["raf"+key]); let rm=false; try{ rm=matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){}
   if(rm||Math.abs(from-to)<.01){ put(to); return; } const t0=performance.now(), D=1100;
   (function st(now){ const k=Math.min(1,(now-t0)/D), e=1-Math.pow(1-k,3); put(from+(to-from)*e); if(k<1) animRing["raf"+key]=requestAnimationFrame(st); })(t0); }
+document.getElementById("phoneRing").addEventListener("click",()=>{ try{ cheer("PHONE POP",document.getElementById("phoneRing").getAttribute("aria-label")); }catch(e){} });
 document.getElementById("netRing").addEventListener("click",()=>{ const el=document.getElementById("netRing"); try{ cheer("INTERNET",el.getAttribute("aria-label")); }catch(e){} });
 /* ===== close the book ===== */
 function monthKeyNow(){ const n=new Date(); return n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0"); }
@@ -3612,7 +3626,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v66", tpChecked=0;
+var TP_BUILD="trip-pad-v67", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
