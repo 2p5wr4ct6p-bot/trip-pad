@@ -2084,6 +2084,7 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
   try{ if(localStorage.getItem("trippad.theme")==="hero"){ const r=indexedDB.open("trippad",1); r.onupgradeneeded=()=>r.result.createObjectStore("files"); r.onsuccess=()=>{ try{ const q=r.result.transaction("files").objectStore("files").get("herosong"); q.onsuccess=()=>{ const v=q.result; if(v&&v.blob){ heroAud=new Audio(URL.createObjectURL(v.blob)); heroAud.preload="auto"; heroAud.setAttribute("playsinline",""); } }; }catch(e){} }; } }catch(e){}
   btn.addEventListener("click",()=>{ if(done) return; done=true;
     let heroPlayed=false; try{ if(heroAud){ try{ if(navigator.audioSession) navigator.audioSession.type="playback"; }catch(e){} heroAud.currentTime=0; heroAud.volume=1; const pr=heroAud.play(); heroPlayed=true; if(pr&&pr.catch) pr.catch(()=>{}); window.__heroAud=heroAud; const a=heroAud; setTimeout(()=>{ let v=1; const t=setInterval(()=>{ v-=.08; if(v<=0){ clearInterval(t); a.pause(); } else { try{ a.volume=v; }catch(e){} } },90); setTimeout(()=>{ try{ a.pause(); }catch(e){} },1300); },17000); } }catch(e){}
+    if(!heroPlayed&&localStorage.getItem("trippad.theme")==="hero"&&window.playHeroFanfare&&(typeof soundPref==="undefined"||soundPref!=="off")){ try{ playHeroFanfare(); heroPlayed=true; }catch(e){} }
     if(!heroPlayed) try{ if(window.audioCtx && (typeof soundPref==="undefined"||soundPref!=="off")){ const ctx=audioCtx(); if(ctx){ const bin=atob(ENTER_SFX), arr=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) arr[i]=bin.charCodeAt(i);
       ctx.decodeAudioData(arr.buffer, buf=>{ const src=ctx.createBufferSource(); src.buffer=buf; src.connect(ctx.destination); src.start(); }, ()=>{}); } } }catch(e){}
     try{ if(window.tapSuccess) tapSuccess(); }catch(e){}
@@ -2429,9 +2430,10 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
       <label class="f">Start the song at (seconds)<input id="wuStart" type="number" inputmode="decimal" min="0" step="0.5" value="0"></label>
       <div class="row2"><button type="button" class="btn" id="wuPlay">▶ Preview</button><button type="button" class="btn danger" id="wuDel">Remove</button></div>
     </div>
-    <div class="setgrp"><h3>💥 Hero theme song</h3><p class="setnote">Plays when you hit <b>Suit Up!</b> on the Hero enter screen, instead of the regular enter sound. Saved on this device.</p>
+    <div class="setgrp"><h3>💥 Hero theme song</h3><p class="setnote">Hero comes with its own theme music on <b>Suit Up!</b>. Want something else? Pick a song here and it plays instead. Saved on this device.</p>
       <div class="wu-row"><button type="button" class="btn" id="hsPick">🎵 Choose a song…</button><input type="file" id="hsFile" accept="audio/*" hidden></div>
       <p class="wu-name" id="hsName">No song picked</p>
+      <button type="button" class="btn" id="hsFan" style="width:100%;margin-bottom:8px">💥 Play the built-in Hero theme</button>
       <div class="row2"><button type="button" class="btn" id="hsPlay">▶ Preview</button><button type="button" class="btn danger" id="hsDel">Remove</button></div>
     </div>
     <div class="setgrp"><h3>📕 Close the book</h3><p class="setnote" id="setBookNote">Done for the month? Close the book to lock the Fun Trip Pad until next month.</p><button type="button" class="closebook setbook" id="setCloseBook"><span class="cbk-ico" aria-hidden="true">📕</span><span class="cbk-txt"><b>Close the book</b><small id="setBookSub">Wrap up this month</small></span><span class="cbk-go" aria-hidden="true">›</span></button></div>
@@ -3493,6 +3495,22 @@ function toCastle(){ themePref="princess"; try{ localStorage.setItem("trippad.th
   o.innerHTML='<div class="cg-sp">'+Array.from({length:22},(_,k)=>'<i style="left:'+((k*37)%100)+'%;top:'+((k*53)%100)+'%;animation-delay:'+(k*.07).toFixed(2)+'s">'+["✨","💖","⭐"][k%3]+'</i>').join("")+'</div><div class="cg-in"><div class="cg-c">🏰</div><div class="cg-t">Opening the castle gates…</div></div>';
   document.body.append(o); try{ tapSuccess(); }catch(e){} try{ playB64("yay",YAY_SFX); }catch(e){}
   setTimeout(()=>o.classList.add("flash"),1500); setTimeout(()=>{ try{ window.scrollTo(0,0); location.reload(); }catch(e){} },1900); }
+function playHeroFanfare(){ try{ if(navigator.audioSession) navigator.audioSession.type="playback"; }catch(e){} let ctx=null; try{ ctx=audioCtx(); }catch(e){} if(!ctx) return; try{ if(ctx.state==="suspended") ctx.resume(); }catch(e){}
+  const out=ctx.createGain(); out.gain.value=.55; const comp=ctx.createDynamicsCompressor(); out.connect(comp).connect(ctx.destination);
+  const N=n=>440*Math.pow(2,(n-69)/12), b=.2, t0=ctx.currentTime+.05;
+  const brass=(n,st,d,v=.22)=>{ const t=t0+st*b, dur=d*b; [0,-7,7].forEach((det,k)=>{ const o=ctx.createOscillator(), f=ctx.createBiquadFilter(), g=ctx.createGain(); o.type="sawtooth"; o.frequency.value=N(n); o.detune.value=det; f.type="lowpass"; f.Q.value=2; f.frequency.setValueAtTime(500,t); f.frequency.exponentialRampToValueAtTime(3200,t+.06); f.frequency.exponentialRampToValueAtTime(1400,t+dur);
+      g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(v/(k?2:1.4),t+.03); g.gain.setValueAtTime(v/(k?2:1.4)*.8,t+dur*.85); g.gain.exponentialRampToValueAtTime(.0001,t+dur+.08); o.connect(f).connect(g).connect(out); o.start(t); o.stop(t+dur+.1); }); };
+  const bass=(n,st,d)=>{ const t=t0+st*b, o=ctx.createOscillator(), g=ctx.createGain(); o.type="triangle"; o.frequency.value=N(n); g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.45,t+.02); g.gain.exponentialRampToValueAtTime(.0001,t+d*b); o.connect(g).connect(out); o.start(t); o.stop(t+d*b+.05); };
+  const nb=ctx.createBuffer(1,ctx.sampleRate*.5,ctx.sampleRate), nd=nb.getChannelData(0); for(let i=0;i<nd.length;i++) nd[i]=Math.random()*2-1;
+  const snare=(st,v=.35,len=.14)=>{ const t=t0+st*b, s=ctx.createBufferSource(), f=ctx.createBiquadFilter(), g=ctx.createGain(); s.buffer=nb; f.type="highpass"; f.frequency.value=1500; g.gain.setValueAtTime(v,t); g.gain.exponentialRampToValueAtTime(.0001,t+len); s.connect(f).connect(g).connect(out); s.start(t); s.stop(t+len+.02); };
+  const kick=st=>{ const t=t0+st*b, o=ctx.createOscillator(), g=ctx.createGain(); o.frequency.setValueAtTime(140,t); o.frequency.exponentialRampToValueAtTime(45,t+.15); g.gain.setValueAtTime(.8,t); g.gain.exponentialRampToValueAtTime(.0001,t+.22); o.connect(g).connect(out); o.start(t); o.stop(t+.25); };
+  const crash=st=>{ const t=t0+st*b, s=ctx.createBufferSource(), f=ctx.createBiquadFilter(), g=ctx.createGain(); s.buffer=nb; s.loop=true; f.type="highpass"; f.frequency.value=5000; g.gain.setValueAtTime(.28,t); g.gain.exponentialRampToValueAtTime(.0001,t+1.8); s.connect(f).connect(g).connect(out); s.start(t); s.stop(t+1.9); };
+  /* original melody in D minor -> D major finish */
+  [[62,0,1],[62,1,1],[65,2,1],[69,3,2],[67,5,1],[65,6,1],[64,7,1],[62,8,2],[69,10,1],[74,11,3],[72,14,1],[69,15,1],[65,16,1],[67,17,1],[69,18,2],[70,20,1],[69,21,1],[67,22,1],[64,23,1],[66,24,8]].forEach(([n,s,d])=>brass(n,s,d));
+  [[57,24,8],[62,24,8]].forEach(([n,s,d])=>brass(n,s,d,.14));
+  [[38,0,2],[38,2,2],[41,4,2],[43,6,2],[38,8,2],[45,10,2],[46,12,2],[45,14,2],[41,16,2],[43,18,2],[46,20,2],[45,22,2],[38,24,8]].forEach(([n,s,d])=>bass(n,s,d));
+  for(let k=0;k<24;k+=2) kick(k); for(let k=1;k<22;k+=2) snare(k); for(let k=22;k<24;k+=.25) snare(k,.12+(k-22)*.12,.08); kick(24); crash(24);
+  const end=t0+32*b; out.gain.setValueAtTime(.55,end-.6); out.gain.exponentialRampToValueAtTime(.0001,end+.4); }
 function toNextGen(){ themePref="nextgen"; try{ localStorage.setItem("trippad.theme","nextgen"); }catch(e){} try{ closeSettings(); }catch(e){}
   const o=document.createElement("div"); o.className="ng-boot"; o.setAttribute("role","status"); o.setAttribute("aria-label","Starting up");
   o.innerHTML='<div class="ngl"></div><div class="ngt">NEXT GEN</div><div class="ngs">Fun Trip Pad · Starting up</div>'; document.body.append(o);
@@ -3794,13 +3812,14 @@ document.getElementById("wuPlay").addEventListener("click",()=>{ try{ audioCtx()
 async function hsGet(){ try{ const db=await wuDB(); return await new Promise(res=>{ const q=db.transaction("files").objectStore("files").get("herosong"); q.onsuccess=()=>res(q.result||null); q.onerror=()=>res(null); }); }catch(e){ return null; } }
 async function hsPut(v){ const db=await wuDB(); return new Promise((res,rej)=>{ const t=db.transaction("files","readwrite"); if(v) t.objectStore("files").put(v,"herosong"); else t.objectStore("files").delete("herosong"); t.oncomplete=res; t.onerror=()=>rej(t.error); }); }
 let hsAud=null, hsUrl="";
-async function hsLoad(){ const v=await hsGet(); const n=document.getElementById("hsName"); if(hsUrl){ try{ URL.revokeObjectURL(hsUrl); }catch(e){} hsUrl=""; } hsAud=null; if(!v||!v.blob){ if(n) n.textContent="No song picked"; return; } hsUrl=URL.createObjectURL(v.blob); hsAud=new Audio(hsUrl); hsAud.preload="auto"; if(n) n.textContent="🎶 "+(v.name||"Your song"); }
+async function hsLoad(){ const v=await hsGet(); const n=document.getElementById("hsName"); if(hsUrl){ try{ URL.revokeObjectURL(hsUrl); }catch(e){} hsUrl=""; } hsAud=null; if(!v||!v.blob){ if(n) n.textContent="Using the built-in Hero theme"; return; } hsUrl=URL.createObjectURL(v.blob); hsAud=new Audio(hsUrl); hsAud.preload="auto"; if(n) n.textContent="🎶 "+(v.name||"Your song"); }
 function hsStop(){ if(hsAud){ try{ hsAud.pause(); hsAud.currentTime=0; }catch(e){} } const b=document.getElementById("hsPlay"); if(b) b.textContent="▶ Preview"; }
 document.getElementById("hsPick").addEventListener("click",()=>document.getElementById("hsFile").click());
 document.getElementById("hsFile").addEventListener("change",async e=>{ const f=e.target.files&&e.target.files[0]; e.target.value=""; if(!f) return; try{ await hsPut({blob:f,name:f.name.replace(/\.[^.]+$/,"")}); await hsLoad(); setNote("Hero theme song set 💥"); }catch(err){ setNote("Couldn't save that song on this device.","warn"); } });
 document.getElementById("hsPlay").addEventListener("click",()=>{ if(!hsAud){ setNote("Pick a song first.","warn"); return; } const b=document.getElementById("hsPlay"); if(!hsAud.paused){ hsStop(); return; } try{ if(navigator.audioSession) navigator.audioSession.type="playback"; }catch(e){} hsAud.currentTime=0; const pr=hsAud.play(); if(pr&&pr.catch) pr.catch(()=>setNote("Couldn't play that file. Try an MP3 or M4A.","warn")); b.textContent="⏹ Stop"; hsAud.onended=hsStop; });
 document.getElementById("hsDel").addEventListener("click",async()=>{ hsStop(); try{ await hsPut(null); }catch(e){} await hsLoad(); setNote("Hero theme song removed."); });
 hsLoad();
+document.getElementById("hsFan").addEventListener("click",()=>{ hsStop(); playHeroFanfare(); });
 document.getElementById("wuDel").addEventListener("click",async()=>{ try{ await wuPut(null); }catch(e){} wu.buf=null; wu.name=""; wuUI(); setNote("Walk-up song removed."); });
 wuPrefs(); wuUI(); addEventListener("tp-enter",()=>wuLoad(),{once:true}); if(!document.getElementById("gate")) wuLoad();
 /* --- shared car art --- */
@@ -4344,7 +4363,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v95", tpChecked=0;
+var TP_BUILD="trip-pad-v96", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
