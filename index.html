@@ -3158,16 +3158,16 @@ function renderNetRing(){ const el=document.getElementById("netRing"); if(!el) r
   const month=deals.filter(d=>(d.date||"").startsWith(mk)&&d.status!=="unwound"), total=month.length, sold=month.filter(d=>d.source==="Internet").length;
   const pct=total?Math.round(sold/total*100):0; el.classList.toggle("empty",!total);
   document.getElementById("netPct").textContent=total?pct+"%":"—";
-  document.getElementById("netSub").textContent=total?(sold+" of "+total+" deals"+(ups?" · "+Math.min(100,Math.round(sold/ups*100))+"% of leads":"")):"no deals yet";
+  document.getElementById("netSub").textContent=total?(sold+" of "+total+" deals"):"no deals yet";
   animRing("netFill","netTip",pct,"net");
-  el.setAttribute("aria-label", total?("Internet deals: "+sold+" of your "+total+" deals this month ("+pct+"%)"+(ups?". Closed "+sold+" of "+ups+" internet leads.":"")):"Internet deals: none logged this month yet"); el.title=el.getAttribute("aria-label"); }
+  el.setAttribute("aria-label", total?("Internet deals: "+sold+" of your "+total+" deals this month ("+pct+"%)"):"Internet deals: none logged this month yet"); el.title=el.getAttribute("aria-label"); }
 var ringState={};
 function animRing(fillId,tipId,pct,key){ const f=document.getElementById(fillId), tp=document.getElementById(tipId); if(!f) return; const from=ringState[key]==null?0:ringState[key], to=pct; ringState[key]=to;
   const put=v=>{ f.style.strokeDashoffset=String(333.0*(1-v/100)); if(tp){ const a=v*3.6*Math.PI/180; tp.setAttribute("cx",(60+53*Math.cos(a)).toFixed(2)); tp.setAttribute("cy",(60+53*Math.sin(a)).toFixed(2)); tp.style.opacity=v>1.5?"1":"0"; } };
   cancelAnimationFrame(animRing["raf"+key]); let rm=false; try{ rm=matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){}
   if(rm||Math.abs(from-to)<.01){ put(to); return; } const t0=performance.now(), D=1100;
   (function st(now){ const k=Math.min(1,(now-t0)/D), e=1-Math.pow(1-k,3); put(from+(to-from)*e); if(k<1) animRing["raf"+key]=requestAnimationFrame(st); })(t0); }
-document.getElementById("netRing").addEventListener("click",()=>{ const el=document.getElementById("netRing"); try{ cheer("INTERNET",el.getAttribute("aria-label")); }catch(e){} document.getElementById("todaySec").scrollIntoView({behavior:"smooth",block:"center"}); });
+document.getElementById("netRing").addEventListener("click",()=>{ const el=document.getElementById("netRing"); try{ cheer("INTERNET",el.getAttribute("aria-label")); }catch(e){} });
 /* ===== close the book ===== */
 function monthKeyNow(){ const n=new Date(); return n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0"); }
 function isLastDay(){ const n=new Date(), t=new Date(n.getFullYear(),n.getMonth(),n.getDate()+1); return t.getMonth()!==n.getMonth(); }
@@ -3616,7 +3616,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v64", tpChecked=0;
+var TP_BUILD="trip-pad-v65", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
