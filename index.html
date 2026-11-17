@@ -2947,7 +2947,7 @@ function fireworks(power){ if(reduceMotion()) return; const {c,x,dpr,W,H}=fxCanv
     if(t<dur) requestAnimationFrame(f); else c.remove(); })(t0); }
 function carZoom(){ if(reduceMotion()) return; const z=document.createElement("div"); z.className="zoomcar"; z.innerHTML="<i></i><i></i><i></i>"+ZOOM_CAR+LIGHTCYCLE; document.body.append(z); setTimeout(()=>z.remove(),1400); }
 let lastParty="", spiffPartyUntil=0;
-var CASH_STACK_SRC="cash-stack.webp";
+var CASH_STACK_SRC="cash-stack.webp?v=79";
 function showCashStack(){ if(reduceMotion()){ cheer("CASH DEAL","Cash in hand 💵"); return; } const o=document.createElement("div"); o.className="cashstack"; o.setAttribute("role","status"); o.setAttribute("aria-label","Cash deal");
   o.innerHTML='<div class="cs-in"><img alt="" src="'+CASH_STACK_SRC+'"><b>CASH DEAL!</b></div>'; document.body.append(o);
   try{ tapSuccess(); }catch(e){} setTimeout(()=>{ try{ moneyRain(1.6); }catch(e){} },350);
@@ -3842,7 +3842,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v78", tpChecked=0;
+var TP_BUILD="trip-pad-v79", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";
