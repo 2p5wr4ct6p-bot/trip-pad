@@ -562,6 +562,7 @@ h1{background:linear-gradient(115deg,var(--hg1) 0%,var(--hg2) 12.5%,var(--hg3) 2
 .td-tools{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;border-top:1px solid var(--line);padding-top:10px}
 .td-tool{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:12px;padding:8px 2px;font-size:20px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none}
 .td-tool span{font-size:11px;font-weight:700;color:var(--muted)}
+.td-tool{font-family:inherit;line-height:1.15;justify-content:center}
 .alertbar.eo{background:color-mix(in srgb,var(--bad) 13%,var(--card));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--bad) 45%,transparent)}
 .alertbar.eo .dot{background:var(--bad)} .alertbar.eo .go{color:var(--bad)}
 .tag.veritas-ol{background:transparent!important;color:#d6237f;box-shadow:inset 0 0 0 1.5px #ff4fa3}
@@ -1692,11 +1693,6 @@ const ENTER_SFX="SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//t
   <section class="today" id="todaySec" aria-label="Today's plan">
     <div class="td-head"><h3>📋 Today<span id="tdDate"></span></h3><button type="button" class="td-add" id="planAdd">+ Appt</button></div>
     <ul class="td-list" id="tdList"></ul>
-    <div class="ups">
-      <div class="ups-top"><span class="ups-ttl">Ups today<b id="upsToday">0</b></span><span class="ups-ratio" id="upsRatio"></span><button type="button" class="ups-undo" id="upsUndo" aria-label="Remove last up">−1</button></div>
-      <div class="ups-btns" id="upsBtns"></div>
-      <p class="ups-take" id="upsTake" role="img"></p>
-    </div>
     <div class="td-tools">
       <button type="button" class="td-tool" id="calcOpen">🧮<span>Payment</span></button>
       <button type="button" class="td-tool" id="bookOpen">📒<span>Customers</span></button>
@@ -3253,10 +3249,10 @@ async function addUp(src,delta){ if(!store||!store.saveDoc) return; const t=toda
   const cut=new Date(); cut.setDate(cut.getDate()-400); const ck=ymd(cut); Object.keys(all).forEach(k=>{ if(k<ck) delete all[k]; });
   upsStack=upsStack||[]; if(delta>0) upsStack.push(src);
   try{ await store.saveDoc("ups",{byDay:all}); }catch(e){} }
-UPS_SRC.forEach(([s,ic])=>{ const b=document.createElement("button"); b.type="button"; b.dataset.s=s; b.innerHTML='<span aria-hidden="true">'+ic+'</span><b>0</b>'+s;
+if($("upsBtns")) UPS_SRC.forEach(([s,ic])=>{ const b=document.createElement("button"); b.type="button"; b.dataset.s=s; b.innerHTML='<span aria-hidden="true">'+ic+'</span><b>0</b>'+s;
   b.addEventListener("click",()=>{ try{ tap(); }catch(e){} addUp(s,1); }); $("upsBtns").append(b); });
-$("upsUndo").addEventListener("click",()=>{ const o=(upsData||{})[today()]||{}; upsStack=upsStack||[]; let s=upsStack.pop(); if(!s||!(o[s]>0)) s=(UPS_SRC.map(x=>x[0]).filter(k=>o[k]>0).pop()); if(s) addUp(s,-1); });
-function renderUps(){ const t=today(), o=(upsData||{})[t]||{}, mk=monthKey(new Date());
+if($("upsUndo")) $("upsUndo").addEventListener("click",()=>{ const o=(upsData||{})[today()]||{}; upsStack=upsStack||[]; let s=upsStack.pop(); if(!s||!(o[s]>0)) s=(UPS_SRC.map(x=>x[0]).filter(k=>o[k]>0).pop()); if(s) addUp(s,-1); });
+function renderUps(){ if(!$("upsBtns")) return; const t=today(), o=(upsData||{})[t]||{}, mk=monthKey(new Date());
   $("upsToday").textContent=upsOn(t);
   $("upsBtns").querySelectorAll("button").forEach(b=>{ b.querySelector("b").textContent=o[b.dataset.s]|0; });
   $("upsUndo").hidden=!upsOn(t);
@@ -3616,7 +3612,7 @@ init();
 <script>
 if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 /* update check: when the app comes back to the front, look for a newer version and offer it */
-var TP_BUILD="trip-pad-v65", tpChecked=0;
+var TP_BUILD="trip-pad-v66", tpChecked=0;
 function tpCheckUpdate(){ if(Date.now()-tpChecked<60000) return; tpChecked=Date.now();
   fetch("sw.js?u="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ const m=/VERSION\s*=\s*"([^"]+)"/.exec(t||""); if(!m||m[1]===TP_BUILD||document.getElementById("tpUpd")) return;
     const b=document.createElement("button"); b.id="tpUpd"; b.type="button"; b.textContent="✨ New Trip Pad update — tap to load";

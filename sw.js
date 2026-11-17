@@ -1,5 +1,5 @@
 // Trip Pad offline cache. Bump VERSION when the app changes.
-const VERSION = "trip-pad-v65";
+const VERSION = "trip-pad-v66";
 const CORE = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(VERSION).then(c => c.addAll(CORE)).then(() => self.skipWaiting())); });
 self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k.startsWith("trip-pad-") && k !== VERSION).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
